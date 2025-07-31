@@ -134,3 +134,7 @@ The application is designed to be deployed as a single Node.js process that serv
 - **Voice Line System**: Added character-specific dialogue that appears as speech bubbles when songs complete or fail, featuring 3 different lines per character per outcome
 - **Background Removal**: Processed character images using Python PIL to remove backgrounds, creating transparent PNG files for cleaner visual integration with CSS enhancement filters
 - **Full-Page Character Selection**: Redesigned character selection as immersive full-page interface with large character displays, detailed stats, lore, and arrow key navigation (left/right to browse, Enter to confirm)
+- **User Authentication System**: Implemented complete Replit Auth integration with PostgreSQL database for user profiles, high scores, and progression tracking
+- **Leveling and Character Unlocks**: Added experience-based progression system with character unlocks at specific levels (Ivy: 1, Scal: 5, Lightren: 10, Winter: 20)
+- **High Score Leaderboards**: Created song-sectioned leaderboards showing only top 10 cleared songs per difficulty, with user highlighting and detailed score information
+- **Progressive Authentication Flow**: Landing page for unauthenticated users, home dashboard for authenticated users with progression stats and character management

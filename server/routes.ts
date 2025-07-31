@@ -44,19 +44,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Calculate experience earned
       const experience = calculateExperience(score, accuracy, difficulty, passed);
       
-      // Save high score
-      const highScore = await storage.saveHighScore({
-        userId,
-        songTitle,
-        difficulty,
-        character,
-        score,
-        accuracy,
-        combo,
-        grade,
-        passed,
-        experience,
-      });
+      // Save high score only if song was cleared
+      let highScore = null;
+      if (passed) {
+        try {
+          highScore = await storage.saveHighScore({
+            userId,
+            songTitle,
+            difficulty,
+            character,
+            score,
+            accuracy,
+            combo,
+            grade,
+            passed,
+            experience,
+          });
+        } catch (error) {
+          console.log("Could not save high score (song not cleared)");
+        }
+      }
       
       // Add experience to user and check for level up
       const oldUser = await storage.getUser(userId);
@@ -104,6 +111,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
       res.status(500).json({ message: "Failed to fetch leaderboard" });
+    }
+  });
+
+  // Get all leaderboards organized by song
+  app.get('/api/leaderboards', async (req, res) => {
+    try {
+      const leaderboards = await storage.getAllLeaderboards();
+      res.json(leaderboards);
+    } catch (error) {
+      console.error("Error fetching all leaderboards:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboards" });
     }
   });
 

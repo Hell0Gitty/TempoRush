@@ -28,6 +28,7 @@ export interface IStorage {
   saveHighScore(highScore: InsertHighScore): Promise<HighScore>;
   getUserHighScores(userId: string): Promise<HighScore[]>;
   getLeaderboard(songTitle: string, difficulty: string): Promise<HighScore[]>;
+  getAllLeaderboards(): Promise<{ [key: string]: { [key: string]: HighScore[] } }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -121,6 +122,11 @@ export class DatabaseStorage implements IStorage {
 
   // High score operations
   async saveHighScore(highScoreData: InsertHighScore): Promise<HighScore> {
+    // Only save if the song was cleared (passed = true)
+    if (!highScoreData.passed) {
+      throw new Error("Only cleared songs can be saved to high scores");
+    }
+    
     const [highScore] = await db
       .insert(highScores)
       .values(highScoreData)
@@ -142,10 +148,38 @@ export class DatabaseStorage implements IStorage {
       .from(highScores)
       .where(and(
         eq(highScores.songTitle, songTitle),
-        eq(highScores.difficulty, difficulty)
+        eq(highScores.difficulty, difficulty),
+        eq(highScores.passed, true) // Only show cleared songs
       ))
       .orderBy(desc(highScores.score))
       .limit(10);
+  }
+
+  async getAllLeaderboards(): Promise<{ [key: string]: { [key: string]: HighScore[] } }> {
+    const allScores = await db
+      .select()
+      .from(highScores)
+      .where(eq(highScores.passed, true)) // Only cleared songs
+      .orderBy(desc(highScores.score));
+
+    // Group by song and difficulty
+    const leaderboards: { [key: string]: { [key: string]: HighScore[] } } = {};
+    
+    allScores.forEach(score => {
+      if (!leaderboards[score.songTitle]) {
+        leaderboards[score.songTitle] = {};
+      }
+      if (!leaderboards[score.songTitle][score.difficulty]) {
+        leaderboards[score.songTitle][score.difficulty] = [];
+      }
+      
+      // Only keep top 10 per song/difficulty
+      if (leaderboards[score.songTitle][score.difficulty].length < 10) {
+        leaderboards[score.songTitle][score.difficulty].push(score);
+      }
+    });
+
+    return leaderboards;
   }
 }
 
