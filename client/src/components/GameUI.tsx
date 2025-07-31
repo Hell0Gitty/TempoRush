@@ -3,10 +3,10 @@ import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
 
 interface GameUIProps {
-  onRestart: () => void;
+  onPause: () => void;
 }
 
-export default function GameUI({ onRestart }: GameUIProps) {
+export default function GameUI({ onPause }: GameUIProps) {
   const { score, combo, accuracy, health } = useRhythm();
   const { toggleMute, isMuted } = useAudio();
   const { selectedSong } = useGame();
@@ -39,10 +39,10 @@ export default function GameUI({ onRestart }: GameUIProps) {
             {isMuted ? '🔇' : '🔊'}
           </button>
           <button
-            onClick={onRestart}
+            onClick={onPause}
             className="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 hover:bg-black/40 transition-colors"
           >
-            Restart
+            Pause
           </button>
         </div>
       </div>
@@ -60,6 +60,14 @@ export default function GameUI({ onRestart }: GameUIProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Speed Control Instructions */}
+      <div className="absolute bottom-32 right-4 bg-black/30 backdrop-blur-sm rounded-lg p-3 text-white text-sm">
+        <div className="font-bold mb-1">Speed Controls:</div>
+        <div>↑/+ : Faster</div>
+        <div>↓/- : Slower</div>
+        <div>0 : Reset</div>
       </div>
 
       {/* Key indicators at bottom */}

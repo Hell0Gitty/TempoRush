@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-export type GamePhase = "ready" | "songSelect" | "playing" | "ended";
+export type GamePhase = "ready" | "songSelect" | "playing" | "paused" | "ended";
 
 interface SongDifficulty {
   level: 'Easy' | 'Normal' | 'Hard' | 'Expert' | 'Master';
@@ -33,6 +33,8 @@ interface GameState {
   selectSong: (song: Song, difficulty: SongDifficulty) => void;
   unlockMaster: (songId: string) => void;
   start: () => void;
+  pause: () => void;
+  resume: () => void;
   restart: () => void;
   end: () => void;
 }
@@ -67,6 +69,26 @@ export const useGame = create<GameState>()(
         // Only transition from songSelect to playing
         if (state.phase === "songSelect" && state.selectedSong) {
           console.log("Game phase changed from songSelect to playing");
+          return { phase: "playing" };
+        }
+        return {};
+      });
+    },
+
+    pause: () => {
+      set((state) => {
+        if (state.phase === "playing") {
+          console.log("Game paused");
+          return { phase: "paused" };
+        }
+        return {};
+      });
+    },
+
+    resume: () => {
+      set((state) => {
+        if (state.phase === "paused") {
+          console.log("Game resumed");
           return { phase: "playing" };
         }
         return {};

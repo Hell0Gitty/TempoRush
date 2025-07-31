@@ -5,10 +5,11 @@ import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
+import PauseMenu from "./PauseMenu";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
-  const { phase, restart } = useGame();
+  const { phase, restart, pause } = useGame();
   const { resetGame } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
 
@@ -16,7 +17,12 @@ export default function Game() {
     if (phase === 'playing' && !gameEngineRef.current) {
       gameEngineRef.current = new GameEngine();
       gameEngineRef.current.start();
-    } else if (phase !== 'playing' && gameEngineRef.current) {
+    } else if (phase === 'paused' && gameEngineRef.current) {
+      gameEngineRef.current.stop();
+    } else if (phase === 'playing' && gameEngineRef.current) {
+      // Resume game if engine exists
+      gameEngineRef.current.start();
+    } else if ((phase !== 'playing' && phase !== 'paused') && gameEngineRef.current) {
       gameEngineRef.current.stop();
       gameEngineRef.current = null;
     }
@@ -41,9 +47,13 @@ export default function Game() {
   return (
     <div className="relative w-full h-full">
       <GameCanvas gameEngine={gameEngineRef.current} />
-      <GameUI onRestart={handleRestart} />
+      <GameUI onPause={pause} />
       <FlashOverlay />
       <SpeedFeedback />
+      
+      {phase === 'paused' && (
+        <PauseMenu onRestart={handleRestart} />
+      )}
       
       {phase === 'ended' && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

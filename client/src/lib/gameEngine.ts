@@ -83,6 +83,9 @@ export class GameEngine {
       else if (key === '0') {
         this.resetSpeed();
       }
+      else if (key === 'escape') {
+        useGame.getState().pause();
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -627,6 +630,7 @@ export class GameEngine {
     this.ctx!.font = '14px Arial';
     this.ctx!.fillText('↑/↓ or +/- to adjust', this.width - 20, 60);
     this.ctx!.fillText('0 to reset', this.width - 20, 80);
+    this.ctx!.fillText('ESC to pause', this.width - 20, 100);
   }
 
   private gameLoop = (timestamp: number) => {
