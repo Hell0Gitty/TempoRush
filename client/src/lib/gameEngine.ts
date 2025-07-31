@@ -530,66 +530,48 @@ export class GameEngine {
       const centerX = x + this.laneWidth / 2;
       
       if (note.isHold) {
-        // Draw hold note as a long rectangle
+        // Draw hold note as a long white rectangle
         const holdHeight = Math.max(60, (note.holdDuration || 1000) / 10); // Scale hold duration to visual height
-        
-        // Change appearance based on whether it's being held
         const isActive = note.holdActive;
-        const opacity = isActive ? '80' : '40';
-        const brightness = isActive ? 'FF' : this.laneColors[note.lane];
         
-        // Hold note background - brighter when active
-        this.ctx!.fillStyle = `${brightness}${opacity}`;
+        // Hold note body (long white bar)
+        this.ctx!.fillStyle = isActive ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.7)';
         this.ctx!.fillRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
         
-        // Hold note borders - thicker when active
-        this.ctx!.strokeStyle = brightness;
-        this.ctx!.lineWidth = isActive ? 5 : 3;
+        // Hold note outline
+        this.ctx!.strokeStyle = isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.8)';
+        this.ctx!.lineWidth = isActive ? 3 : 2;
         this.ctx!.strokeRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
         
-        // Hold note head (at the end) - glowing when active
-        this.ctx!.fillStyle = isActive ? '#ffffff' : this.laneColors[note.lane];
+        // Hold note head (at the end) - white block
+        this.ctx!.fillStyle = 'white';
         this.ctx!.fillRect(x + 10, note.y, this.laneWidth - 20, 20);
         
-        // Hold note tail (at the start)
-        this.ctx!.fillStyle = this.laneColors[note.lane];
+        // Hold note tail (at the start) - white block
+        this.ctx!.fillStyle = 'white';
         this.ctx!.fillRect(x + 10, note.y - holdHeight + 10, this.laneWidth - 20, 20);
         
-        // Add progress indicator for active holds
+        // Add progress indicator for active holds (green overlay)
         if (isActive && note.holdStartTime) {
           const elapsed = Date.now() - note.holdStartTime;
           const progress = Math.min(elapsed / (note.holdDuration || 1000), 1.0);
           const progressHeight = holdHeight * progress;
           
-          this.ctx!.fillStyle = '#00ff0080';
+          this.ctx!.fillStyle = 'rgba(0, 255, 0, 0.5)';
           this.ctx!.fillRect(x + 18, note.y - holdHeight + 10, this.laneWidth - 36, progressHeight);
         }
       } else {
-        // Regular note with stem
-        this.ctx!.strokeStyle = this.laneColors[note.lane];
-        this.ctx!.lineWidth = 3;
-        this.ctx!.beginPath();
-        this.ctx!.moveTo(centerX + noteSize / 2 - 5, note.y);
-        this.ctx!.lineTo(centerX + noteSize / 2 - 5, note.y - 30);
-        this.ctx!.stroke();
+        // Simple white block for regular notes
+        this.ctx!.fillStyle = 'white';
+        this.ctx!.fillRect(x + 10, note.y, this.laneWidth - 20, 20);
         
-        // Note shadow
+        // Add a subtle shadow for depth
         this.ctx!.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        this.ctx!.beginPath();
-        this.ctx!.ellipse(centerX + 2, note.y + 12, noteSize / 2, 10, 0, 0, 2 * Math.PI);
-        this.ctx!.fill();
+        this.ctx!.fillRect(x + 12, note.y + 2, this.laneWidth - 24, 16);
         
-        // Note body (oval shape like a musical note)
-        this.ctx!.fillStyle = this.laneColors[note.lane];
-        this.ctx!.beginPath();
-        this.ctx!.ellipse(centerX, note.y + 10, noteSize / 2, 10, 0, 0, 2 * Math.PI);
-        this.ctx!.fill();
-        
-        // Note highlight
-        this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        this.ctx!.beginPath();
-        this.ctx!.ellipse(centerX - 5, note.y + 6, noteSize / 4, 6, 0, 0, 2 * Math.PI);
-        this.ctx!.fill();
+        // White block on top
+        this.ctx!.fillStyle = 'white';
+        this.ctx!.fillRect(x + 10, note.y, this.laneWidth - 20, 20);
       }
     });
 

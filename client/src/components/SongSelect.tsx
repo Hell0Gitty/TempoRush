@@ -9,11 +9,11 @@ const AVAILABLE_SONGS = [
     artist: "Laur",
     audioFile: "/sounds/gears-of-fate.mp3",
     difficulties: [
-      { level: "Easy" as const, bpm: 140, duration: "4:32", noteSpeed: 200, noteFrequency: 1500 },
-      { level: "Normal" as const, bpm: 165, duration: "4:32", noteSpeed: 250, noteFrequency: 1200 },
-      { level: "Hard" as const, bpm: 180, duration: "4:32", noteSpeed: 300, noteFrequency: 1000 },
-      { level: "Expert" as const, bpm: 195, duration: "4:32", noteSpeed: 350, noteFrequency: 800 },
-      { level: "Master" as const, bpm: 210, duration: "4:32", noteSpeed: 400, noteFrequency: 600 }
+      { level: "Easy" as const, bpm: 140, duration: "4:32", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 165, duration: "4:32", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 180, duration: "4:32", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 195, duration: "4:32", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 210, duration: "4:32", noteSpeed: 700, noteFrequency: 600 }
     ]
   },
   {
@@ -22,11 +22,11 @@ const AVAILABLE_SONGS = [
     artist: "Laur",
     audioFile: "/sounds/grievous-lady.mp3",
     difficulties: [
-      { level: "Easy" as const, bpm: 150, duration: "3:58", noteSpeed: 200, noteFrequency: 1500 },
-      { level: "Normal" as const, bpm: 170, duration: "3:58", noteSpeed: 250, noteFrequency: 1200 },
-      { level: "Hard" as const, bpm: 190, duration: "3:58", noteSpeed: 300, noteFrequency: 1000 },
-      { level: "Expert" as const, bpm: 210, duration: "3:58", noteSpeed: 350, noteFrequency: 800 },
-      { level: "Master" as const, bpm: 230, duration: "3:58", noteSpeed: 400, noteFrequency: 600 }
+      { level: "Easy" as const, bpm: 150, duration: "3:58", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 170, duration: "3:58", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 190, duration: "3:58", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 210, duration: "3:58", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 230, duration: "3:58", noteSpeed: 700, noteFrequency: 600 }
     ]
   },
   {
@@ -35,11 +35,11 @@ const AVAILABLE_SONGS = [
     artist: "Laur",
     audioFile: "/sounds/viyellas-destiny.mp3",
     difficulties: [
-      { level: "Easy" as const, bpm: 120, duration: "4:15", noteSpeed: 200, noteFrequency: 1500 },
-      { level: "Normal" as const, bpm: 140, duration: "4:15", noteSpeed: 250, noteFrequency: 1200 },
-      { level: "Hard" as const, bpm: 160, duration: "4:15", noteSpeed: 300, noteFrequency: 1000 },
-      { level: "Expert" as const, bpm: 180, duration: "4:15", noteSpeed: 350, noteFrequency: 800 },
-      { level: "Master" as const, bpm: 200, duration: "4:15", noteSpeed: 400, noteFrequency: 600 }
+      { level: "Easy" as const, bpm: 120, duration: "4:15", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 140, duration: "4:15", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 160, duration: "4:15", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 180, duration: "4:15", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 200, duration: "4:15", noteSpeed: 700, noteFrequency: 600 }
     ]
   },
   {
@@ -48,11 +48,11 @@ const AVAILABLE_SONGS = [
     artist: "Laur",
     audioFile: "/sounds/another-me.mp3",
     difficulties: [
-      { level: "Easy" as const, bpm: 130, duration: "3:47", noteSpeed: 200, noteFrequency: 1500 },
-      { level: "Normal" as const, bpm: 158, duration: "3:47", noteSpeed: 250, noteFrequency: 1200 },
-      { level: "Hard" as const, bpm: 175, duration: "3:47", noteSpeed: 300, noteFrequency: 1000 },
-      { level: "Expert" as const, bpm: 190, duration: "3:47", noteSpeed: 350, noteFrequency: 800 },
-      { level: "Master" as const, bpm: 205, duration: "3:47", noteSpeed: 400, noteFrequency: 600 }
+      { level: "Easy" as const, bpm: 130, duration: "3:47", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 158, duration: "3:47", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 175, duration: "3:47", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 190, duration: "3:47", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 205, duration: "3:47", noteSpeed: 700, noteFrequency: 600 }
     ]
   }
 ];
