@@ -27,7 +27,7 @@ export default function GameUI({ onRestart }: GameUIProps) {
             <div className="text-sm opacity-60">Now Playing</div>
             <div className="font-bold">{selectedSong.title}</div>
             <div className="text-sm opacity-80">{selectedSong.artist}</div>
-            <div className="text-xs opacity-60">{selectedSong.difficulty} • {selectedSong.bpm} BPM</div>
+            <div className="text-xs opacity-60">{selectedSong.selectedDifficulty.level} • {selectedSong.selectedDifficulty.bpm} BPM</div>
           </div>
         )}
 

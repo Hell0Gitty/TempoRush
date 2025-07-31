@@ -2,7 +2,7 @@
 
 ## Overview
 
-Tempo Rush is a full-stack rhythm game built with React, TypeScript, and Express. The application features a 4-lane rhythm game where players hit keys (A, S, K, L) in time with falling notes. The frontend uses Canvas for game rendering, Zustand for state management, and Tailwind CSS with Radix UI components for styling. The backend provides a REST API foundation using Express with Drizzle ORM for database operations.
+Tempo Rush is a full-stack rhythm game built with React, TypeScript, and Express. The application features a 4-lane rhythm game where players hit keys (A, S, K, L) in time with falling notes. The game includes a comprehensive song selection system with multiple difficulty levels (Easy, Normal, Hard, Expert, Master) and features tracks by Laur. The frontend uses Canvas for game rendering with centered lanes and animated backgrounds, Zustand for state management, and Tailwind CSS with Radix UI components for styling. The backend provides a REST API foundation using Express with Drizzle ORM for database operations.
 
 ## User Preferences
 
@@ -32,15 +32,22 @@ The application follows a monorepo structure with separate client and server dir
 
 ### Game Engine
 The core game logic is implemented in a custom GameEngine class that handles:
-- Canvas rendering and animation loops
-- Note spawning and movement physics
+- Canvas rendering with centered lanes and animated gradient backgrounds
+- Note spawning and movement physics with difficulty-based speeds
 - Input handling for keyboard events (A, S, K, L keys)
 - Collision detection for note hits
 - Particle effects for visual feedback
 - Score calculation and combo tracking
 
+### Song Selection System
+- **Multi-tier selection**: Song selection followed by difficulty selection
+- **Five difficulty levels**: Easy, Normal, Hard, Expert, Master
+- **Master unlock system**: Master difficulty unlocks after Expert full combo
+- **Laur track collection**: Features Gears of Fate, Grievious Lady, Viyella's Destiny, Another Me
+- **Difficulty-specific parameters**: Each level has unique BPM, note speed, and frequency
+
 ### State Management Stores
-- **useGame**: Manages game phases (ready, playing, ended) and transitions
+- **useGame**: Manages game phases (ready, songSelect, playing, ended), song/difficulty selection, and expert full combo tracking
 - **useRhythm**: Handles game mechanics like score, combo, notes, and hit detection
 - **useAudio**: Controls background music, sound effects, and mute functionality
 
