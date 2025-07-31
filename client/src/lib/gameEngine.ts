@@ -98,32 +98,47 @@ export class GameEngine {
     try {
       // Get the audio element that's playing music
       const audioElement = document.querySelector('audio');
-      if (!audioElement) return;
+      console.log('Audio element found:', audioElement);
+      if (!audioElement) {
+        console.log('No audio element found for visualizer');
+        return;
+      }
 
       // Create audio context and analyser
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       this.analyser = this.audioContext.createAnalyser();
       
       // Configure analyser
-      this.analyser.fftSize = 128; // 64 frequency bins
+      this.analyser.fftSize = 256; // 128 frequency bins for better resolution
       this.analyser.smoothingTimeConstant = 0.8;
       
       // Create data array for frequency data
       this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+      console.log('Audio analyser created with', this.analyser.frequencyBinCount, 'frequency bins');
       
       // Connect audio source to analyser
       if (!this.source) {
         this.source = this.audioContext.createMediaElementSource(audioElement);
         this.source.connect(this.analyser);
         this.source.connect(this.audioContext.destination);
+        console.log('Audio source connected to analyser');
       }
+      
+      // Resume audio context if needed
+      if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume();
+      }
+      
     } catch (error) {
-      console.log('Audio analyser setup failed:', error);
+      console.error('Audio analyser setup failed:', error);
     }
   }
 
   private getFrequencyData(): number[] {
-    if (!this.analyser || !this.dataArray) return [];
+    if (!this.analyser || !this.dataArray) {
+      console.log('No analyser or dataArray available');
+      return [];
+    }
     
     this.analyser.getByteFrequencyData(this.dataArray);
     
@@ -140,38 +155,52 @@ export class GameEngine {
       bars.push(sum / binSize / 255); // Normalize to 0-1
     }
     
+    // Log first few frames to see if we're getting data
+    if (this.currentFrame % 60 === 0) { // Log every second
+      console.log('Frequency data:', bars.map(b => b.toFixed(2)));
+    }
+    
     return bars;
   }
 
   private drawAudioBars() {
     const frequencyData = this.getFrequencyData();
-    if (frequencyData.length === 0) return;
+    if (frequencyData.length === 0) {
+      // Draw static bars for testing if no frequency data
+      const staticBars = [0.3, 0.5, 0.7, 0.4, 0.6, 0.8, 0.2, 0.9];
+      this.renderBars(staticBars);
+      return;
+    }
     
-    const barWidth = this.width / frequencyData.length;
-    const maxBarHeight = this.height * 0.4; // Reduced height so it doesn't cover gameplay
+    this.renderBars(frequencyData);
+  }
+
+  private renderBars(barData: number[]) {
+    const barWidth = this.width / barData.length;
+    const maxBarHeight = this.height * 0.3; // Reduced height so it doesn't cover gameplay
     
-    frequencyData.forEach((amplitude, index) => {
-      const barHeight = amplitude * maxBarHeight;
+    barData.forEach((amplitude, index) => {
+      const barHeight = Math.max(amplitude * maxBarHeight, 10); // Minimum height for visibility
       const x = index * barWidth;
       const y = this.height - barHeight;
       
       // Create gradient for each bar
       const barGradient = this.ctx!.createLinearGradient(x, y + barHeight, x, y);
       const hue = (index * 45) % 360;
-      barGradient.addColorStop(0, `hsla(${hue}, 70%, 50%, 0.2)`);
-      barGradient.addColorStop(1, `hsla(${hue}, 70%, 70%, 0.4)`);
+      barGradient.addColorStop(0, `hsla(${hue}, 70%, 50%, 0.4)`);
+      barGradient.addColorStop(1, `hsla(${hue}, 70%, 70%, 0.8)`);
       
       this.ctx!.fillStyle = barGradient;
-      this.ctx!.fillRect(x, y, barWidth - 2, barHeight);
+      this.ctx!.fillRect(x, y, barWidth - 4, barHeight);
       
       // Add mirror bars at the top
       const topY = 0;
-      const topGradient = this.ctx!.createLinearGradient(x, topY, x, topY + barHeight);
-      topGradient.addColorStop(0, `hsla(${hue}, 70%, 70%, 0.3)`);
-      topGradient.addColorStop(1, `hsla(${hue}, 70%, 50%, 0.1)`);
+      const topGradient = this.ctx!.createLinearGradient(x, topY, x, topY + barHeight * 0.5);
+      topGradient.addColorStop(0, `hsla(${hue}, 70%, 70%, 0.6)`);
+      topGradient.addColorStop(1, `hsla(${hue}, 70%, 50%, 0.2)`);
       
       this.ctx!.fillStyle = topGradient;
-      this.ctx!.fillRect(x, topY, barWidth - 2, barHeight);
+      this.ctx!.fillRect(x, topY, barWidth - 4, barHeight * 0.5);
     });
   }
 
@@ -589,10 +618,17 @@ export class GameEngine {
     this.currentFrame = 0;
     this.nextNoteIndex = 0;
     
-    // Initialize audio analyser after a delay to ensure audio is ready
+    // Try to initialize audio analyser immediately and with retries
+    this.initAudioAnalyser();
+    
+    // Also retry after delays in case audio isn't ready yet
     setTimeout(() => {
       this.initAudioAnalyser();
-    }, 2000);
+    }, 1000);
+    
+    setTimeout(() => {
+      this.initAudioAnalyser();
+    }, 3000);
     
     this.animationId = requestAnimationFrame(this.gameLoop);
   }
