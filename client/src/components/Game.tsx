@@ -4,6 +4,7 @@ import { useRhythm } from "../lib/stores/useRhythm";
 import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import FlashOverlay from "./FlashOverlay";
+import SpeedFeedback from "./SpeedFeedback";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
@@ -42,6 +43,7 @@ export default function Game() {
       <GameCanvas gameEngine={gameEngineRef.current} />
       <GameUI onRestart={handleRestart} />
       <FlashOverlay />
+      <SpeedFeedback />
       
       {phase === 'ended' && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">

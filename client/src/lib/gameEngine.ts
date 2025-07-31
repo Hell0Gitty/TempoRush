@@ -73,6 +73,16 @@ export class GameEngine {
           this.handleKeyPress(key);
         }
       }
+      // Speed controls
+      else if (key === 'arrowup' || key === '=') {
+        this.adjustSpeed(0.1);
+      }
+      else if (key === 'arrowdown' || key === '-') {
+        this.adjustSpeed(-0.1);
+      }
+      else if (key === '0') {
+        this.resetSpeed();
+      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -138,7 +148,7 @@ export class GameEngine {
     } catch (error) {
       console.error('Audio analyser setup failed:', error);
       // If we get CORS or other errors, we can still show animated bars
-      if (error.message.includes('cross-origin') || error.message.includes('CORS')) {
+      if ((error as Error).message.includes('cross-origin') || (error as Error).message.includes('CORS')) {
         console.log('Using animated fallback bars due to CORS');
         this.useFallbackAnimation = true;
       }
@@ -146,6 +156,8 @@ export class GameEngine {
   }
 
   private useFallbackAnimation = false;
+  private baseNoteSpeed: number = 300; // Base speed from difficulty
+  private speedMultiplier: number = 1.0; // Player-adjustable multiplier (0.5x to 2.0x)
 
   private getFrequencyData(): number[] {
     if (!this.analyser || !this.dataArray) {
@@ -190,6 +202,28 @@ export class GameEngine {
     }
     
     this.renderBars(frequencyData);
+  }
+
+  private adjustSpeed(delta: number) {
+    this.speedMultiplier = Math.max(0.5, Math.min(2.0, this.speedMultiplier + delta));
+    this.noteSpeed = this.baseNoteSpeed * this.speedMultiplier;
+    console.log(`Speed adjusted to ${(this.speedMultiplier * 100).toFixed(0)}% (${this.noteSpeed.toFixed(0)} px/s)`);
+    
+    // Show speed change feedback
+    useRhythm.getState().showSpeedFeedback(this.speedMultiplier);
+  }
+
+  private resetSpeed() {
+    this.speedMultiplier = 1.0;
+    this.noteSpeed = this.baseNoteSpeed;
+    console.log('Speed reset to 100%');
+    
+    // Show speed reset feedback
+    useRhythm.getState().showSpeedFeedback(this.speedMultiplier);
+  }
+
+  getSpeedMultiplier(): number {
+    return this.speedMultiplier;
   }
 
   private renderBars(barData: number[]) {
@@ -580,6 +614,19 @@ export class GameEngine {
       this.ctx!.fillStyle = 'white';
       this.ctx!.fillText(key, x, this.height - 30);
     });
+
+    // Draw speed indicator
+    this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    this.ctx!.font = 'bold 18px Arial';
+    this.ctx!.textAlign = 'right';
+    const speedText = `Speed: ${(this.speedMultiplier * 100).toFixed(0)}%`;
+    this.ctx!.fillText(speedText, this.width - 20, 40);
+    
+    // Draw speed controls hint
+    this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    this.ctx!.font = '14px Arial';
+    this.ctx!.fillText('↑/↓ or +/- to adjust', this.width - 20, 60);
+    this.ctx!.fillText('0 to reset', this.width - 20, 80);
   }
 
   private gameLoop = (timestamp: number) => {
@@ -615,7 +662,8 @@ export class GameEngine {
       const chart = getChart(gameState.selectedSong.id, gameState.selectedSong.selectedDifficulty.level);
       if (chart) {
         this.chartNotes = chart.notes;
-        this.noteSpeed = gameState.selectedSong.selectedDifficulty.noteSpeed;
+        this.baseNoteSpeed = gameState.selectedSong.selectedDifficulty.noteSpeed;
+        this.noteSpeed = this.baseNoteSpeed * this.speedMultiplier;
         this.setupFlashTriggers(gameState.selectedSong.id);
         console.log(`Loaded chart for ${gameState.selectedSong.title} - ${gameState.selectedSong.selectedDifficulty.level}: ${this.chartNotes.length} notes`);
       }

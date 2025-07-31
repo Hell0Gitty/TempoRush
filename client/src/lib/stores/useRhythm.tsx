@@ -26,6 +26,7 @@ interface RhythmState {
     miss: number;
   };
   flashIntensity: number; // 0-1 for screen flash effect
+  speedFeedback: { visible: boolean; multiplier: number; }; // Speed change feedback
   
   // Actions
   addNote: (note: Note) => void;
@@ -36,6 +37,7 @@ interface RhythmState {
   resetGame: () => void;
   triggerFlash: (intensity?: number) => void;
   updateFlash: () => void;
+  showSpeedFeedback: (multiplier: number) => void;
 }
 
 export const useRhythm = create<RhythmState>()(
@@ -52,6 +54,7 @@ export const useRhythm = create<RhythmState>()(
       miss: 0
     },
     flashIntensity: 0,
+    speedFeedback: { visible: false, multiplier: 1.0 },
 
     addNote: (note) => {
       set((state) => ({
@@ -184,7 +187,8 @@ export const useRhythm = create<RhythmState>()(
           good: 0,
           miss: 0
         },
-        flashIntensity: 0
+        flashIntensity: 0,
+        speedFeedback: { visible: false, multiplier: 1.0 }
       });
     },
 
@@ -196,6 +200,17 @@ export const useRhythm = create<RhythmState>()(
       set((state) => ({
         flashIntensity: Math.max(0, state.flashIntensity - 0.04) // Fade out over ~1 second at 60fps
       }));
+    },
+
+    showSpeedFeedback: (multiplier) => {
+      set({ speedFeedback: { visible: true, multiplier } });
+      
+      // Hide after 2 seconds
+      setTimeout(() => {
+        set((state) => ({ 
+          speedFeedback: { ...state.speedFeedback, visible: false } 
+        }));
+      }, 2000);
     }
   }))
 );
