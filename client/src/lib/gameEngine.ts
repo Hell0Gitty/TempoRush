@@ -65,7 +65,26 @@ export class GameEngine {
 
   private setupKeyListeners() {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const gameState = useGame.getState();
       const key = e.key.toLowerCase();
+      
+      // Handle ESC key for pause/resume regardless of game state
+      if (key === 'escape') {
+        if (gameState.phase === 'playing') {
+          console.log("ESC pressed - pausing game");
+          gameState.pause();
+        } else if (gameState.phase === 'paused') {
+          console.log("ESC pressed - resuming game");
+          gameState.resume();
+        }
+        return;
+      }
+      
+      // Only process other keys when game is actually playing
+      if (gameState.phase !== 'playing') {
+        return;
+      }
+      
       if (['a', 's', 'k', 'l'].includes(key)) {
         if (!this.keyStates[key]) {
           this.keyStates[key] = true;
@@ -83,19 +102,15 @@ export class GameEngine {
       else if (key === '0') {
         this.resetSpeed();
       }
-      else if (key === 'escape') {
-        const gameState = useGame.getState();
-        if (gameState.phase === 'playing') {
-          console.log("ESC pressed - pausing game");
-          gameState.pause();
-        } else if (gameState.phase === 'paused') {
-          console.log("ESC pressed - resuming game");
-          gameState.resume();
-        }
-      }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
+      const gameState = useGame.getState();
+      // Only process key releases when game is playing
+      if (gameState.phase !== 'playing') {
+        return;
+      }
+      
       const key = e.key.toLowerCase();
       if (['a', 's', 'k', 'l'].includes(key)) {
         this.keyStates[key] = false;
