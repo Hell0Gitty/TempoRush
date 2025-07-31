@@ -5,13 +5,12 @@ import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
-import PauseMenu from "./PauseMenu";
 import VoiceLines from "./VoiceLines";
 import ResultsScreen from "./ResultsScreen";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
-  const { phase, restart, pause, selectedSong, selectedCharacter, saveHighScore } = useGame();
+  const { phase, restart, pause, resume, selectedSong, selectedCharacter, saveHighScore } = useGame();
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
@@ -101,6 +100,24 @@ export default function Game() {
     }
   }, [phase, score, accuracy, maxCombo, health, selectedSong, selectedCharacter, saveHighScore]);
 
+  // ESC and Enter key handling for pause/resume
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (phase === 'playing') {
+          pause();
+        } else if (phase === 'paused') {
+          resume();
+        }
+      } else if (e.key === 'Enter' && phase === 'paused') {
+        resume();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [phase, pause, resume]);
+
   const handleRestart = () => {
     if (gameEngineRef.current) {
       gameEngineRef.current.stop();
@@ -133,7 +150,12 @@ export default function Game() {
       <VoiceLines gameResult={voiceLineResult} onClose={handleVoiceLineClose} />
       
       {phase === 'paused' && (
-        <PauseMenu onRestart={handleRestart} />
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-40">
+          <div className="text-white text-center">
+            <div className="text-6xl font-bold mb-4">PAUSED</div>
+            <div className="text-2xl">Press Enter to continue</div>
+          </div>
+        </div>
       )}
       
       {showResults && voiceLineResult && (
