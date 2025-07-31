@@ -40,35 +40,54 @@ def remove_background_simple(input_path, output_path):
         print(f"✗ Error processing {input_path}: {e}")
         return False
 
-def remove_background_edges(input_path, output_path):
-    """Remove background by making edge colors transparent"""
+def remove_background_advanced(input_path, output_path):
+    """Advanced background removal preserving character details"""
     try:
         # Open image
         img = Image.open(input_path)
         img = img.convert("RGBA")
         
-        # Get the colors at the corners (likely background)
-        width, height = img.size
-        corners = [
-            img.getpixel((0, 0)),
-            img.getpixel((width-1, 0)),
-            img.getpixel((0, height-1)),
-            img.getpixel((width-1, height-1))
-        ]
-        
-        # Find most common corner color (background)
-        bg_color = max(set(corners), key=corners.count)
-        
-        # Create mask for background removal
+        # Get image data as array for easier processing
         data = img.getdata()
         new_data = []
         
-        for item in data:
-            # Check if pixel is similar to background color
-            if abs(item[0] - bg_color[0]) < 30 and abs(item[1] - bg_color[1]) < 30 and abs(item[2] - bg_color[2]) < 30:
-                new_data.append((item[0], item[1], item[2], 0))  # Make transparent
+        # Sample multiple edge points for better background detection
+        width, height = img.size
+        edge_samples = []
+        for i in range(0, width, max(1, width//10)):
+            edge_samples.append(img.getpixel((i, 0)))  # Top edge
+            edge_samples.append(img.getpixel((i, height-1)))  # Bottom edge
+        for i in range(0, height, max(1, height//10)):
+            edge_samples.append(img.getpixel((0, i)))  # Left edge
+            edge_samples.append(img.getpixel((width-1, i)))  # Right edge
+        
+        # Find most common background colors
+        bg_colors = {}
+        for color in edge_samples:
+            rgb = color[:3]
+            if rgb in bg_colors:
+                bg_colors[rgb] += 1
             else:
-                new_data.append(item)  # Keep original
+                bg_colors[rgb] = 1
+        
+        # Get dominant background color
+        bg_color = max(bg_colors, key=bg_colors.get)
+        
+        for item in data:
+            r, g, b = item[:3]
+            
+            # More precise background detection
+            color_diff = abs(r - bg_color[0]) + abs(g - bg_color[1]) + abs(b - bg_color[2])
+            
+            # Very similar to background color - make transparent
+            if color_diff < 25:
+                new_data.append((r, g, b, 0))
+            # Somewhat similar - make semi-transparent
+            elif color_diff < 60:
+                new_data.append((r, g, b, 100))
+            # Keep original with full opacity
+            else:
+                new_data.append((r, g, b, 255))
         
         # Update image data
         img.putdata(new_data)
@@ -76,7 +95,7 @@ def remove_background_edges(input_path, output_path):
         # Save as PNG with transparency
         img.save(output_path, "PNG")
         
-        print(f"✓ Processed (edge method): {input_path} -> {output_path}")
+        print(f"✓ Processed (advanced method): {input_path} -> {output_path}")
         return True
     except Exception as e:
         print(f"✗ Error processing {input_path}: {e}")
@@ -107,8 +126,8 @@ def main():
         output_path = os.path.join(output_dir, target_file)
         
         if os.path.exists(input_path):
-            # Try edge detection method first
-            if remove_background_edges(input_path, output_path):
+            # Try advanced method first
+            if remove_background_advanced(input_path, output_path):
                 success_count += 1
             # If that fails, try simple color method
             elif remove_background_simple(input_path, output_path):

@@ -241,15 +241,7 @@ export default function CharacterSelect() {
             {currentCharacter.name}
           </h1>
           
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <span className={`text-2xl font-bold ${getRarityColor(currentCharacter.stats.rarity)}`}>
-              {currentCharacter.stats.rarity}
-            </span>
-            <span className="text-xl opacity-60">•</span>
-            <span className="text-xl">{currentCharacter.stats.element}</span>
-            <span className="text-xl opacity-60">•</span>
-            <span className="text-xl">{currentCharacter.stats.difficulty}</span>
-          </div>
+
         </div>
       </div>
 
