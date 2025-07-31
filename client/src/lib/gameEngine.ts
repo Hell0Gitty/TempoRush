@@ -306,24 +306,39 @@ export class GameEngine {
       this.ctx!.strokeRect(x + 10, this.hitZoneY - 30, this.laneWidth - 20, 60);
     }
 
-    // Draw notes
+    // Draw notes with stems
     state.notes.forEach(note => {
       if (note.hit) return;
       
       const x = this.laneStartX + note.lane * this.laneWidth;
       const noteSize = this.laneWidth - 40;
+      const centerX = x + this.laneWidth / 2;
+      
+      // Note stem (vertical line)
+      this.ctx!.strokeStyle = this.laneColors[note.lane];
+      this.ctx!.lineWidth = 3;
+      this.ctx!.beginPath();
+      this.ctx!.moveTo(centerX + noteSize / 2 - 5, note.y);
+      this.ctx!.lineTo(centerX + noteSize / 2 - 5, note.y - 30);
+      this.ctx!.stroke();
       
       // Note shadow
       this.ctx!.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      this.ctx!.fillRect(x + 22, note.y + 2, noteSize, 20);
+      this.ctx!.beginPath();
+      this.ctx!.ellipse(centerX + 2, note.y + 12, noteSize / 2, 10, 0, 0, 2 * Math.PI);
+      this.ctx!.fill();
       
-      // Note body
+      // Note body (oval shape like a musical note)
       this.ctx!.fillStyle = this.laneColors[note.lane];
-      this.ctx!.fillRect(x + 20, note.y, noteSize, 20);
+      this.ctx!.beginPath();
+      this.ctx!.ellipse(centerX, note.y + 10, noteSize / 2, 10, 0, 0, 2 * Math.PI);
+      this.ctx!.fill();
       
       // Note highlight
-      this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.3)';
-      this.ctx!.fillRect(x + 20, note.y, noteSize, 5);
+      this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      this.ctx!.beginPath();
+      this.ctx!.ellipse(centerX - 5, note.y + 6, noteSize / 4, 6, 0, 0, 2 * Math.PI);
+      this.ctx!.fill();
     });
 
     // Draw particles

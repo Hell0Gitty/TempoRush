@@ -15,9 +15,15 @@ export default function Menu() {
         <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-600 bg-clip-text text-transparent">
           TEMPO RUSH
         </h1>
-        <p className="text-xl mb-8 opacity-80">
+        <p className="text-xl mb-4 opacity-80">
           Hit the beats with perfect timing!
         </p>
+        
+        <div className="mb-6 p-4 bg-red-900/30 border border-red-500/50 rounded-lg backdrop-blur-sm">
+          <p className="text-sm text-red-200 font-semibold">
+            ⚠️ Warning: This game contains flashing lights that may trigger seizures in individuals with photosensitive epilepsy.
+          </p>
+        </div>
         
         <div className="mb-8 p-6 bg-black/20 rounded-lg backdrop-blur-sm">
           <h3 className="text-lg font-semibold mb-4">Controls:</h3>
