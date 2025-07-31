@@ -190,7 +190,7 @@ export class GameEngine {
 
       // Check if note missed (went past hit zone)
       if (note.y > this.hitZoneY + 100) {
-        state.hitNote(note.id, 'miss');
+        // Just remove the note without affecting health/score - passive miss
         return false;
       }
 
