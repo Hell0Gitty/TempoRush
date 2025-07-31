@@ -29,9 +29,6 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
   };
 
   useEffect(() => {
-    // Clear any existing high scores first (reset for new system)
-    localStorage.removeItem('tempoRushHighScores');
-    
     // Save high score to localStorage only if song was cleared
     if (selectedSong && selectedCharacter && health > 0 && accuracy >= 70) {
       const highScore = {

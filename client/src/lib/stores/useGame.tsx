@@ -52,6 +52,7 @@ interface GameState {
   speedMultiplier: number; // Global speed multiplier (0.5 to 2.0)
   
   // Actions
+  setPhase: (phase: GamePhase) => void;
   showSongSelect: () => void;
   showCharacterSelect: () => void;
   showHighScores: () => void;
@@ -91,6 +92,10 @@ export const useGame = create<GameState>()(
     },
     expertFullCombos: [],
     speedMultiplier: 1.0,
+    
+    setPhase: (phase) => {
+      set(() => ({ phase }));
+    },
     
     showSongSelect: () => {
       set(() => ({ phase: "songSelect" }));
