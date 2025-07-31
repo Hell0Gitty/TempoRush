@@ -9,16 +9,13 @@ import "@fontsource/lato";
 
 function App() {
   const { phase, selectedSong } = useGame();
-  const { setBackgroundMusic, setHitSound, setSuccessSound } = useAudio();
+  const { setBackgroundMusic, setSuccessSound } = useAudio();
 
-  // Initialize hit and success sound effects
+  // Initialize success sound effect only
   useEffect(() => {
-    const hitSound = new Audio('/sounds/hit.mp3');
     const successSound = new Audio('/sounds/success.mp3');
-    
-    setHitSound(hitSound);
     setSuccessSound(successSound);
-  }, [setHitSound, setSuccessSound]);
+  }, [setSuccessSound]);
 
   // Load selected song's audio file
   useEffect(() => {
