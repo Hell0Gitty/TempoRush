@@ -71,38 +71,38 @@ const gearsOfFateEasy: Chart = {
   ]
 };
 
-// Gears of Fate - Normal (165 BPM)
-// Add eighth notes and some simple patterns, ~280 notes total
+// Gears of Fate - Normal (160 BPM)
+// Gentle introduction to eighth notes, ~120 notes total
 const gearsOfFateNormal: Chart = {
   songId: "1",
   difficulty: "Normal",
-  bpm: 165,
+  bpm: 160,
   notes: [
-    // Intro section with eighth notes (16 bars)
-    { time: beatToMs(1, 165), lane: 0 }, { time: beatToMs(1.5, 165), lane: 1 }, { time: beatToMs(2.5, 165), lane: 2 }, { time: beatToMs(3, 165), lane: 3 },
-    { time: beatToMs(4.5, 165), lane: 1 }, { time: beatToMs(5, 165), lane: 0 }, { time: beatToMs(6.5, 165), lane: 2 }, { time: beatToMs(7, 165), lane: 3 },
-    { time: beatToMs(9, 165), lane: 0 }, { time: beatToMs(9.5, 165), lane: 1 }, { time: beatToMs(10.5, 165), lane: 2 }, { time: beatToMs(11, 165), lane: 3 },
-    { time: beatToMs(12, 165), lane: 1 }, { time: beatToMs(13, 165), lane: 0 }, { time: beatToMs(13.5, 165), lane: 2 }, { time: beatToMs(14.5, 165), lane: 3 },
-    { time: beatToMs(17, 165), lane: 0 }, { time: beatToMs(17.5, 165), lane: 1 }, { time: beatToMs(18, 165), lane: 2 }, { time: beatToMs(18.5, 165), lane: 3 },
-    { time: beatToMs(19, 165), lane: 2 }, { time: beatToMs(19.5, 165), lane: 1 }, { time: beatToMs(20, 165), lane: 0 }, { time: beatToMs(20.5, 165), lane: 3 },
-    { time: beatToMs(21, 165), lane: 1 }, { time: beatToMs(21.5, 165), lane: 2 }, { time: beatToMs(22, 165), lane: 3 }, { time: beatToMs(22.5, 165), lane: 0 },
-    { time: beatToMs(23, 165), lane: 2 }, { time: beatToMs(23.5, 165), lane: 1 }, { time: beatToMs(24, 165), lane: 3 }, { time: beatToMs(24.5, 165), lane: 0 },
+    // Intro section - mostly quarter notes with some eighth notes (8 bars)
+    { time: beatToMs(1, 160), lane: 0 }, { time: beatToMs(2, 160), lane: 1 }, { time: beatToMs(3, 160), lane: 2 }, { time: beatToMs(4, 160), lane: 3 },
+    { time: beatToMs(5, 160), lane: 1 }, { time: beatToMs(6, 160), lane: 0 }, { time: beatToMs(7, 160), lane: 3 }, { time: beatToMs(8, 160), lane: 2 },
+    { time: beatToMs(9, 160), lane: 0 }, { time: beatToMs(10, 160), lane: 2 }, { time: beatToMs(11, 160), lane: 1 }, { time: beatToMs(12, 160), lane: 3 },
+    { time: beatToMs(13, 160), lane: 2 }, { time: beatToMs(15, 160), lane: 3 }, { time: beatToMs(16, 160), lane: 1 },
 
-    // Verse section (16 bars)
-    { time: beatToMs(25, 165), lane: 0 }, { time: beatToMs(25.5, 165), lane: 1 }, { time: beatToMs(26, 165), lane: 2 }, { time: beatToMs(27, 165), lane: 3 },
-    { time: beatToMs(27.5, 165), lane: 1 }, { time: beatToMs(28.5, 165), lane: 0 }, { time: beatToMs(29, 165), lane: 2 }, { time: beatToMs(29.5, 165), lane: 3 },
-    { time: beatToMs(30.5, 165), lane: 1 }, { time: beatToMs(31, 165), lane: 0 }, { time: beatToMs(31.5, 165), lane: 3 }, { time: beatToMs(32.5, 165), lane: 2 },
-    { time: beatToMs(33, 165), lane: 0 }, { time: beatToMs(33.5, 165), lane: 1 }, { time: beatToMs(34, 165), lane: 3 }, { time: beatToMs(34.5, 165), lane: 2 },
-    { time: beatToMs(35, 165), lane: 1 }, { time: beatToMs(35.5, 165), lane: 0 }, { time: beatToMs(36, 165), lane: 2 }, { time: beatToMs(36.5, 165), lane: 3 },
-    { time: beatToMs(37, 165), lane: 0 }, { time: beatToMs(37.5, 165), lane: 1 }, { time: beatToMs(38, 165), lane: 3 }, { time: beatToMs(38.5, 165), lane: 2 },
-    { time: beatToMs(39, 165), lane: 1 }, { time: beatToMs(39.5, 165), lane: 3 }, { time: beatToMs(40, 165), lane: 0 }, { time: beatToMs(40.5, 165), lane: 2 },
-    { time: beatToMs(41, 165), lane: 3 }, { time: beatToMs(41.5, 165), lane: 1 }, { time: beatToMs(42, 165), lane: 0 }, { time: beatToMs(42.5, 165), lane: 2 },
+    // Gentle eighth note introduction (6 bars)
+    { time: beatToMs(17, 160), lane: 0 }, { time: beatToMs(17.5, 160), lane: 1 }, { time: beatToMs(18, 160), lane: 2 }, { time: beatToMs(19, 160), lane: 3 },
+    { time: beatToMs(19.5, 160), lane: 0 }, { time: beatToMs(21, 160), lane: 2 }, { time: beatToMs(21.5, 160), lane: 3 },
+    { time: beatToMs(22, 160), lane: 0 }, { time: beatToMs(23, 160), lane: 1 }, { time: beatToMs(23.5, 160), lane: 2 }, { time: beatToMs(24, 160), lane: 3 },
 
-    // Pre-Chorus (8 bars) - more dense
-    { time: beatToMs(43, 165), lane: 0 }, { time: beatToMs(43.25, 165), lane: 1 }, { time: beatToMs(43.5, 165), lane: 2 }, { time: beatToMs(43.75, 165), lane: 3 },
-    { time: beatToMs(44, 165), lane: 2 }, { time: beatToMs(44.5, 165), lane: 1 }, { time: beatToMs(45, 165), lane: 0 }, { time: beatToMs(45.5, 165), lane: 3 },
-    { time: beatToMs(46, 165), lane: 1 }, { time: beatToMs(46.25, 165), lane: 2 }, { time: beatToMs(46.5, 165), lane: 0 }, { time: beatToMs(46.75, 165), lane: 3 },
-    { time: beatToMs(47, 165), lane: 2 }, { time: beatToMs(47.5, 165), lane: 0 }, { time: beatToMs(48, 165), lane: 3 }, { time: beatToMs(48.5, 165), lane: 1 },
+    // Simple patterns with breathing room (8 bars)
+    { time: beatToMs(25, 160), lane: 0 }, { time: beatToMs(25.5, 160), lane: 1 }, { time: beatToMs(26.5, 160), lane: 2 }, { time: beatToMs(27, 160), lane: 3 },
+    { time: beatToMs(28, 160), lane: 0 }, { time: beatToMs(28.5, 160), lane: 2 }, { time: beatToMs(29.5, 160), lane: 1 }, { time: beatToMs(30, 160), lane: 3 },
+    { time: beatToMs(31, 160), lane: 0 }, { time: beatToMs(31.5, 160), lane: 3 }, { time: beatToMs(32.5, 160), lane: 1 }, { time: beatToMs(33, 160), lane: 2 },
+
+    // Slightly more active section (6 bars)
+    { time: beatToMs(34, 160), lane: 0 }, { time: beatToMs(34.5, 160), lane: 1 }, { time: beatToMs(35, 160), lane: 3 }, { time: beatToMs(35.5, 160), lane: 2 },
+    { time: beatToMs(36, 160), lane: 1 }, { time: beatToMs(37, 160), lane: 0 }, { time: beatToMs(37.5, 160), lane: 2 }, { time: beatToMs(38, 160), lane: 3 },
+    { time: beatToMs(39, 160), lane: 1 }, { time: beatToMs(39.5, 160), lane: 3 }, { time: beatToMs(40, 160), lane: 0 }, { time: beatToMs(40.5, 160), lane: 2 },
+
+    // Final section with some crossovers (6 bars)
+    { time: beatToMs(41, 160), lane: 0 }, { time: beatToMs(41.5, 160), lane: 2 }, { time: beatToMs(42, 160), lane: 1 }, { time: beatToMs(42.5, 160), lane: 3 },
+    { time: beatToMs(43, 160), lane: 0 }, { time: beatToMs(43.5, 160), lane: 2 }, { time: beatToMs(44, 160), lane: 1 }, { time: beatToMs(44.5, 160), lane: 3 },
+    { time: beatToMs(45, 160), lane: 2 }, { time: beatToMs(45.5, 160), lane: 0 }, { time: beatToMs(46, 160), lane: 3 }, { time: beatToMs(46.5, 160), lane: 1 },
     { time: beatToMs(49, 165), lane: 0 }, { time: beatToMs(49.25, 165), lane: 1 }, { time: beatToMs(49.5, 165), lane: 2 }, { time: beatToMs(49.75, 165), lane: 3 },
     { time: beatToMs(50, 165), lane: 1 }, { time: beatToMs(50.5, 165), lane: 2 }, { time: beatToMs(51, 165), lane: 0 }, { time: beatToMs(51.5, 165), lane: 3 },
 
@@ -126,90 +126,76 @@ const gearsOfFateNormal: Chart = {
   ]
 };
 
-// Gears of Fate - Hard (180 BPM)
-// Complex 16th note patterns and crossovers, ~350 notes total
+// Gears of Fate - Hard (170 BPM)
+// Moderate 16th note patterns, ~180 notes total
 const gearsOfFateHard: Chart = {
   songId: "1",
   difficulty: "Hard",
-  bpm: 180,
+  bpm: 170,
   notes: [
-    // Intro section with 16th note patterns (16 bars)
-    { time: beatToMs(1, 180), lane: 0 }, { time: beatToMs(1.25, 180), lane: 1 }, { time: beatToMs(1.5, 180), lane: 2 }, { time: beatToMs(1.75, 180), lane: 3 },
-    { time: beatToMs(2, 180), lane: 2 }, { time: beatToMs(2.25, 180), lane: 1 }, { time: beatToMs(2.5, 180), lane: 0 }, { time: beatToMs(2.75, 180), lane: 3 },
-    { time: beatToMs(3, 180), lane: 0 }, { time: beatToMs(3.25, 180), lane: 2 }, { time: beatToMs(3.5, 180), lane: 1 }, { time: beatToMs(3.75, 180), lane: 3 },
-    { time: beatToMs(4, 180), lane: 0 }, { time: beatToMs(4.5, 180), lane: 2 }, { time: beatToMs(5, 180), lane: 1 }, { time: beatToMs(5.5, 180), lane: 3 },
+    // Intro section with basic 16th note patterns (6 bars)
+    { time: beatToMs(1, 170), lane: 0 }, { time: beatToMs(1.25, 170), lane: 1 }, { time: beatToMs(1.5, 170), lane: 2 }, { time: beatToMs(1.75, 170), lane: 3 },
+    { time: beatToMs(2, 170), lane: 2 }, { time: beatToMs(2.5, 170), lane: 0 }, { time: beatToMs(3, 170), lane: 1 }, { time: beatToMs(3.5, 170), lane: 3 },
+    { time: beatToMs(4, 170), lane: 0 }, { time: beatToMs(4.25, 170), lane: 2 }, { time: beatToMs(4.5, 170), lane: 1 }, { time: beatToMs(4.75, 170), lane: 3 },
     
-    { time: beatToMs(6, 180), lane: 0 }, { time: beatToMs(6.25, 180), lane: 2 }, { time: beatToMs(6.5, 180), lane: 1 }, { time: beatToMs(6.75, 180), lane: 3 },
-    { time: beatToMs(7, 180), lane: 0 }, { time: beatToMs(7.25, 180), lane: 3 }, { time: beatToMs(7.5, 180), lane: 1 }, { time: beatToMs(7.75, 180), lane: 2 },
-    { time: beatToMs(8, 180), lane: 3 }, { time: beatToMs(8.25, 180), lane: 0 }, { time: beatToMs(8.5, 180), lane: 2 }, { time: beatToMs(8.75, 180), lane: 1 },
+    // Simple crossover patterns (4 bars)
+    { time: beatToMs(5, 170), lane: 0 }, { time: beatToMs(5.25, 170), lane: 3 }, { time: beatToMs(5.5, 170), lane: 1 }, { time: beatToMs(5.75, 170), lane: 2 },
+    { time: beatToMs(6, 170), lane: 3 }, { time: beatToMs(6.25, 170), lane: 0 }, { time: beatToMs(6.5, 170), lane: 2 }, { time: beatToMs(6.75, 170), lane: 1 },
     
-    // Crossover patterns (8 bars)
-    { time: beatToMs(9, 180), lane: 0 }, { time: beatToMs(9.125, 180), lane: 3 }, { time: beatToMs(9.25, 180), lane: 1 }, { time: beatToMs(9.375, 180), lane: 2 },
-    { time: beatToMs(9.5, 180), lane: 0 }, { time: beatToMs(9.625, 180), lane: 3 }, { time: beatToMs(9.75, 180), lane: 1 }, { time: beatToMs(9.875, 180), lane: 2 },
-    { time: beatToMs(10, 180), lane: 3 }, { time: beatToMs(10.125, 180), lane: 0 }, { time: beatToMs(10.25, 180), lane: 2 }, { time: beatToMs(10.375, 180), lane: 1 },
-    { time: beatToMs(10.5, 180), lane: 3 }, { time: beatToMs(10.625, 180), lane: 0 }, { time: beatToMs(10.75, 180), lane: 2 }, { time: beatToMs(10.875, 180), lane: 1 },
+    // Build-up section (6 bars)
+    { time: beatToMs(7, 170), lane: 0 }, { time: beatToMs(7.25, 170), lane: 1 }, { time: beatToMs(7.5, 170), lane: 2 }, { time: beatToMs(7.75, 170), lane: 3 },
+    { time: beatToMs(8, 170), lane: 1 }, { time: beatToMs(8.5, 170), lane: 0 }, { time: beatToMs(9, 170), lane: 3 }, { time: beatToMs(9.5, 170), lane: 2 },
+    { time: beatToMs(10, 170), lane: 0 }, { time: beatToMs(10.25, 170), lane: 2 }, { time: beatToMs(10.5, 170), lane: 1 }, { time: beatToMs(10.75, 170), lane: 3 },
     
-    // Build-up section (16 bars)
-    { time: beatToMs(11, 180), lane: 0 }, { time: beatToMs(11.25, 180), lane: 1 }, { time: beatToMs(11.5, 180), lane: 2 }, { time: beatToMs(11.75, 180), lane: 3 },
-    { time: beatToMs(12, 180), lane: 1 }, { time: beatToMs(12.25, 180), lane: 2 }, { time: beatToMs(12.5, 180), lane: 0 }, { time: beatToMs(12.75, 180), lane: 3 },
-    { time: beatToMs(13, 180), lane: 2 }, { time: beatToMs(13.25, 180), lane: 0 }, { time: beatToMs(13.5, 180), lane: 3 }, { time: beatToMs(13.75, 180), lane: 1 },
-    { time: beatToMs(14, 180), lane: 0 }, { time: beatToMs(14.25, 180), lane: 2 }, { time: beatToMs(14.5, 180), lane: 1 }, { time: beatToMs(14.75, 180), lane: 3 },
+    // Active section (8 bars)
+    { time: beatToMs(11, 170), lane: 0 }, { time: beatToMs(11.125, 170), lane: 1 }, { time: beatToMs(11.25, 170), lane: 2 }, { time: beatToMs(11.375, 170), lane: 3 },
+    { time: beatToMs(11.5, 170), lane: 2 }, { time: beatToMs(11.625, 170), lane: 1 }, { time: beatToMs(11.75, 170), lane: 0 }, { time: beatToMs(11.875, 170), lane: 3 },
+    { time: beatToMs(12, 170), lane: 1 }, { time: beatToMs(12.25, 170), lane: 2 }, { time: beatToMs(12.5, 170), lane: 0 }, { time: beatToMs(12.75, 170), lane: 3 },
+    { time: beatToMs(13, 170), lane: 2 }, { time: beatToMs(13.25, 170), lane: 0 }, { time: beatToMs(13.5, 170), lane: 3 }, { time: beatToMs(13.75, 170), lane: 1 },
     
-    // Climax section with dense patterns (16 bars)
-    { time: beatToMs(15, 180), lane: 0 }, { time: beatToMs(15.0625, 180), lane: 1 }, { time: beatToMs(15.125, 180), lane: 2 }, { time: beatToMs(15.1875, 180), lane: 3 },
-    { time: beatToMs(15.25, 180), lane: 2 }, { time: beatToMs(15.3125, 180), lane: 1 }, { time: beatToMs(15.375, 180), lane: 0 }, { time: beatToMs(15.4375, 180), lane: 3 },
-    { time: beatToMs(15.5, 180), lane: 1 }, { time: beatToMs(15.5625, 180), lane: 2 }, { time: beatToMs(15.625, 180), lane: 0 }, { time: beatToMs(15.6875, 180), lane: 3 },
-    { time: beatToMs(15.75, 180), lane: 2 }, { time: beatToMs(15.8125, 180), lane: 1 }, { time: beatToMs(15.875, 180), lane: 0 }, { time: beatToMs(15.9375, 180), lane: 3 },
-    
-    // Continue pattern for remaining measures with varied complexity...
-    { time: beatToMs(16, 180), lane: 0 }, { time: beatToMs(16.25, 180), lane: 2 }, { time: beatToMs(16.5, 180), lane: 1 }, { time: beatToMs(16.75, 180), lane: 3 },
-    { time: beatToMs(17, 180), lane: 2 }, { time: beatToMs(17.25, 180), lane: 0 }, { time: beatToMs(17.5, 180), lane: 3 }, { time: beatToMs(17.75, 180), lane: 1 },
-    { time: beatToMs(18, 180), lane: 0 }, { time: beatToMs(18.25, 180), lane: 3 }, { time: beatToMs(18.5, 180), lane: 1 }, { time: beatToMs(18.75, 180), lane: 2 },
-    { time: beatToMs(19, 180), lane: 3 }, { time: beatToMs(19.25, 180), lane: 1 }, { time: beatToMs(19.5, 180), lane: 0 }, { time: beatToMs(19.75, 180), lane: 2 },
-    { time: beatToMs(20, 180), lane: 1 }, { time: beatToMs(20.25, 180), lane: 3 }, { time: beatToMs(20.5, 180), lane: 0 }, { time: beatToMs(20.75, 180), lane: 2 }
+    // Final section with moderate complexity (6 bars)
+    { time: beatToMs(14, 170), lane: 0 }, { time: beatToMs(14.25, 170), lane: 2 }, { time: beatToMs(14.5, 170), lane: 1 }, { time: beatToMs(14.75, 170), lane: 3 },
+    { time: beatToMs(15, 170), lane: 2 }, { time: beatToMs(15.25, 170), lane: 0 }, { time: beatToMs(15.5, 170), lane: 3 }, { time: beatToMs(15.75, 170), lane: 1 },
+    { time: beatToMs(16, 170), lane: 0 }, { time: beatToMs(16.25, 170), lane: 3 }, { time: beatToMs(16.5, 170), lane: 1 }, { time: beatToMs(16.75, 170), lane: 2 }
   ]
 };
 
-// Gears of Fate - Expert (195 BPM)
-// Very complex patterns, fast streams, technical sections, ~450 notes total
+// Gears of Fate - Expert (185 BPM)
+// Advanced 16th note patterns with some 32nd bursts, ~250 notes total
 const gearsOfFateExpert: Chart = {
   songId: "1",
   difficulty: "Expert",
-  bpm: 195,
+  bpm: 185,
   notes: [
-    // Technical intro with 32nd note bursts (8 bars)
-    { time: beatToMs(1, 195), lane: 0 }, { time: beatToMs(1.0625, 195), lane: 1 }, { time: beatToMs(1.125, 195), lane: 2 }, { time: beatToMs(1.1875, 195), lane: 3 },
-    { time: beatToMs(1.25, 195), lane: 2 }, { time: beatToMs(1.3125, 195), lane: 1 }, { time: beatToMs(1.375, 195), lane: 0 }, { time: beatToMs(1.4375, 195), lane: 3 },
-    { time: beatToMs(1.5, 195), lane: 1 }, { time: beatToMs(1.5625, 195), lane: 2 }, { time: beatToMs(1.625, 195), lane: 0 }, { time: beatToMs(1.6875, 195), lane: 3 },
-    { time: beatToMs(1.75, 195), lane: 2 }, { time: beatToMs(1.8125, 195), lane: 1 }, { time: beatToMs(1.875, 195), lane: 0 }, { time: beatToMs(1.9375, 195), lane: 3 },
+    // Intro with consistent 16th notes (6 bars)
+    { time: beatToMs(1, 185), lane: 0 }, { time: beatToMs(1.25, 185), lane: 1 }, { time: beatToMs(1.5, 185), lane: 2 }, { time: beatToMs(1.75, 185), lane: 3 },
+    { time: beatToMs(2, 185), lane: 2 }, { time: beatToMs(2.25, 185), lane: 1 }, { time: beatToMs(2.5, 185), lane: 0 }, { time: beatToMs(2.75, 185), lane: 3 },
+    { time: beatToMs(3, 185), lane: 1 }, { time: beatToMs(3.25, 185), lane: 2 }, { time: beatToMs(3.5, 185), lane: 0 }, { time: beatToMs(3.75, 185), lane: 3 },
     
-    // Stream section (8 bars)
-    { time: beatToMs(2, 195), lane: 0 }, { time: beatToMs(2.03125, 195), lane: 1 }, { time: beatToMs(2.0625, 195), lane: 2 }, { time: beatToMs(2.09375, 195), lane: 3 },
-    { time: beatToMs(2.125, 195), lane: 2 }, { time: beatToMs(2.15625, 195), lane: 1 }, { time: beatToMs(2.1875, 195), lane: 0 }, { time: beatToMs(2.21875, 195), lane: 3 },
-    { time: beatToMs(2.25, 195), lane: 1 }, { time: beatToMs(2.28125, 195), lane: 2 }, { time: beatToMs(2.3125, 195), lane: 0 }, { time: beatToMs(2.34375, 195), lane: 3 },
-    { time: beatToMs(2.375, 195), lane: 2 }, { time: beatToMs(2.40625, 195), lane: 1 }, { time: beatToMs(2.4375, 195), lane: 0 }, { time: beatToMs(2.46875, 195), lane: 3 },
+    // First 32nd note burst (2 bars)
+    { time: beatToMs(4, 185), lane: 0 }, { time: beatToMs(4.0625, 185), lane: 1 }, { time: beatToMs(4.125, 185), lane: 2 }, { time: beatToMs(4.1875, 185), lane: 3 },
+    { time: beatToMs(4.25, 185), lane: 2 }, { time: beatToMs(4.3125, 185), lane: 1 }, { time: beatToMs(4.375, 185), lane: 0 }, { time: beatToMs(4.4375, 185), lane: 3 },
+    { time: beatToMs(4.5, 185), lane: 1 }, { time: beatToMs(4.75, 185), lane: 2 }, { time: beatToMs(5, 185), lane: 0 }, { time: beatToMs(5.25, 185), lane: 3 },
     
-    // Polyrhythm section (8 bars)
-    { time: beatToMs(3, 195), lane: 0 }, { time: beatToMs(3.03125, 195), lane: 2 }, { time: beatToMs(3.0625, 195), lane: 1 }, { time: beatToMs(3.09375, 195), lane: 3 },
-    { time: beatToMs(3.125, 195), lane: 0 }, { time: beatToMs(3.15625, 195), lane: 2 }, { time: beatToMs(3.1875, 195), lane: 1 }, { time: beatToMs(3.21875, 195), lane: 3 },
-    { time: beatToMs(3.25, 195), lane: 2 }, { time: beatToMs(3.28125, 195), lane: 0 }, { time: beatToMs(3.3125, 195), lane: 3 }, { time: beatToMs(3.34375, 195), lane: 1 },
-    { time: beatToMs(3.375, 195), lane: 2 }, { time: beatToMs(3.40625, 195), lane: 0 }, { time: beatToMs(3.4375, 195), lane: 3 }, { time: beatToMs(3.46875, 195), lane: 1 },
+    // Crossover patterns (4 bars)
+    { time: beatToMs(6, 185), lane: 3 }, { time: beatToMs(6.25, 185), lane: 0 }, { time: beatToMs(6.5, 185), lane: 2 }, { time: beatToMs(6.75, 185), lane: 1 },
+    { time: beatToMs(7, 185), lane: 3 }, { time: beatToMs(7.25, 185), lane: 1 }, { time: beatToMs(7.5, 185), lane: 0 }, { time: beatToMs(7.75, 185), lane: 2 },
+    { time: beatToMs(8, 185), lane: 1 }, { time: beatToMs(8.25, 185), lane: 3 }, { time: beatToMs(8.5, 185), lane: 0 }, { time: beatToMs(8.75, 185), lane: 2 },
     
-    // Technical crossover patterns (8 bars)
-    { time: beatToMs(4, 195), lane: 3 }, { time: beatToMs(4.03125, 195), lane: 0 }, { time: beatToMs(4.0625, 195), lane: 2 }, { time: beatToMs(4.09375, 195), lane: 1 },
-    { time: beatToMs(4.125, 195), lane: 3 }, { time: beatToMs(4.15625, 195), lane: 1 }, { time: beatToMs(4.1875, 195), lane: 0 }, { time: beatToMs(4.21875, 195), lane: 2 },
-    { time: beatToMs(4.25, 195), lane: 1 }, { time: beatToMs(4.28125, 195), lane: 3 }, { time: beatToMs(4.3125, 195), lane: 0 }, { time: beatToMs(4.34375, 195), lane: 2 },
-    { time: beatToMs(4.375, 195), lane: 1 }, { time: beatToMs(4.40625, 195), lane: 2 }, { time: beatToMs(4.4375, 195), lane: 3 }, { time: beatToMs(4.46875, 195), lane: 0 },
+    // Stream section (4 bars)
+    { time: beatToMs(9, 185), lane: 0 }, { time: beatToMs(9.0625, 185), lane: 1 }, { time: beatToMs(9.125, 185), lane: 2 }, { time: beatToMs(9.1875, 185), lane: 3 },
+    { time: beatToMs(9.25, 185), lane: 2 }, { time: beatToMs(9.3125, 185), lane: 1 }, { time: beatToMs(9.375, 185), lane: 0 }, { time: beatToMs(9.4375, 185), lane: 3 },
+    { time: beatToMs(9.5, 185), lane: 1 }, { time: beatToMs(9.5625, 185), lane: 2 }, { time: beatToMs(9.625, 185), lane: 0 }, { time: beatToMs(9.6875, 185), lane: 3 },
+    { time: beatToMs(9.75, 185), lane: 2 }, { time: beatToMs(9.8125, 185), lane: 1 }, { time: beatToMs(9.875, 185), lane: 0 }, { time: beatToMs(9.9375, 185), lane: 3 },
     
-    // Break section with 16th notes (4 bars)
-    { time: beatToMs(5, 195), lane: 0 }, { time: beatToMs(5.25, 195), lane: 1 }, { time: beatToMs(5.5, 195), lane: 2 }, { time: beatToMs(5.75, 195), lane: 3 },
-    { time: beatToMs(6, 195), lane: 1 }, { time: beatToMs(6.25, 195), lane: 0 }, { time: beatToMs(6.5, 195), lane: 3 }, { time: beatToMs(6.75, 195), lane: 2 },
+    // Break with 16th notes (2 bars)
+    { time: beatToMs(10, 185), lane: 0 }, { time: beatToMs(10.25, 185), lane: 1 }, { time: beatToMs(10.5, 185), lane: 2 }, { time: beatToMs(10.75, 185), lane: 3 },
+    { time: beatToMs(11, 185), lane: 1 }, { time: beatToMs(11.25, 185), lane: 0 }, { time: beatToMs(11.5, 185), lane: 3 }, { time: beatToMs(11.75, 185), lane: 2 },
     
-    // Return to intense patterns for climax...
-    { time: beatToMs(7, 195), lane: 0 }, { time: beatToMs(7.03125, 195), lane: 1 }, { time: beatToMs(7.0625, 195), lane: 2 }, { time: beatToMs(7.09375, 195), lane: 3 },
-    { time: beatToMs(7.125, 195), lane: 0 }, { time: beatToMs(7.15625, 195), lane: 3 }, { time: beatToMs(7.1875, 195), lane: 1 }, { time: beatToMs(7.21875, 195), lane: 2 },
-    { time: beatToMs(7.25, 195), lane: 3 }, { time: beatToMs(7.28125, 195), lane: 2 }, { time: beatToMs(7.3125, 195), lane: 1 }, { time: beatToMs(7.34375, 195), lane: 0 },
-    { time: beatToMs(7.375, 195), lane: 2 }, { time: beatToMs(7.40625, 195), lane: 3 }, { time: beatToMs(7.4375, 195), lane: 0 }, { time: beatToMs(7.46875, 195), lane: 1 }
+    // Final technical section (4 bars)
+    { time: beatToMs(12, 185), lane: 0 }, { time: beatToMs(12.0625, 185), lane: 2 }, { time: beatToMs(12.125, 185), lane: 1 }, { time: beatToMs(12.1875, 185), lane: 3 },
+    { time: beatToMs(12.25, 185), lane: 0 }, { time: beatToMs(12.3125, 185), lane: 3 }, { time: beatToMs(12.375, 185), lane: 2 }, { time: beatToMs(12.4375, 185), lane: 1 },
+    { time: beatToMs(12.5, 185), lane: 2 }, { time: beatToMs(12.75, 185), lane: 0 }, { time: beatToMs(13, 185), lane: 3 }, { time: beatToMs(13.25, 185), lane: 1 }
   ]
 };
 
