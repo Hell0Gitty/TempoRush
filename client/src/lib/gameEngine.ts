@@ -98,8 +98,7 @@ export class GameEngine {
     );
 
     if (notesInLane.length === 0) {
-      // Miss - no notes to hit
-      audioState.playHit();
+      // Miss - no notes to hit (no sound for cleaner experience)
       return;
     }
 
@@ -114,15 +113,15 @@ export class GameEngine {
     let timing: 'perfect' | 'good' | 'miss';
     if (distance <= 30) {
       timing = 'perfect';
-      audioState.playSuccess();
+      audioState.playSuccess(); // Keep the satisfying "ding" for perfect hits
       this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffd700');
     } else if (distance <= 60) {
       timing = 'good';
-      audioState.playHit();
+      // No sound for good hits - cleaner experience
       this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffffff');
     } else {
       timing = 'miss';
-      audioState.playHit();
+      // No sound for misses - less punishing
     }
 
     state.hitNote(closestNote.id, timing);
