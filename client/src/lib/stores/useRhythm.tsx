@@ -36,6 +36,7 @@ interface RhythmState {
     healthFreeze?: { endTime: number };
     scoreBoost?: { endTime: number; multiplier: number };
   };
+  abilityVoiceLine: string | null; // Current ability voice line
   
   // Actions
   addNote: (note: Note) => void;
@@ -49,6 +50,7 @@ interface RhythmState {
   showSpeedFeedback: (multiplier: number) => void;
   activateAbility: (abilityType: string) => void;
   updateActiveAbilities: () => void;
+  clearAbilityVoiceLine: () => void;
 }
 
 export const useRhythm = create<RhythmState>()(
@@ -68,6 +70,7 @@ export const useRhythm = create<RhythmState>()(
     speedFeedback: { visible: false, multiplier: 1.0 },
     abilityUses: {},
     activeAbilities: {},
+    abilityVoiceLine: null,
 
     addNote: (note) => {
       set((state) => ({
@@ -248,7 +251,8 @@ export const useRhythm = create<RhythmState>()(
         flashIntensity: 0,
         speedFeedback: { visible: false, multiplier: 1.0 },
         abilityUses: initialAbilityUses,
-        activeAbilities: {}
+        activeAbilities: {},
+        abilityVoiceLine: null
       });
     },
 
@@ -288,6 +292,16 @@ export const useRhythm = create<RhythmState>()(
         
         const newActiveAbilities = { ...state.activeAbilities };
         
+        // Character-specific voice lines
+        const abilityVoiceLines = {
+          winter: "I'll save you.",
+          scal: "Hiyah! Go, my snakes!",
+          ivy: "Ha! We got this!",
+          lightren: "Let me light the way."
+        };
+        
+        const voiceLine = abilityVoiceLines[character.id as keyof typeof abilityVoiceLines] || "";
+        
         if (abilityType === 'health_freeze' && character.ability.duration) {
           newActiveAbilities.healthFreeze = {
             endTime: Date.now() + character.ability.duration * 1000
@@ -301,10 +315,16 @@ export const useRhythm = create<RhythmState>()(
           console.log(`Score boost activated: ${character.ability.value}x for ${character.ability.duration} seconds`);
         }
         
+        // Auto-clear voice line after 2 seconds
+        setTimeout(() => {
+          set((s) => ({ ...s, abilityVoiceLine: null }));
+        }, 2000);
+        
         return {
           ...state,
           abilityUses: newAbilityUses,
-          activeAbilities: newActiveAbilities
+          activeAbilities: newActiveAbilities,
+          abilityVoiceLine: voiceLine
         };
       });
     },
@@ -326,6 +346,10 @@ export const useRhythm = create<RhythmState>()(
         
         return { ...state, activeAbilities: newActiveAbilities };
       });
+    },
+
+    clearAbilityVoiceLine: () => {
+      set({ abilityVoiceLine: null });
     }
   }))
 );

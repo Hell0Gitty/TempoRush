@@ -8,7 +8,7 @@ interface GameUIProps {
 }
 
 export default function GameUI({ onPause }: GameUIProps) {
-  const { score, combo, accuracy, health, abilityUses, activeAbilities, activateAbility, updateActiveAbilities } = useRhythm();
+  const { score, combo, accuracy, health, abilityUses, activeAbilities, abilityVoiceLine, activateAbility, updateActiveAbilities, clearAbilityVoiceLine } = useRhythm();
   const { toggleMute, isMuted } = useAudio();
   const { selectedSong, selectedCharacter } = useGame();
 
@@ -20,12 +20,12 @@ export default function GameUI({ onPause }: GameUIProps) {
     return () => clearInterval(interval);
   }, [updateActiveAbilities]);
 
-  // Handle ability activation (Q key for Winter/Lightren abilities)
+  // Handle ability activation (Return key for Winter/Lightren abilities)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedCharacter) return;
       
-      if (e.key.toLowerCase() === 'q') {
+      if (e.key === 'Enter') {
         const abilityType = selectedCharacter.ability.type;
         if ((abilityType === 'health_freeze' || abilityType === 'score_boost') && 
             (abilityUses[abilityType] || 0) > 0) {
@@ -133,7 +133,7 @@ export default function GameUI({ onPause }: GameUIProps) {
                     : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                Q - Activate ({abilityUses[selectedCharacter.ability.type] || 0} left)
+                Enter - Activate ({abilityUses[selectedCharacter.ability.type] || 0} left)
               </button>
               
               {selectedCharacter.ability.type === 'score_boost' && activeAbilities.scoreBoost && (
@@ -175,6 +175,25 @@ export default function GameUI({ onPause }: GameUIProps) {
           ))}
         </div>
       </div>
+
+      {/* Ability Voice Line */}
+      {abilityVoiceLine && selectedCharacter && (
+        <div className="absolute bottom-28 left-1/2 transform -translate-x-1/2 pointer-events-none">
+          <div className="bg-black/80 backdrop-blur-sm rounded-lg p-4 flex items-center gap-3 animate-bounce">
+            <img 
+              src={selectedCharacter.image} 
+              alt={selectedCharacter.name}
+              className="w-8 h-8 rounded object-cover"
+              style={{
+                filter: 'contrast(1.1) brightness(1.1)'
+              }}
+            />
+            <div className="text-white font-bold text-lg">
+              "{abilityVoiceLine}"
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
