@@ -143,27 +143,32 @@ export class GameEngine {
   }
 
   private generateNote() {
+    if (this.startTime === 0) return; // Wait for game to properly start
+    
     const currentTime = (this.lastTime || 0) - this.startTime;
     
     // Check if we have more notes to spawn from the chart
     while (this.nextNoteIndex < this.chartNotes.length) {
       const chartNote = this.chartNotes[this.nextNoteIndex];
       
-      // Check if it's time to spawn this note (with lead time for it to fall to hit zone)
-      const leadTime = (this.hitZoneY + 50) / this.noteSpeed * 1000; // Time for note to reach hit zone
+      // Calculate lead time based on note speed and distance
+      const fallDistance = this.hitZoneY + 50; // Distance note needs to fall
+      const leadTime = (fallDistance / this.noteSpeed) * 1000; // Convert to milliseconds
       const spawnTime = chartNote.time - leadTime;
       
       if (currentTime >= spawnTime) {
         const note: Note = {
-          id: `note-${chartNote.time}-${chartNote.lane}`,
+          id: `note-${this.nextNoteIndex}-${chartNote.time}`,
           lane: chartNote.lane,
           y: -50,
-          time: chartNote.time,
+          time: currentTime + leadTime, // When this note should be hit
           hit: false
         };
 
         useRhythm.getState().addNote(note);
         this.nextNoteIndex++;
+        
+        console.log(`Spawned note ${this.nextNoteIndex}/${this.chartNotes.length} for lane ${chartNote.lane} at ${currentTime.toFixed(0)}ms`);
       } else {
         break; // No more notes ready to spawn yet
       }
