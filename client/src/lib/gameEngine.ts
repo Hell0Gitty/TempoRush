@@ -377,36 +377,49 @@ export class GameEngine {
     const gameState = useGame.getState();
     
     const updatedNotes = state.notes.filter(note => {
-      if (note.hit && !note.isHold) {
-        // Remove regular hit notes after a short delay
-        return false;
-      }
-      
-      if (note.hit && note.isHold) {
-        // Keep hold notes visible until they're completely finished
+      // Don't move or check hit notes anymore - they stay in place briefly
+      if (note.hit) {
+        // Keep hit notes visible for a short time for visual feedback
+        if (!note.hitTime) {
+          note.hitTime = Date.now();
+        }
+        
+        // Remove hit notes after 200ms for visual feedback
+        const timeSinceHit = Date.now() - (note.hitTime || 0);
+        if (timeSinceHit > 200) {
+          return false;
+        }
         return true;
       }
 
       // Move note down using global speed multiplier
-      const gameState = useGame.getState();
       const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier;
       note.y += currentSpeed * (deltaTime / 1000);
 
       // Check if note passed the judgment line without being hit
-      if (note.y > this.hitZoneY + 60) {
-        // This is a proper miss - reset combo and affect health
+      if (note.y > this.hitZoneY + 100) {
+        // This is a proper miss - mark it as hit first to avoid double processing
+        note.hit = true;
+        note.hitTime = Date.now();
+        
+        // Process the miss
         if (note.isHold) {
           state.endHoldNote(note.id, 'miss');
         } else {
           state.hitNote(note.id, 'miss');
         }
-        return false;
+        
+        // Keep the note for visual feedback but mark as hit
+        return true;
       }
 
       return true;
     });
 
-    state.updateNotes(updatedNotes);
+    // Only update if the array actually changed
+    if (updatedNotes.length !== state.notes.length) {
+      state.updateNotes(updatedNotes);
+    }
 
     // Check if health is depleted
     if (state.health <= 0) {

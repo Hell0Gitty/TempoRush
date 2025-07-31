@@ -7,6 +7,7 @@ export interface Note {
   y: number;
   time: number;
   hit: boolean;
+  hitTime?: number; // When the note was hit (for visual feedback timing)
   isHold?: boolean;
   holdDuration?: number; // Duration in milliseconds
   holdStartTime?: number; // When the hold started being pressed
@@ -65,7 +66,7 @@ export const useRhythm = create<RhythmState>()(
     hitNote: (noteId, timing) => {
       set((state) => {
         const newNotes = state.notes.map(note => 
-          note.id === noteId ? { ...note, hit: true } : note
+          note.id === noteId ? { ...note, hit: true, hitTime: Date.now() } : note
         );
 
         let scoreIncrease = 0;
