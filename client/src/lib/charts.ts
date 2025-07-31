@@ -156,7 +156,45 @@ const gearsOfFateHard: Chart = {
     // Final section with moderate complexity (6 bars)
     { time: beatToMs(14, 170), lane: 0 }, { time: beatToMs(14.25, 170), lane: 2 }, { time: beatToMs(14.5, 170), lane: 1 }, { time: beatToMs(14.75, 170), lane: 3 },
     { time: beatToMs(15, 170), lane: 2 }, { time: beatToMs(15.25, 170), lane: 0 }, { time: beatToMs(15.5, 170), lane: 3 }, { time: beatToMs(15.75, 170), lane: 1 },
-    { time: beatToMs(16, 170), lane: 0 }, { time: beatToMs(16.25, 170), lane: 3 }, { time: beatToMs(16.5, 170), lane: 1 }, { time: beatToMs(16.75, 170), lane: 2 }
+    { time: beatToMs(16, 170), lane: 0 }, { time: beatToMs(16.25, 170), lane: 3 }, { time: beatToMs(16.5, 170), lane: 1 }, { time: beatToMs(16.75, 170), lane: 2 },
+
+    // Extended section for full song (continuing patterns)
+    { time: beatToMs(17, 170), lane: 0 }, { time: beatToMs(17.25, 170), lane: 1 }, { time: beatToMs(17.5, 170), lane: 2 }, { time: beatToMs(17.75, 170), lane: 3 },
+    { time: beatToMs(18, 170), lane: 2 }, { time: beatToMs(18.25, 170), lane: 1 }, { time: beatToMs(18.5, 170), lane: 0 }, { time: beatToMs(18.75, 170), lane: 3 },
+    { time: beatToMs(19, 170), lane: 1 }, { time: beatToMs(19.25, 170), lane: 2 }, { time: beatToMs(19.5, 170), lane: 0 }, { time: beatToMs(19.75, 170), lane: 3 },
+    { time: beatToMs(20, 170), lane: 2 }, { time: beatToMs(20.25, 170), lane: 0 }, { time: beatToMs(20.5, 170), lane: 3 }, { time: beatToMs(20.75, 170), lane: 1 },
+
+    // Verse 2 patterns (8 bars)
+    { time: beatToMs(21, 170), lane: 0 }, { time: beatToMs(21.25, 170), lane: 2 }, { time: beatToMs(21.5, 170), lane: 1 }, { time: beatToMs(21.75, 170), lane: 3 },
+    { time: beatToMs(22, 170), lane: 0 }, { time: beatToMs(22.25, 170), lane: 3 }, { time: beatToMs(22.5, 170), lane: 2 }, { time: beatToMs(22.75, 170), lane: 1 },
+    { time: beatToMs(23, 170), lane: 3 }, { time: beatToMs(23.25, 170), lane: 0 }, { time: beatToMs(23.5, 170), lane: 1 }, { time: beatToMs(23.75, 170), lane: 2 },
+    { time: beatToMs(24, 170), lane: 1 }, { time: beatToMs(24.25, 170), lane: 3 }, { time: beatToMs(24.5, 170), lane: 0 }, { time: beatToMs(24.75, 170), lane: 2 },
+
+    // Chorus with crossovers (12 bars)
+    { time: beatToMs(25, 170), lane: 0 }, { time: beatToMs(25.125, 170), lane: 3 }, { time: beatToMs(25.25, 170), lane: 1 }, { time: beatToMs(25.375, 170), lane: 2 },
+    { time: beatToMs(25.5, 170), lane: 0 }, { time: beatToMs(25.625, 170), lane: 3 }, { time: beatToMs(25.75, 170), lane: 1 }, { time: beatToMs(25.875, 170), lane: 2 },
+    { time: beatToMs(26, 170), lane: 3 }, { time: beatToMs(26.125, 170), lane: 0 }, { time: beatToMs(26.25, 170), lane: 2 }, { time: beatToMs(26.375, 170), lane: 1 },
+    { time: beatToMs(26.5, 170), lane: 3 }, { time: beatToMs(26.625, 170), lane: 0 }, { time: beatToMs(26.75, 170), lane: 2 }, { time: beatToMs(26.875, 170), lane: 1 },
+
+    { time: beatToMs(27, 170), lane: 0 }, { time: beatToMs(27.25, 170), lane: 1 }, { time: beatToMs(27.5, 170), lane: 2 }, { time: beatToMs(27.75, 170), lane: 3 },
+    { time: beatToMs(28, 170), lane: 1 }, { time: beatToMs(28.25, 170), lane: 2 }, { time: beatToMs(28.5, 170), lane: 0 }, { time: beatToMs(28.75, 170), lane: 3 },
+    { time: beatToMs(29, 170), lane: 2 }, { time: beatToMs(29.25, 170), lane: 0 }, { time: beatToMs(29.5, 170), lane: 3 }, { time: beatToMs(29.75, 170), lane: 1 },
+    { time: beatToMs(30, 170), lane: 0 }, { time: beatToMs(30.25, 170), lane: 2 }, { time: beatToMs(30.5, 170), lane: 1 }, { time: beatToMs(30.75, 170), lane: 3 },
+
+    // Bridge section (8 bars)
+    { time: beatToMs(31, 170), lane: 0 }, { time: beatToMs(31.5, 170), lane: 2 }, { time: beatToMs(32, 170), lane: 1 }, { time: beatToMs(32.5, 170), lane: 3 },
+    { time: beatToMs(33, 170), lane: 2 }, { time: beatToMs(33.25, 170), lane: 0 }, { time: beatToMs(33.5, 170), lane: 3 }, { time: beatToMs(33.75, 170), lane: 1 },
+    { time: beatToMs(34, 170), lane: 0 }, { time: beatToMs(34.25, 170), lane: 1 }, { time: beatToMs(34.5, 170), lane: 2 }, { time: beatToMs(34.75, 170), lane: 3 },
+    { time: beatToMs(35, 170), lane: 1 }, { time: beatToMs(35.5, 170), lane: 0 }, { time: beatToMs(36, 170), lane: 3 }, { time: beatToMs(36.5, 170), lane: 2 },
+
+    // Final chorus climax (8 bars)
+    { time: beatToMs(37, 170), lane: 0 }, { time: beatToMs(37.125, 170), lane: 1 }, { time: beatToMs(37.25, 170), lane: 2 }, { time: beatToMs(37.375, 170), lane: 3 },
+    { time: beatToMs(37.5, 170), lane: 2 }, { time: beatToMs(37.625, 170), lane: 1 }, { time: beatToMs(37.75, 170), lane: 0 }, { time: beatToMs(37.875, 170), lane: 3 },
+    { time: beatToMs(38, 170), lane: 1 }, { time: beatToMs(38.125, 170), lane: 2 }, { time: beatToMs(38.25, 170), lane: 0 }, { time: beatToMs(38.375, 170), lane: 3 },
+    { time: beatToMs(38.5, 170), lane: 2 }, { time: beatToMs(38.625, 170), lane: 1 }, { time: beatToMs(38.75, 170), lane: 0 }, { time: beatToMs(38.875, 170), lane: 3 },
+
+    { time: beatToMs(39, 170), lane: 0 }, { time: beatToMs(39.25, 170), lane: 2 }, { time: beatToMs(39.5, 170), lane: 1 }, { time: beatToMs(39.75, 170), lane: 3 },
+    { time: beatToMs(40, 170), lane: 2 }, { time: beatToMs(40.25, 170), lane: 0 }, { time: beatToMs(40.5, 170), lane: 3 }, { time: beatToMs(40.75, 170), lane: 1 }
   ]
 };
 
@@ -195,7 +233,45 @@ const gearsOfFateExpert: Chart = {
     // Final technical section (4 bars)
     { time: beatToMs(12, 185), lane: 0 }, { time: beatToMs(12.0625, 185), lane: 2 }, { time: beatToMs(12.125, 185), lane: 1 }, { time: beatToMs(12.1875, 185), lane: 3 },
     { time: beatToMs(12.25, 185), lane: 0 }, { time: beatToMs(12.3125, 185), lane: 3 }, { time: beatToMs(12.375, 185), lane: 2 }, { time: beatToMs(12.4375, 185), lane: 1 },
-    { time: beatToMs(12.5, 185), lane: 2 }, { time: beatToMs(12.75, 185), lane: 0 }, { time: beatToMs(13, 185), lane: 3 }, { time: beatToMs(13.25, 185), lane: 1 }
+    { time: beatToMs(12.5, 185), lane: 2 }, { time: beatToMs(12.75, 185), lane: 0 }, { time: beatToMs(13, 185), lane: 3 }, { time: beatToMs(13.25, 185), lane: 1 },
+
+    // Extended Expert patterns for full song
+    // Second verse with consistent 16th patterns (8 bars)
+    { time: beatToMs(14, 185), lane: 0 }, { time: beatToMs(14.25, 185), lane: 1 }, { time: beatToMs(14.5, 185), lane: 2 }, { time: beatToMs(14.75, 185), lane: 3 },
+    { time: beatToMs(15, 185), lane: 2 }, { time: beatToMs(15.25, 185), lane: 1 }, { time: beatToMs(15.5, 185), lane: 0 }, { time: beatToMs(15.75, 185), lane: 3 },
+    { time: beatToMs(16, 185), lane: 1 }, { time: beatToMs(16.25, 185), lane: 2 }, { time: beatToMs(16.5, 185), lane: 0 }, { time: beatToMs(16.75, 185), lane: 3 },
+    { time: beatToMs(17, 185), lane: 2 }, { time: beatToMs(17.25, 185), lane: 1 }, { time: beatToMs(17.5, 185), lane: 0 }, { time: beatToMs(17.75, 185), lane: 3 },
+
+    // Advanced crossover section (8 bars)
+    { time: beatToMs(18, 185), lane: 3 }, { time: beatToMs(18.0625, 185), lane: 0 }, { time: beatToMs(18.125, 185), lane: 2 }, { time: beatToMs(18.1875, 185), lane: 1 },
+    { time: beatToMs(18.25, 185), lane: 3 }, { time: beatToMs(18.3125, 185), lane: 1 }, { time: beatToMs(18.375, 185), lane: 0 }, { time: beatToMs(18.4375, 185), lane: 2 },
+    { time: beatToMs(18.5, 185), lane: 1 }, { time: beatToMs(18.5625, 185), lane: 3 }, { time: beatToMs(18.625, 185), lane: 0 }, { time: beatToMs(18.6875, 185), lane: 2 },
+    { time: beatToMs(18.75, 185), lane: 1 }, { time: beatToMs(18.8125, 185), lane: 2 }, { time: beatToMs(18.875, 185), lane: 3 }, { time: beatToMs(18.9375, 185), lane: 0 },
+
+    { time: beatToMs(19, 185), lane: 0 }, { time: beatToMs(19.0625, 185), lane: 2 }, { time: beatToMs(19.125, 185), lane: 1 }, { time: beatToMs(19.1875, 185), lane: 3 },
+    { time: beatToMs(19.25, 185), lane: 0 }, { time: beatToMs(19.3125, 185), lane: 2 }, { time: beatToMs(19.375, 185), lane: 1 }, { time: beatToMs(19.4375, 185), lane: 3 },
+    { time: beatToMs(19.5, 185), lane: 2 }, { time: beatToMs(19.5625, 185), lane: 0 }, { time: beatToMs(19.625, 185), lane: 3 }, { time: beatToMs(19.6875, 185), lane: 1 },
+    { time: beatToMs(19.75, 185), lane: 2 }, { time: beatToMs(19.8125, 185), lane: 0 }, { time: beatToMs(19.875, 185), lane: 3 }, { time: beatToMs(19.9375, 185), lane: 1 },
+
+    // Polyrhythm section (6 bars)
+    { time: beatToMs(20, 185), lane: 0 }, { time: beatToMs(20.03125, 185), lane: 2 }, { time: beatToMs(20.0625, 185), lane: 1 }, { time: beatToMs(20.09375, 185), lane: 3 },
+    { time: beatToMs(20.125, 185), lane: 0 }, { time: beatToMs(20.15625, 185), lane: 2 }, { time: beatToMs(20.1875, 185), lane: 1 }, { time: beatToMs(20.21875, 185), lane: 3 },
+    { time: beatToMs(20.25, 185), lane: 2 }, { time: beatToMs(20.28125, 185), lane: 0 }, { time: beatToMs(20.3125, 185), lane: 3 }, { time: beatToMs(20.34375, 185), lane: 1 },
+    { time: beatToMs(20.375, 185), lane: 2 }, { time: beatToMs(20.40625, 185), lane: 0 }, { time: beatToMs(20.4375, 185), lane: 3 }, { time: beatToMs(20.46875, 185), lane: 1 },
+
+    { time: beatToMs(20.5, 185), lane: 0 }, { time: beatToMs(20.5625, 185), lane: 1 }, { time: beatToMs(20.625, 185), lane: 2 }, { time: beatToMs(20.6875, 185), lane: 3 },
+    { time: beatToMs(20.75, 185), lane: 2 }, { time: beatToMs(20.8125, 185), lane: 1 }, { time: beatToMs(20.875, 185), lane: 0 }, { time: beatToMs(20.9375, 185), lane: 3 },
+    { time: beatToMs(21, 185), lane: 1 }, { time: beatToMs(21.0625, 185), lane: 2 }, { time: beatToMs(21.125, 185), lane: 0 }, { time: beatToMs(21.1875, 185), lane: 3 },
+    { time: beatToMs(21.25, 185), lane: 2 }, { time: beatToMs(21.3125, 185), lane: 1 }, { time: beatToMs(21.375, 185), lane: 0 }, { time: beatToMs(21.4375, 185), lane: 3 },
+
+    // Final climax with dense patterns (6 bars)
+    { time: beatToMs(21.5, 185), lane: 0 }, { time: beatToMs(21.53125, 185), lane: 1 }, { time: beatToMs(21.5625, 185), lane: 2 }, { time: beatToMs(21.59375, 185), lane: 3 },
+    { time: beatToMs(21.625, 185), lane: 2 }, { time: beatToMs(21.65625, 185), lane: 1 }, { time: beatToMs(21.6875, 185), lane: 0 }, { time: beatToMs(21.71875, 185), lane: 3 },
+    { time: beatToMs(21.75, 185), lane: 1 }, { time: beatToMs(21.78125, 185), lane: 3 }, { time: beatToMs(21.8125, 185), lane: 0 }, { time: beatToMs(21.84375, 185), lane: 2 },
+    { time: beatToMs(21.875, 185), lane: 3 }, { time: beatToMs(21.90625, 185), lane: 2 }, { time: beatToMs(21.9375, 185), lane: 1 }, { time: beatToMs(21.96875, 185), lane: 0 },
+
+    { time: beatToMs(22, 185), lane: 0 }, { time: beatToMs(22.25, 185), lane: 2 }, { time: beatToMs(22.5, 185), lane: 1 }, { time: beatToMs(22.75, 185), lane: 3 },
+    { time: beatToMs(23, 185), lane: 2 }, { time: beatToMs(23.25, 185), lane: 0 }, { time: beatToMs(23.5, 185), lane: 3 }, { time: beatToMs(23.75, 185), lane: 1 }
   ]
 };
 
@@ -240,7 +316,51 @@ const gearsOfFateMaster: Chart = {
     { time: beatToMs(2.5, 210), lane: 0 }, { time: beatToMs(2.515625, 210), lane: 1 }, { time: beatToMs(2.53125, 210), lane: 2 }, { time: beatToMs(2.546875, 210), lane: 3 },
     { time: beatToMs(2.5625, 210), lane: 2 }, { time: beatToMs(2.578125, 210), lane: 1 }, { time: beatToMs(2.59375, 210), lane: 0 }, { time: beatToMs(2.609375, 210), lane: 3 },
     { time: beatToMs(2.625, 210), lane: 1 }, { time: beatToMs(2.640625, 210), lane: 3 }, { time: beatToMs(2.65625, 210), lane: 0 }, { time: beatToMs(2.671875, 210), lane: 2 },
-    { time: beatToMs(2.6875, 210), lane: 3 }, { time: beatToMs(2.703125, 210), lane: 2 }, { time: beatToMs(2.71875, 210), lane: 1 }, { time: beatToMs(2.734375, 210), lane: 0 }
+    { time: beatToMs(2.6875, 210), lane: 3 }, { time: beatToMs(2.703125, 210), lane: 2 }, { time: beatToMs(2.71875, 210), lane: 1 }, { time: beatToMs(2.734375, 210), lane: 0 },
+
+    // Extended Master difficulty for full song - the ultimate challenge
+    // Verse 2 with insane 64th note streams (8 bars)
+    { time: beatToMs(3, 210), lane: 0 }, { time: beatToMs(3.015625, 210), lane: 1 }, { time: beatToMs(3.03125, 210), lane: 2 }, { time: beatToMs(3.046875, 210), lane: 3 },
+    { time: beatToMs(3.0625, 210), lane: 2 }, { time: beatToMs(3.078125, 210), lane: 1 }, { time: beatToMs(3.09375, 210), lane: 0 }, { time: beatToMs(3.109375, 210), lane: 3 },
+    { time: beatToMs(3.125, 210), lane: 1 }, { time: beatToMs(3.140625, 210), lane: 2 }, { time: beatToMs(3.15625, 210), lane: 0 }, { time: beatToMs(3.171875, 210), lane: 3 },
+    { time: beatToMs(3.1875, 210), lane: 2 }, { time: beatToMs(3.203125, 210), lane: 1 }, { time: beatToMs(3.21875, 210), lane: 0 }, { time: beatToMs(3.234375, 210), lane: 3 },
+
+    { time: beatToMs(3.25, 210), lane: 0 }, { time: beatToMs(3.265625, 210), lane: 1 }, { time: beatToMs(3.28125, 210), lane: 2 }, { time: beatToMs(3.296875, 210), lane: 3 },
+    { time: beatToMs(3.3125, 210), lane: 2 }, { time: beatToMs(3.328125, 210), lane: 1 }, { time: beatToMs(3.34375, 210), lane: 0 }, { time: beatToMs(3.359375, 210), lane: 3 },
+    { time: beatToMs(3.375, 210), lane: 1 }, { time: beatToMs(3.390625, 210), lane: 3 }, { time: beatToMs(3.40625, 210), lane: 0 }, { time: beatToMs(3.421875, 210), lane: 2 },
+    { time: beatToMs(3.4375, 210), lane: 3 }, { time: beatToMs(3.453125, 210), lane: 2 }, { time: beatToMs(3.46875, 210), lane: 1 }, { time: beatToMs(3.484375, 210), lane: 0 },
+
+    // Extreme polyrhythm section (6 bars)
+    { time: beatToMs(3.5, 210), lane: 0 }, { time: beatToMs(3.515625, 210), lane: 2 }, { time: beatToMs(3.53125, 210), lane: 1 }, { time: beatToMs(3.546875, 210), lane: 3 },
+    { time: beatToMs(3.5625, 210), lane: 0 }, { time: beatToMs(3.578125, 210), lane: 3 }, { time: beatToMs(3.59375, 210), lane: 2 }, { time: beatToMs(3.609375, 210), lane: 1 },
+    { time: beatToMs(3.625, 210), lane: 2 }, { time: beatToMs(3.640625, 210), lane: 0 }, { time: beatToMs(3.65625, 210), lane: 3 }, { time: beatToMs(3.671875, 210), lane: 1 },
+    { time: beatToMs(3.6875, 210), lane: 2 }, { time: beatToMs(3.703125, 210), lane: 1 }, { time: beatToMs(3.71875, 210), lane: 0 }, { time: beatToMs(3.734375, 210), lane: 3 },
+
+    // Technical crossovers with extreme jumps (8 bars)
+    { time: beatToMs(3.75, 210), lane: 3 }, { time: beatToMs(3.765625, 210), lane: 0 }, { time: beatToMs(3.78125, 210), lane: 2 }, { time: beatToMs(3.796875, 210), lane: 1 },
+    { time: beatToMs(3.8125, 210), lane: 3 }, { time: beatToMs(3.828125, 210), lane: 1 }, { time: beatToMs(3.84375, 210), lane: 0 }, { time: beatToMs(3.859375, 210), lane: 2 },
+    { time: beatToMs(3.875, 210), lane: 1 }, { time: beatToMs(3.890625, 210), lane: 3 }, { time: beatToMs(3.90625, 210), lane: 0 }, { time: beatToMs(3.921875, 210), lane: 2 },
+    { time: beatToMs(3.9375, 210), lane: 1 }, { time: beatToMs(3.953125, 210), lane: 2 }, { time: beatToMs(3.96875, 210), lane: 3 }, { time: beatToMs(3.984375, 210), lane: 0 },
+
+    { time: beatToMs(4, 210), lane: 0 }, { time: beatToMs(4.015625, 210), lane: 2 }, { time: beatToMs(4.03125, 210), lane: 1 }, { time: beatToMs(4.046875, 210), lane: 3 },
+    { time: beatToMs(4.0625, 210), lane: 0 }, { time: beatToMs(4.078125, 210), lane: 3 }, { time: beatToMs(4.09375, 210), lane: 2 }, { time: beatToMs(4.109375, 210), lane: 1 },
+    { time: beatToMs(4.125, 210), lane: 2 }, { time: beatToMs(4.140625, 210), lane: 0 }, { time: beatToMs(4.15625, 210), lane: 3 }, { time: beatToMs(4.171875, 210), lane: 1 },
+    { time: beatToMs(4.1875, 210), lane: 2 }, { time: beatToMs(4.203125, 210), lane: 1 }, { time: beatToMs(4.21875, 210), lane: 0 }, { time: beatToMs(4.234375, 210), lane: 3 },
+
+    // Break with 32nd notes for breathing (2 bars)
+    { time: beatToMs(4.25, 210), lane: 0 }, { time: beatToMs(4.28125, 210), lane: 1 }, { time: beatToMs(4.3125, 210), lane: 2 }, { time: beatToMs(4.34375, 210), lane: 3 },
+    { time: beatToMs(4.375, 210), lane: 1 }, { time: beatToMs(4.40625, 210), lane: 0 }, { time: beatToMs(4.4375, 210), lane: 3 }, { time: beatToMs(4.46875, 210), lane: 2 },
+
+    // Final climax - ultimate challenge (4 bars)
+    { time: beatToMs(4.5, 210), lane: 0 }, { time: beatToMs(4.515625, 210), lane: 1 }, { time: beatToMs(4.53125, 210), lane: 2 }, { time: beatToMs(4.546875, 210), lane: 3 },
+    { time: beatToMs(4.5625, 210), lane: 2 }, { time: beatToMs(4.578125, 210), lane: 1 }, { time: beatToMs(4.59375, 210), lane: 0 }, { time: beatToMs(4.609375, 210), lane: 3 },
+    { time: beatToMs(4.625, 210), lane: 1 }, { time: beatToMs(4.640625, 210), lane: 3 }, { time: beatToMs(4.65625, 210), lane: 0 }, { time: beatToMs(4.671875, 210), lane: 2 },
+    { time: beatToMs(4.6875, 210), lane: 3 }, { time: beatToMs(4.703125, 210), lane: 2 }, { time: beatToMs(4.71875, 210), lane: 1 }, { time: beatToMs(4.734375, 210), lane: 0 },
+
+    { time: beatToMs(4.75, 210), lane: 0 }, { time: beatToMs(4.765625, 210), lane: 2 }, { time: beatToMs(4.78125, 210), lane: 1 }, { time: beatToMs(4.796875, 210), lane: 3 },
+    { time: beatToMs(4.8125, 210), lane: 0 }, { time: beatToMs(4.828125, 210), lane: 3 }, { time: beatToMs(4.84375, 210), lane: 1 }, { time: beatToMs(4.859375, 210), lane: 2 },
+    { time: beatToMs(4.875, 210), lane: 3 }, { time: beatToMs(4.890625, 210), lane: 1 }, { time: beatToMs(4.90625, 210), lane: 0 }, { time: beatToMs(4.921875, 210), lane: 2 },
+    { time: beatToMs(4.9375, 210), lane: 1 }, { time: beatToMs(4.953125, 210), lane: 0 }, { time: beatToMs(4.96875, 210), lane: 3 }, { time: beatToMs(4.984375, 210), lane: 2 }
   ]
 };
 
