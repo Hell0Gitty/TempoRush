@@ -15,6 +15,9 @@ export default function Game() {
     if (phase === 'playing' && !gameEngineRef.current) {
       gameEngineRef.current = new GameEngine();
       gameEngineRef.current.start();
+    } else if (phase !== 'playing' && gameEngineRef.current) {
+      gameEngineRef.current.stop();
+      gameEngineRef.current = null;
     }
 
     return () => {

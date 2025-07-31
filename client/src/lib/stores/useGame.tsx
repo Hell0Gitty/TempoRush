@@ -66,6 +66,7 @@ export const useGame = create<GameState>()(
       set((state) => {
         // Only transition from songSelect to playing
         if (state.phase === "songSelect" && state.selectedSong) {
+          console.log("Game phase changed from songSelect to playing");
           return { phase: "playing" };
         }
         return {};
@@ -73,6 +74,7 @@ export const useGame = create<GameState>()(
     },
     
     restart: () => {
+      console.log("Game phase changed to ready (restart)");
       set(() => ({ phase: "ready", selectedSong: null }));
     },
     
@@ -80,6 +82,7 @@ export const useGame = create<GameState>()(
       set((state) => {
         // Only transition from playing to ended
         if (state.phase === "playing") {
+          console.log("Game phase changed from playing to ended");
           return { phase: "ended" };
         }
         return {};

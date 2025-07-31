@@ -389,7 +389,10 @@ export class GameEngine {
   private lastTime?: number;
 
   start() {
-    if (this.animationId) return;
+    if (this.animationId) {
+      console.log("GameEngine already running, ignoring duplicate start call");
+      return;
+    }
     
     // Load chart data based on selected song and difficulty
     const gameState = useGame.getState();
