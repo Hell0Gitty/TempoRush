@@ -59,8 +59,8 @@ export default function Game() {
       saveHighScore(highScoreData);
       scoresSavedRef.current = true;
       
-      // Determine if song was completed or failed
-      const gameResult = health > 0 ? 'complete' : 'failed';
+      // Determine if song was completed or failed based on grade (C or above is pass)
+      const gameResult = health > 0 && accuracy >= 70 ? 'complete' : 'failed';
       setVoiceLineResult(gameResult);
       
       // Get random voice line for results

@@ -23,7 +23,12 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
     if (accuracy >= 95) return 'text-green-300';
     if (accuracy >= 85) return 'text-blue-300';
     if (accuracy >= 70) return 'text-orange-300';
+    if (accuracy >= 60) return 'text-yellow-500';
     return 'text-red-300';
+  };
+
+  const isPass = () => {
+    return health > 0 && accuracy >= 70; // B grade or above with health remaining
   };
 
   const getRankText = () => {
@@ -32,7 +37,8 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
     if (accuracy >= 95) return 'S';
     if (accuracy >= 85) return 'A';
     if (accuracy >= 70) return 'B';
-    return 'C';
+    if (accuracy >= 60) return 'C';
+    return 'D';
   };
 
   return (
@@ -119,11 +125,14 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
 
           {/* Result Status */}
           <div className="text-center mb-8">
-            <div className={`text-2xl font-bold ${gameResult === 'complete' ? 'text-green-400' : 'text-red-400'}`}>
-              {gameResult === 'complete' ? 'SONG COMPLETE!' : 'SONG FAILED'}
+            <div className={`text-2xl font-bold ${isPass() ? 'text-green-400' : 'text-red-400'}`}>
+              {isPass() ? 'SONG CLEAR!' : 'SONG FAILED'}
             </div>
-            {gameResult === 'complete' && health > 0 && (
-              <div className="text-lg opacity-80 mt-2">
+            <div className="text-lg opacity-80 mt-2">
+              {isPass() ? `Grade: ${getRankText()} (${accuracy.toFixed(1)}%) - PASS` : `Grade: ${getRankText()} (${accuracy.toFixed(1)}%) - FAILED`}
+            </div>
+            {health > 0 && (
+              <div className="text-lg opacity-80 mt-1">
                 Remaining Health: {health}%
               </div>
             )}
