@@ -2,6 +2,7 @@ import { useRhythm, Note } from "./stores/useRhythm";
 import { useGame } from "./stores/useGame";
 import { useAudio } from "./stores/useAudio";
 import { AudioEngine } from "./audioEngine";
+import { getChart } from "./charts";
 
 export class GameEngine {
   private canvas: HTMLCanvasElement | null = null;
@@ -15,11 +16,11 @@ export class GameEngine {
   private laneStartX: number = 0;
   private hitZoneY: number = 0;
   private noteSpeed: number = 300; // pixels per second
-  private nextNoteTime: number = 0;
-  private noteInterval: number = 1000; // ms between notes
   private keyStates: { [key: string]: boolean } = {};
   private keyPressedFrames: { [key: string]: number } = {};
   private currentFrame: number = 0;
+  private chartNotes: Array<{time: number, lane: number}> = [];
+  private nextNoteIndex: number = 0;
 
   // Lane colors
   private laneColors = ['#ef4444', '#22c55e', '#3b82f6', '#eab308']; // red, green, blue, yellow
@@ -142,26 +143,29 @@ export class GameEngine {
   }
 
   private generateNote() {
-    const currentTime = Date.now() - this.startTime;
+    const currentTime = (this.lastTime || 0) - this.startTime;
     
-    if (currentTime >= this.nextNoteTime) {
-      const lane = Math.floor(Math.random() * 4);
-      const note: Note = {
-        id: `note-${Date.now()}-${Math.random()}`,
-        lane,
-        y: -50,
-        time: currentTime,
-        hit: false
-      };
+    // Check if we have more notes to spawn from the chart
+    while (this.nextNoteIndex < this.chartNotes.length) {
+      const chartNote = this.chartNotes[this.nextNoteIndex];
+      
+      // Check if it's time to spawn this note (with lead time for it to fall to hit zone)
+      const leadTime = (this.hitZoneY + 50) / this.noteSpeed * 1000; // Time for note to reach hit zone
+      const spawnTime = chartNote.time - leadTime;
+      
+      if (currentTime >= spawnTime) {
+        const note: Note = {
+          id: `note-${chartNote.time}-${chartNote.lane}`,
+          lane: chartNote.lane,
+          y: -50,
+          time: chartNote.time,
+          hit: false
+        };
 
-      useRhythm.getState().addNote(note);
-      
-      // Schedule next note with some variation
-      this.nextNoteTime = currentTime + this.noteInterval + (Math.random() - 0.5) * 300;
-      
-      // Gradually increase difficulty
-      if (this.noteInterval > 400) {
-        this.noteInterval -= 0.5;
+        useRhythm.getState().addNote(note);
+        this.nextNoteIndex++;
+      } else {
+        break; // No more notes ready to spawn yet
       }
     }
   }
@@ -318,10 +322,21 @@ export class GameEngine {
   start() {
     if (this.animationId) return;
     
-    this.startTime = 0;
+    // Load chart data based on selected song and difficulty
+    const gameState = useGame.getState();
+    if (gameState.selectedSong) {
+      const chart = getChart(gameState.selectedSong.id, gameState.selectedSong.selectedDifficulty.level);
+      if (chart) {
+        this.chartNotes = chart.notes;
+        this.noteSpeed = gameState.selectedSong.selectedDifficulty.noteSpeed;
+        console.log(`Loaded chart for ${gameState.selectedSong.title} - ${gameState.selectedSong.selectedDifficulty.level}: ${this.chartNotes.length} notes`);
+      }
+    }
+    
+    this.startTime = 0; // Will be set in gameLoop
     this.lastTime = undefined;
     this.currentFrame = 0;
-    this.nextNoteTime = 2000; // Start after 2 seconds
+    this.nextNoteIndex = 0;
     
     this.animationId = requestAnimationFrame(this.gameLoop);
   }
