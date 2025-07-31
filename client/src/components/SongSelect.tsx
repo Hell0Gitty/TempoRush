@@ -58,7 +58,7 @@ const AVAILABLE_SONGS = [
 ];
 
 export default function SongSelect() {
-  const { selectSong, start, restart, selectedSong, expertFullCombos } = useGame();
+  const { selectSong, start, restart, selectedSong, expertFullCombos, speedMultiplier, setSpeedMultiplier } = useGame();
   const { isMuted } = useAudio();
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
@@ -201,6 +201,72 @@ export default function SongSelect() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Speed Control */}
+        <div className="mb-8 bg-black/30 backdrop-blur-sm rounded-lg p-6 max-w-md w-full">
+          <h3 className="text-lg font-bold mb-4 text-center">Game Speed</h3>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setSpeedMultiplier(speedMultiplier - 0.1)}
+              disabled={speedMultiplier <= 0.5}
+              className="px-3 py-2 bg-red-600 rounded-lg font-bold hover:bg-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              -
+            </button>
+            
+            <div className="flex-1 text-center">
+              <div className="text-2xl font-bold">{Math.round(speedMultiplier * 100)}%</div>
+              <div className="text-xs opacity-70">Note Speed</div>
+            </div>
+            
+            <button
+              onClick={() => setSpeedMultiplier(speedMultiplier + 0.1)}
+              disabled={speedMultiplier >= 2.0}
+              className="px-3 py-2 bg-green-600 rounded-lg font-bold hover:bg-green-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              +
+            </button>
+          </div>
+          
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => setSpeedMultiplier(0.5)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 0.5 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              50%
+            </button>
+            <button
+              onClick={() => setSpeedMultiplier(0.75)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 0.75 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              75%
+            </button>
+            <button
+              onClick={() => setSpeedMultiplier(1.0)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 1.0 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              100%
+            </button>
+            <button
+              onClick={() => setSpeedMultiplier(1.25)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 1.25 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              125%
+            </button>
+            <button
+              onClick={() => setSpeedMultiplier(1.5)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 1.5 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              150%
+            </button>
+            <button
+              onClick={() => setSpeedMultiplier(2.0)}
+              className={`flex-1 px-2 py-1 text-xs rounded ${speedMultiplier === 2.0 ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'} transition-colors`}
+            >
+              200%
+            </button>
+          </div>
         </div>
 
         <div className="flex gap-4">

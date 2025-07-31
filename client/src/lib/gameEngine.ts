@@ -15,7 +15,7 @@ export class GameEngine {
   private laneWidth: number = 0;
   private laneStartX: number = 0;
   private hitZoneY: number = 0;
-  private noteSpeed: number = 300; // pixels per second
+  private baseNoteSpeed: number = 300; // base pixels per second
   private keyStates: { [key: string]: boolean } = {};
   private keyPressedFrames: { [key: string]: number } = {};
   private activeHolds: { [key: string]: string | null } = {}; // Maps key to note ID
@@ -92,16 +92,7 @@ export class GameEngine {
           this.handleKeyPress(key);
         }
       }
-      // Speed controls
-      else if (key === 'arrowup' || key === '=') {
-        this.adjustSpeed(0.1);
-      }
-      else if (key === 'arrowdown' || key === '-') {
-        this.adjustSpeed(-0.1);
-      }
-      else if (key === '0') {
-        this.resetSpeed();
-      }
+
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
@@ -181,8 +172,6 @@ export class GameEngine {
   }
 
   private useFallbackAnimation = false;
-  private baseNoteSpeed: number = 300; // Base speed from difficulty
-  private speedMultiplier: number = 1.0; // Player-adjustable multiplier (0.5x to 2.0x)
 
   private getFrequencyData(): number[] {
     if (!this.analyser || !this.dataArray) {
@@ -229,27 +218,7 @@ export class GameEngine {
     this.renderBars(frequencyData);
   }
 
-  private adjustSpeed(delta: number) {
-    this.speedMultiplier = Math.max(0.5, Math.min(2.0, this.speedMultiplier + delta));
-    this.noteSpeed = this.baseNoteSpeed * this.speedMultiplier;
-    console.log(`Speed adjusted to ${(this.speedMultiplier * 100).toFixed(0)}% (${this.noteSpeed.toFixed(0)} px/s)`);
-    
-    // Show speed change feedback
-    useRhythm.getState().showSpeedFeedback(this.speedMultiplier);
-  }
 
-  private resetSpeed() {
-    this.speedMultiplier = 1.0;
-    this.noteSpeed = this.baseNoteSpeed;
-    console.log('Speed reset to 100%');
-    
-    // Show speed reset feedback
-    useRhythm.getState().showSpeedFeedback(this.speedMultiplier);
-  }
-
-  getSpeedMultiplier(): number {
-    return this.speedMultiplier;
-  }
 
   private renderBars(barData: number[]) {
     const barWidth = this.width / barData.length;
@@ -375,8 +344,10 @@ export class GameEngine {
       const chartNote = this.chartNotes[this.nextNoteIndex];
       
       // Calculate lead time based on note speed and distance
+      const gameState = useGame.getState();
+      const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier;
       const fallDistance = this.hitZoneY + 50; // Distance note needs to fall
-      const leadTime = (fallDistance / this.noteSpeed) * 1000; // Convert to milliseconds
+      const leadTime = (fallDistance / currentSpeed) * 1000; // Convert to milliseconds
       const spawnTime = chartNote.time - leadTime;
       
       if (currentTime >= spawnTime) {
@@ -416,8 +387,10 @@ export class GameEngine {
         return true;
       }
 
-      // Move note down
-      note.y += this.noteSpeed * (deltaTime / 1000);
+      // Move note down using global speed multiplier
+      const gameState = useGame.getState();
+      const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier;
+      note.y += currentSpeed * (deltaTime / 1000);
 
       // Check if note passed the judgment line without being hit
       if (note.y > this.hitZoneY + 60) {
@@ -622,19 +595,18 @@ export class GameEngine {
       this.ctx!.fillText(key, x, this.height - 30);
     });
 
-    // Draw speed indicator
+    // Draw speed indicator using global multiplier
+    const gameState = useGame.getState();
     this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.9)';
     this.ctx!.font = 'bold 18px Arial';
     this.ctx!.textAlign = 'right';
-    const speedText = `Speed: ${(this.speedMultiplier * 100).toFixed(0)}%`;
+    const speedText = `Speed: ${(gameState.speedMultiplier * 100).toFixed(0)}%`;
     this.ctx!.fillText(speedText, this.width - 20, 40);
     
-    // Draw speed controls hint
+    // Draw controls hint
     this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.6)';
     this.ctx!.font = '14px Arial';
-    this.ctx!.fillText('↑/↓ or +/- to adjust', this.width - 20, 60);
-    this.ctx!.fillText('0 to reset', this.width - 20, 80);
-    this.ctx!.fillText('ESC to pause', this.width - 20, 100);
+    this.ctx!.fillText('ESC to pause', this.width - 20, 60);
   }
 
   private gameLoop = (timestamp: number) => {
@@ -671,7 +643,6 @@ export class GameEngine {
       if (chart) {
         this.chartNotes = chart.notes;
         this.baseNoteSpeed = gameState.selectedSong.selectedDifficulty.noteSpeed;
-        this.noteSpeed = this.baseNoteSpeed * this.speedMultiplier;
         this.setupFlashTriggers(gameState.selectedSong.id);
         console.log(`Loaded chart for ${gameState.selectedSong.title} - ${gameState.selectedSong.selectedDifficulty.level}: ${this.chartNotes.length} notes`);
       }

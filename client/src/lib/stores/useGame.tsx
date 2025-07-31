@@ -27,11 +27,13 @@ interface GameState {
   phase: GamePhase;
   selectedSong: SelectedSong | null;
   expertFullCombos: string[]; // Track songs with expert full combos to unlock Master
+  speedMultiplier: number; // Global speed multiplier (0.5 to 2.0)
   
   // Actions
   showSongSelect: () => void;
   selectSong: (song: Song, difficulty: SongDifficulty) => void;
   unlockMaster: (songId: string) => void;
+  setSpeedMultiplier: (multiplier: number) => void;
   start: () => void;
   pause: () => void;
   resume: () => void;
@@ -44,6 +46,7 @@ export const useGame = create<GameState>()(
     phase: "ready",
     selectedSong: null,
     expertFullCombos: [],
+    speedMultiplier: 1.0,
     
     showSongSelect: () => {
       set(() => ({ phase: "songSelect" }));
@@ -62,6 +65,12 @@ export const useGame = create<GameState>()(
       set((state) => ({
         expertFullCombos: [...state.expertFullCombos, songId]
       }));
+    },
+
+    setSpeedMultiplier: (multiplier) => {
+      const clampedMultiplier = Math.max(0.5, Math.min(2.0, multiplier));
+      set(() => ({ speedMultiplier: clampedMultiplier }));
+      console.log("Speed multiplier set to:", clampedMultiplier);
     },
     
     start: () => {
