@@ -14,7 +14,6 @@
     @apply antialiased bg-background text-foreground;
     font-family: 'Nunito', 'Fredoka', sans-serif !important;
     font-weight: 900 !important;
-    font-stretch: expanded !important;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -25,9 +24,7 @@
   * {
     font-family: 'Nunito', 'Fredoka', sans-serif !important;
     font-weight: 900 !important;
-    font-stretch: expanded !important;
-    transform: scaleX(1.2) !important;
-    letter-spacing: 0.05em !important;
+    text-shadow: 1px 1px 0px rgba(0,0,0,0.5), 2px 2px 0px rgba(0,0,0,0.3) !important;
   }
 }
 
