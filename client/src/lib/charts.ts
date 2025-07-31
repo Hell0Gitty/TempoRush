@@ -541,49 +541,49 @@ const grievousLadyMaster: Chart = {
   notes: generateMasterPatterns(8, 320, 230) // 8 to 320 beats = ~2.8 minutes
 };
 
-// Glacier - Easy (135 BPM)
+// Glacier - Easy (135 BPM) - Full 4:18 duration
 const glacierEasy: Chart = {
   songId: "5",
   difficulty: "Easy",
   bpm: 135,
-  notes: generateEasyPatterns(4, 280, 135) // 4:18 duration
+  notes: generateEasyPatterns(4, 580, 135) // 4:18 duration (580 beats at 135 BPM)
 };
 
-// Glacier - Normal (160 BPM)
+// Glacier - Normal (160 BPM) - Full 4:18 duration
 const glacierNormal: Chart = {
   songId: "5",
   difficulty: "Normal",
   bpm: 160,
-  notes: generateNormalPatterns(4, 250, 160)
+  notes: generateNormalPatterns(4, 688, 160) // 4:18 duration (688 beats at 160 BPM)
 };
 
-// Glacier - Hard (180 BPM)
+// Glacier - Hard (180 BPM) - Full 4:18 duration
 const glacierHard: Chart = {
   songId: "5",
   difficulty: "Hard",
   bpm: 180,
-  notes: generateConsistent16thNotes(4, 420, 180)
+  notes: generateConsistent16thNotes(4, 774, 180) // 4:18 duration (774 beats at 180 BPM)
 };
 
-// Glacier - Expert (200 BPM)
+// Glacier - Expert (200 BPM) - Full 4:18 duration
 const glacierExpert: Chart = {
   songId: "5",
   difficulty: "Expert",
   bpm: 200,
   notes: combineWithHolds(
-    generateExpertPatterns(8, 450, 200),
-    8, 450, 200, 0.12
+    generateExpertPatterns(8, 860, 200), // 4:18 duration (860 beats at 200 BPM)
+    8, 860, 200, 0.12
   )
 };
 
-// Glacier - Master (220 BPM)
+// Glacier - Master (220 BPM) - Full 4:18 duration
 const glacierMaster: Chart = {
   songId: "5",
   difficulty: "Master",
   bpm: 220,
   notes: combineWithHolds(
-    generateMasterPatterns(8, 480, 220),
-    8, 480, 220, 0.15
+    generateMasterPatterns(8, 946, 220), // 4:18 duration (946 beats at 220 BPM)
+    8, 946, 220, 0.15
   )
 };
 
