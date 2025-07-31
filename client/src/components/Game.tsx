@@ -13,6 +13,11 @@ export default function Game() {
   const { resetGame } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
 
+  // Debug logging for phase changes
+  useEffect(() => {
+    console.log("Game component phase changed to:", phase);
+  }, [phase]);
+
   useEffect(() => {
     if (phase === 'playing' && !gameEngineRef.current) {
       gameEngineRef.current = new GameEngine();
@@ -52,7 +57,12 @@ export default function Game() {
       <SpeedFeedback />
       
       {phase === 'paused' && (
-        <PauseMenu onRestart={handleRestart} />
+        <div>
+          <div style={{ position: 'fixed', top: '10px', left: '10px', color: 'yellow', zIndex: 10001 }}>
+            DEBUG: Phase is {phase} - Menu should show
+          </div>
+          <PauseMenu onRestart={handleRestart} />
+        </div>
       )}
       
       {phase === 'ended' && (
