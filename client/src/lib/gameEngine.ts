@@ -348,13 +348,20 @@ export class GameEngine {
       this.ctx!.fillRect(particle.x - 2, particle.y - 2, 4, 4);
     });
 
-    // Draw lane labels at bottom
-    this.ctx!.font = '900 24px Nunito, Fredoka, sans-serif';
+    // Draw lane labels at bottom with extra bold styling
+    this.ctx!.font = '900 28px Nunito, Fredoka, sans-serif';
     this.ctx!.textAlign = 'center';
+    this.ctx!.save();
+    this.ctx!.scale(1.3, 1.0); // Make text wider
     ['A', 'S', 'K', 'L'].forEach((key, i) => {
       this.ctx!.fillStyle = 'white';
-      this.ctx!.fillText(key, this.laneStartX + i * this.laneWidth + this.laneWidth / 2, this.height - 30);
+      this.ctx!.strokeStyle = 'black';
+      this.ctx!.lineWidth = 2;
+      const x = (this.laneStartX + i * this.laneWidth + this.laneWidth / 2) / 1.3; // Adjust for scaling
+      this.ctx!.strokeText(key, x, this.height - 30);
+      this.ctx!.fillText(key, x, this.height - 30);
     });
+    this.ctx!.restore();
   }
 
   private gameLoop = (timestamp: number) => {
