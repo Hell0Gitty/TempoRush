@@ -55,31 +55,41 @@ const generateConsistent16thNotes = (startBeat: number, endBeat: number, bpm: nu
 const generateExpertPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
   const patterns = [
-    [0, 2, 1, 3], // Cross pattern
-    [3, 1, 0, 2], // Reverse cross
-    [0, 3, 2, 1], // Outside-in
-    [1, 2, 3, 0], // Spiral
-    [0, 1, 3, 2], // Skip pattern
-    [2, 0, 1, 3], // Center-out
-    [3, 2, 0, 1], // Descending cross
-    [1, 0, 2, 3]  // Alternating sides
+    [0, 2, 3, 1, 0, 3, 2, 1, 0, 1], // Complex crossover flow
+    [3, 1, 0, 2, 1, 3, 2, 0, 3, 0], // Diamond weave
+    [1, 0, 3, 2, 0, 1, 2, 3, 1, 2], // Alternating spiral
+    [2, 3, 1, 0, 3, 2, 0, 1, 2, 0], // Outside-in cascade
+    [0, 1, 3, 2, 1, 0, 2, 3, 0, 3], // Skip and bounce
+    [3, 0, 2, 1, 0, 3, 1, 2, 3, 2], // Reverse diamond
+    [1, 2, 0, 3, 2, 1, 3, 0, 1, 3], // Center burst flow
+    [2, 0, 1, 3, 0, 2, 3, 1, 2, 1], // Flowing cross
+    [0, 3, 1, 2, 3, 0, 2, 1, 0, 2], // Wave pattern
+    [3, 2, 0, 1, 2, 3, 1, 0, 3, 1]  // Descending weave
   ];
   
   let patternIndex = 0;
   let noteInPattern = 0;
+  let beat = startBeat;
   
-  for (let beat = startBeat; beat < endBeat; beat += 0.5) { // 8th notes for playability
+  while (beat < endBeat) {
     const currentPattern = patterns[patternIndex % patterns.length];
     notes.push({
       time: beatToMs(beat, bpm),
-      lane: currentPattern[noteInPattern % 4]
+      lane: currentPattern[noteInPattern % 10]
     });
     
     noteInPattern++;
-    // Switch patterns every 8 notes
-    if (noteInPattern % 8 === 0) {
+    // Switch patterns every 14 notes for variety
+    if (noteInPattern % 14 === 0) {
       patternIndex++;
       noteInPattern = 0;
+    }
+    
+    // Mix of 8th and 16th notes for Expert challenge
+    if (patternIndex % 4 === 3 && noteInPattern % 6 < 3) {
+      beat += 0.25; // 16th notes for intensity
+    } else {
+      beat += 0.5; // 8th notes for flow
     }
   }
   return notes;
@@ -89,14 +99,16 @@ const generateExpertPatterns = (startBeat: number, endBeat: number, bpm: number)
 const generateMasterPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
   const advancedPatterns = [
-    [0, 3, 1, 2, 3, 0, 2, 1], // Complex crossover
-    [1, 0, 3, 2, 0, 1, 2, 3], // Alternating pairs
-    [2, 1, 0, 3, 1, 2, 3, 0], // Inward spiral
-    [3, 0, 2, 1, 0, 3, 1, 2], // Diamond pattern
-    [0, 2, 3, 1, 2, 0, 1, 3], // Skip and cross
-    [1, 3, 0, 2, 3, 1, 2, 0], // Outside crosses
-    [2, 0, 1, 3, 0, 2, 3, 1], // Center weave
-    [3, 1, 2, 0, 1, 3, 0, 2]  // Corner bounce
+    [0, 3, 1, 2, 3, 0, 2, 1, 0, 1, 3, 2], // Complex crossover cascade
+    [1, 0, 3, 2, 0, 1, 2, 3, 1, 2, 0, 3], // Alternating spiral flow
+    [2, 1, 0, 3, 1, 2, 3, 0, 2, 0, 1, 3], // Inward spiral burst
+    [3, 0, 2, 1, 0, 3, 1, 2, 3, 2, 0, 1], // Diamond weave advanced
+    [0, 2, 3, 1, 2, 0, 1, 3, 0, 3, 2, 1], // Skip and cross complex
+    [1, 3, 0, 2, 3, 1, 2, 0, 1, 0, 3, 2], // Outside crosses flow
+    [2, 0, 1, 3, 0, 2, 3, 1, 2, 1, 0, 3], // Center weave storm
+    [3, 1, 2, 0, 1, 3, 0, 2, 3, 0, 1, 2], // Corner bounce cascade
+    [0, 1, 3, 0, 2, 1, 3, 2, 0, 3, 1, 0], // Triple cross pattern
+    [2, 3, 0, 1, 3, 2, 1, 0, 2, 0, 3, 1]  // Master finale weave
   ];
   
   let patternIndex = 0;
@@ -107,21 +119,23 @@ const generateMasterPatterns = (startBeat: number, endBeat: number, bpm: number)
     const currentPattern = advancedPatterns[patternIndex % advancedPatterns.length];
     notes.push({
       time: beatToMs(beat, bpm),
-      lane: currentPattern[noteInPattern % 8]
+      lane: currentPattern[noteInPattern % 12]
     });
     
     noteInPattern++;
-    // Switch patterns every 12 notes for master difficulty
-    if (noteInPattern % 12 === 0) {
+    // Switch patterns every 16 notes for master difficulty
+    if (noteInPattern % 16 === 0) {
       patternIndex++;
       noteInPattern = 0;
     }
     
-    // Vary timing: mostly 8th notes with some 16th note bursts
-    if (patternIndex % 3 === 2 && noteInPattern % 4 < 2) {
-      beat += 0.25; // 16th notes for challenge
+    // Advanced timing: mix of 8th, 16th, and triplet feels
+    if (patternIndex % 5 === 4 && noteInPattern % 8 < 4) {
+      beat += 0.25; // 16th note bursts
+    } else if (patternIndex % 7 === 6 && noteInPattern % 6 < 2) {
+      beat += 0.33; // Triplet feel sections
     } else {
-      beat += 0.5; // 8th notes for stability
+      beat += 0.5; // 8th notes for flow
     }
   }
   return notes;
@@ -271,7 +285,7 @@ const anotherMeExpert: Chart = {
   songId: "4",
   difficulty: "Expert",
   bpm: 175,
-  notes: generateExpertPatterns(8, 350, 175) // 8 to 350 beats = ~3.3 minutes
+  notes: generateExpertPatterns(8, 380, 175) // 8 to 380 beats = ~3.6 minutes
 };
 
 // Another Me - Master (190 BPM)
@@ -279,7 +293,7 @@ const anotherMeMaster: Chart = {
   songId: "4",
   difficulty: "Master",
   bpm: 190,
-  notes: generateMasterPatterns(8, 300, 190) // 8 to 300 beats = ~3 minutes
+  notes: generateMasterPatterns(8, 350, 190) // 8 to 350 beats = ~3.3 minutes
 };
 
 // Chart registry
