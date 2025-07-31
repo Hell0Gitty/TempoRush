@@ -184,13 +184,58 @@ const gearsOfFateMaster: Chart = {
   notes: generateMasterPatterns(8, 350, 210) // 8 to 350 beats = ~3 minutes
 };
 
+// Another Me - Easy (140 BPM)
+const anotherMeEasy: Chart = {
+  songId: "4",
+  difficulty: "Easy",
+  bpm: 140,
+  notes: generateEasyPatterns(4, 240, 140) // 4 to 240 beats = ~3.4 minutes
+};
+
+// Another Me - Normal (150 BPM)
+const anotherMeNormal: Chart = {
+  songId: "4",
+  difficulty: "Normal",
+  bpm: 150,
+  notes: generateNormalPatterns(4, 180, 150) // 4 to 180 beats = ~3 minutes
+};
+
+// Another Me - Hard (160 BPM)
+const anotherMeHard: Chart = {
+  songId: "4",
+  difficulty: "Hard",
+  bpm: 160,
+  notes: generateConsistent16thNotes(4, 400, 160) // 4 to 400 beats = ~3.5 minutes
+};
+
+// Another Me - Expert (175 BPM)
+const anotherMeExpert: Chart = {
+  songId: "4",
+  difficulty: "Expert",
+  bpm: 175,
+  notes: generateExpertPatterns(8, 350, 175) // 8 to 350 beats = ~3.3 minutes
+};
+
+// Another Me - Master (190 BPM)
+const anotherMeMaster: Chart = {
+  songId: "4",
+  difficulty: "Master",
+  bpm: 190,
+  notes: generateMasterPatterns(8, 300, 190) // 8 to 300 beats = ~3 minutes
+};
+
 // Chart registry
 export const CHARTS = new Map<string, Chart>([
   ["1-Easy", gearsOfFateEasy],
   ["1-Normal", gearsOfFateNormal],
   ["1-Hard", gearsOfFateHard],
   ["1-Expert", gearsOfFateExpert],
-  ["1-Master", gearsOfFateMaster]
+  ["1-Master", gearsOfFateMaster],
+  ["4-Easy", anotherMeEasy],
+  ["4-Normal", anotherMeNormal],
+  ["4-Hard", anotherMeHard],
+  ["4-Expert", anotherMeExpert],
+  ["4-Master", anotherMeMaster]
 ]);
 
 export const getChart = (songId: string, difficulty: string): Chart | null => {
