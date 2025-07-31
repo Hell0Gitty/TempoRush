@@ -633,6 +633,52 @@ const luminousEraMaster: Chart = {
   )
 };
 
+// Absolute Queen - Easy (140 BPM)
+const absoluteQueenEasy: Chart = {
+  songId: "7",
+  difficulty: "Easy",
+  bpm: 140,
+  notes: generateEasyPatterns(4, 180, 140) // 2:30 duration
+};
+
+// Absolute Queen - Normal (165 BPM)
+const absoluteQueenNormal: Chart = {
+  songId: "7",
+  difficulty: "Normal",
+  bpm: 165,
+  notes: generateNormalPatterns(4, 160, 165)
+};
+
+// Absolute Queen - Hard (185 BPM)
+const absoluteQueenHard: Chart = {
+  songId: "7",
+  difficulty: "Hard",
+  bpm: 185,
+  notes: generateConsistent16thNotes(4, 280, 185)
+};
+
+// Absolute Queen - Expert (205 BPM)
+const absoluteQueenExpert: Chart = {
+  songId: "7",
+  difficulty: "Expert",
+  bpm: 205,
+  notes: combineWithHolds(
+    generateExpertPatterns(8, 300, 205),
+    8, 300, 205, 0.12
+  )
+};
+
+// Absolute Queen - Master (225 BPM)
+const absoluteQueenMaster: Chart = {
+  songId: "7",
+  difficulty: "Master",
+  bpm: 225,
+  notes: combineWithHolds(
+    generateMasterPatterns(8, 320, 225),
+    8, 320, 225, 0.15
+  )
+};
+
 // Chart registry
 export const CHARTS = new Map<string, Chart>([
   ["1-Easy", gearsOfFateEasy],
@@ -664,7 +710,12 @@ export const CHARTS = new Map<string, Chart>([
   ["6-Normal", luminousEraNormal],
   ["6-Hard", luminousEraHard],
   ["6-Expert", luminousEraExpert],
-  ["6-Master", luminousEraMaster]
+  ["6-Master", luminousEraMaster],
+  ["7-Easy", absoluteQueenEasy],
+  ["7-Normal", absoluteQueenNormal],
+  ["7-Hard", absoluteQueenHard],
+  ["7-Expert", absoluteQueenExpert],
+  ["7-Master", absoluteQueenMaster]
 ]);
 
 export const getChart = (songId: string, difficulty: string): Chart | null => {

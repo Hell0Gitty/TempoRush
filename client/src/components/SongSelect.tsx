@@ -80,6 +80,19 @@ const AVAILABLE_SONGS = [
       { level: "Expert" as const, bpm: 205, duration: "3:52", noteSpeed: 600, noteFrequency: 750 },
       { level: "Master" as const, bpm: 225, duration: "3:52", noteSpeed: 700, noteFrequency: 550 }
     ]
+  },
+  {
+    id: "7",
+    title: "Absolute Queen",
+    artist: "Unknown Artist",
+    audioFile: "/sounds/absolute-queen.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 140, duration: "2:30", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 165, duration: "2:30", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 185, duration: "2:30", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 205, duration: "2:30", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 225, duration: "2:30", noteSpeed: 700, noteFrequency: 600 }
+    ]
   }
 ];
 
