@@ -7,6 +7,7 @@ import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
 import PauseMenu from "./PauseMenu";
 import VoiceLines from "./VoiceLines";
+import ResultsScreen from "./ResultsScreen";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
@@ -15,11 +16,14 @@ export default function Game() {
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
   const [voiceLineResult, setVoiceLineResult] = useState<'complete' | 'failed' | null>(null);
+  const [showResults, setShowResults] = useState(false);
+  const [resultVoiceLine, setResultVoiceLine] = useState<string>("");
 
 
 
   useEffect(() => {
     if (phase === 'playing' && !gameEngineRef.current) {
+      resetGame(); // Initialize abilities and game state
       gameEngineRef.current = new GameEngine();
       gameEngineRef.current.start();
       scoresSavedRef.current = false; // Reset when starting a new game
@@ -41,7 +45,7 @@ export default function Game() {
     };
   }, [phase]);
 
-  // Save high score and trigger voice lines when game ends
+  // Save high score and show results when game ends
   useEffect(() => {
     if (phase === 'ended' && !scoresSavedRef.current && selectedSong && selectedCharacter) {
       const highScoreData = {
@@ -60,6 +64,38 @@ export default function Game() {
       const gameResult = health > 0 ? 'complete' : 'failed';
       setVoiceLineResult(gameResult);
       
+      // Get random voice line for results
+      const CHARACTER_VOICE_LINES = {
+        lightren: {
+          complete: ["Nice. I knew it.", "Our completion was inevitable.", "...Huh. You're not as bad as I thought."],
+          failed: ["Ah... there's always next time.", "...Hm.", "Sad, but we'll get better."]
+        },
+        scal: {
+          complete: ["Huh! Didn't think you'd avoid that.", "You're pretty good!", "Nice!"],
+          failed: ["Hm... Perhaps I made it a bit too hard.", "Try something easier, champ.", "Next time, we'll ace this."]
+        },
+        winter: {
+          complete: ["Victory...", "Hah. Nice.", "You're... not bad."],
+          failed: ["...cold.", "That's... saddening.", "Is... that all?"]
+        },
+        ivy: {
+          complete: ["Nice, buddy.", "I knew I could count on you.", "Heh... I thought so."],
+          failed: ["Hm...", "Really... I thought we did better.", "...no way."]
+        }
+      };
+      
+      const lines = CHARACTER_VOICE_LINES[selectedCharacter.id as keyof typeof CHARACTER_VOICE_LINES];
+      if (lines) {
+        const availableLines = lines[gameResult];
+        const randomLine = availableLines[Math.floor(Math.random() * availableLines.length)];
+        setResultVoiceLine(randomLine);
+      }
+      
+      // Show results screen after a brief delay
+      setTimeout(() => {
+        setShowResults(true);
+      }, 1000);
+      
       console.log('High score saved:', highScoreData);
       console.log('Game result:', gameResult);
     }
@@ -73,10 +109,19 @@ export default function Game() {
     resetGame();
     restart();
     setVoiceLineResult(null); // Clear voice lines
+    setShowResults(false); // Clear results screen
+    setResultVoiceLine("");
   };
 
-  const handleCloseVoiceLines = () => {
+  const handleVoiceLineClose = () => {
     setVoiceLineResult(null);
+  };
+
+  const handleResultsNext = () => {
+    setShowResults(false);
+    setVoiceLineResult(null);
+    setResultVoiceLine("");
+    restart(); // Go back to song select
   };
 
   return (
@@ -85,47 +130,19 @@ export default function Game() {
       <GameUI onPause={pause} />
       <FlashOverlay />
       <SpeedFeedback />
-      <VoiceLines gameResult={voiceLineResult} onClose={handleCloseVoiceLines} />
+      <VoiceLines gameResult={voiceLineResult} onClose={handleVoiceLineClose} />
       
       {phase === 'paused' && (
         <PauseMenu onRestart={handleRestart} />
       )}
       
-      {phase === 'ended' && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 text-center text-white max-w-md">
-            <h2 className="text-3xl font-bold mb-4">Game Over!</h2>
-            
-            <div className="mb-6 space-y-2 text-lg">
-              <div className="flex justify-between">
-                <span>Final Score:</span>
-                <span className="font-bold text-green-400">{score.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Accuracy:</span>
-                <span className="font-bold">{accuracy.toFixed(1)}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Max Combo:</span>
-                <span className="font-bold text-yellow-400">{maxCombo}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Character:</span>
-                <span className="font-bold text-cyan-400">{selectedCharacter?.name}</span>
-              </div>
-            </div>
-            
-            <div className="mb-4 text-sm text-green-300">
-              ✓ High score saved!
-            </div>
-            
-            <button
-              onClick={handleRestart}
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg font-bold hover:scale-105 transition-transform"
-            >
-              Play Again
-            </button>
-          </div>
+      {showResults && voiceLineResult && (
+        <div className="absolute inset-0 z-50">
+          <ResultsScreen 
+            gameResult={voiceLineResult}
+            voiceLine={resultVoiceLine}
+            onNext={handleResultsNext}
+          />
         </div>
       )}
     </div>
