@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { useGame } from "../lib/stores/useGame";
+import { useAuth } from "../hooks/useAuth";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "../lib/queryClient";
 
 interface Character {
   id: string;
@@ -195,8 +198,35 @@ export default function CharacterSelect() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [setSelectedCharacter]);
 
+  const { user } = useAuth();
+  
+  const setCharacterMutation = useMutation({
+    mutationFn: async (characterId: string) => {
+      return await apiRequest("POST", "/api/user/character", { characterId });
+    },
+    onSuccess: () => {
+      restart();
+    },
+  });
+
   const handleConfirm = () => {
-    restart();
+    if (user && user.unlockedCharacters && user.unlockedCharacters.includes(currentCharacter.id)) {
+      setCharacterMutation.mutate(currentCharacter.id);
+    }
+  };
+
+  const isCharacterUnlocked = (characterId: string) => {
+    return user?.unlockedCharacters?.includes(characterId) || false;
+  };
+
+  const getRequiredLevel = (characterId: string) => {
+    const CHARACTER_UNLOCK_LEVELS = {
+      ivy: 1,
+      scal: 5,
+      lightren: 10,
+      winter: 20,
+    };
+    return CHARACTER_UNLOCK_LEVELS[characterId as keyof typeof CHARACTER_UNLOCK_LEVELS] || 1;
   };
 
   const currentCharacter = CHARACTERS[currentIndex];
@@ -318,12 +348,22 @@ export default function CharacterSelect() {
               <span>Next →</span>
             </div>
             
-            <button
-              onClick={handleConfirm}
-              className="w-full px-6 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all duration-300 text-xl"
-            >
-              Start Game with {currentCharacter.name}
-            </button>
+            {isCharacterUnlocked(currentCharacter.id) ? (
+              <button
+                onClick={handleConfirm}
+                disabled={setCharacterMutation.isPending}
+                className="w-full px-6 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all duration-300 text-xl disabled:opacity-50"
+              >
+                {setCharacterMutation.isPending ? 'Selecting...' : `Start Game with ${currentCharacter.name}`}
+              </button>
+            ) : (
+              <div className="w-full px-6 py-4 bg-gray-700 text-gray-400 font-bold rounded-lg text-xl text-center">
+                🔒 Unlock at Level {getRequiredLevel(currentCharacter.id)}
+                <div className="text-sm mt-1 opacity-80">
+                  Current Level: {(user as any)?.level || 1}
+                </div>
+              </div>
+            )}
             
             <p className="text-center text-sm opacity-60">
               Use ← → arrow keys to browse • Enter to confirm

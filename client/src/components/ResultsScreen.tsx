@@ -1,5 +1,9 @@
+import { useEffect, useState } from "react";
 import { useGame } from "../lib/stores/useGame";
 import { useRhythm } from "../lib/stores/useRhythm";
+import { useAuth } from "../hooks/useAuth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "../lib/queryClient";
 
 interface ResultsScreenProps {
   gameResult: 'complete' | 'failed';
@@ -10,6 +14,12 @@ interface ResultsScreenProps {
 export default function ResultsScreen({ gameResult, voiceLine, onNext }: ResultsScreenProps) {
   const { selectedSong, selectedCharacter, restart } = useGame();
   const { score, accuracy, maxCombo, hitCounts, health } = useRhythm();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [scoreSaved, setScoreSaved] = useState(false);
+  const [experienceGained, setExperienceGained] = useState(0);
+  const [leveledUp, setLeveledUp] = useState(false);
+  const [newCharactersUnlocked, setNewCharactersUnlocked] = useState<string[]>([]);
 
   if (!selectedSong || !selectedCharacter) return null;
 
@@ -26,6 +36,37 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
     if (accuracy >= 60) return 'text-yellow-500';
     return 'text-red-300';
   };
+
+  const saveScoreMutation = useMutation({
+    mutationFn: async (scoreData: any) => {
+      return await apiRequest("POST", "/api/scores", scoreData);
+    },
+    onSuccess: (data) => {
+      setScoreSaved(true);
+      setExperienceGained(data.experience);
+      setLeveledUp(data.leveledUp);
+      setNewCharactersUnlocked(data.newCharactersUnlocked || []);
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    },
+  });
+
+  useEffect(() => {
+    if (!scoreSaved && selectedSong && selectedCharacter && user) {
+      const passed = health > 0 && accuracy >= 70;
+      const grade = getRankText();
+      
+      saveScoreMutation.mutate({
+        songTitle: selectedSong.title,
+        difficulty: selectedSong.selectedDifficulty.level,
+        character: selectedCharacter.id,
+        score,
+        accuracy,
+        combo: maxCombo,
+        grade,
+        passed,
+      });
+    }
+  }, [scoreSaved, selectedSong, selectedCharacter, user, health, accuracy, score, maxCombo]);
 
   const isPass = () => {
     return health > 0 && accuracy >= 70; // B grade or above with health remaining
@@ -138,6 +179,36 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
             )}
           </div>
 
+          {/* Experience and Level Up Display */}
+          {scoreSaved && (
+            <div className="mb-6 p-6 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg border border-purple-500/30">
+              <h3 className="text-xl font-bold mb-3 text-purple-400">Results Summary</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Experience Gained:</span>
+                  <span className="text-green-400 font-bold">+{experienceGained} EXP</span>
+                </div>
+                {leveledUp && (
+                  <div className="text-yellow-400 font-bold text-center py-2">
+                    🎉 LEVEL UP! 🎉
+                  </div>
+                )}
+                {newCharactersUnlocked.length > 0 && (
+                  <div className="text-center py-2">
+                    <div className="text-pink-400 font-bold mb-1">New Characters Unlocked!</div>
+                    <div className="flex justify-center gap-2">
+                      {newCharactersUnlocked.map(char => (
+                        <span key={char} className="bg-pink-600 text-white px-2 py-1 rounded text-sm">
+                          {char.charAt(0).toUpperCase() + char.slice(1)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex gap-4 justify-center">
             <button
@@ -151,7 +222,7 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
               onClick={onNext}
               className="px-8 py-3 bg-gradient-to-r from-green-500 to-blue-600 text-white font-bold rounded-lg hover:from-green-600 hover:to-blue-700 transition-all duration-300"
             >
-              Next
+              Continue
             </button>
           </div>
         </div>
