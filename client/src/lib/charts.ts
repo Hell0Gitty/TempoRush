@@ -95,6 +95,52 @@ const generateExpertPatterns = (startBeat: number, endBeat: number, bpm: number)
   return notes;
 };
 
+// Generate Viyella-specific expert patterns with melodic flows
+const generateViyellaExpertPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
+  const notes: Note[] = [];
+  const melodicPatterns = [
+    [0, 1, 2, 3, 2, 1, 0, 2, 3, 1, 0, 3], // Ascending melody cascade
+    [3, 2, 1, 0, 1, 2, 3, 1, 0, 2, 3, 0], // Descending harmony flow
+    [1, 0, 2, 1, 3, 2, 0, 3, 1, 2, 0, 1], // Gentle weaving melody
+    [2, 3, 0, 1, 2, 0, 3, 1, 0, 3, 2, 1], // Emotional chord progression
+    [0, 2, 1, 3, 0, 1, 3, 2, 1, 0, 3, 2], // Tender piano-like pattern
+    [3, 1, 2, 0, 3, 2, 1, 0, 2, 1, 3, 0], // Sorrowful descending line
+    [1, 3, 0, 2, 1, 0, 2, 3, 0, 1, 2, 3], // Hope rising pattern
+    [2, 0, 3, 1, 2, 3, 0, 1, 3, 0, 1, 2], // Destiny's call motif
+    [0, 3, 2, 1, 0, 2, 1, 3, 2, 3, 0, 1], // Emotional climax
+    [3, 0, 1, 2, 3, 1, 0, 2, 1, 2, 3, 0]  // Final resolution
+  ];
+  
+  let patternIndex = 0;
+  let noteInPattern = 0;
+  let beat = startBeat;
+  
+  while (beat < endBeat) {
+    const currentPattern = melodicPatterns[patternIndex % melodicPatterns.length];
+    notes.push({
+      time: beatToMs(beat, bpm),
+      lane: currentPattern[noteInPattern % 12]
+    });
+    
+    noteInPattern++;
+    // Longer pattern sections for emotional flow
+    if (noteInPattern % 18 === 0) {
+      patternIndex++;
+      noteInPattern = 0;
+    }
+    
+    // Varied timing for emotional emphasis
+    if (patternIndex % 5 === 4 && noteInPattern % 8 < 4) {
+      beat += 0.25; // Emotional 16th note runs
+    } else if (patternIndex % 7 === 6) {
+      beat += 0.75; // Slower, contemplative sections
+    } else {
+      beat += 0.5; // Standard 8th note flow
+    }
+  }
+  return notes;
+};
+
 // Generate master patterns with extremely challenging, varied patterns
 const generateMasterPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
@@ -136,6 +182,54 @@ const generateMasterPatterns = (startBeat: number, endBeat: number, bpm: number)
       beat += 0.33; // Triplet feel sections
     } else {
       beat += 0.5; // 8th notes for flow
+    }
+  }
+  return notes;
+};
+
+// Generate Viyella-specific master patterns with emotional complexity
+const generateViyellaMasterPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
+  const notes: Note[] = [];
+  const destinyPatterns = [
+    [0, 1, 2, 3, 2, 1, 0, 3, 1, 2, 0, 3, 2, 1], // Fate's ascending spiral
+    [3, 2, 1, 0, 1, 2, 3, 0, 2, 1, 3, 0, 1, 2], // Destiny's descending call
+    [1, 0, 3, 2, 0, 1, 2, 3, 1, 0, 2, 3, 0, 1], // Emotional crossroads
+    [2, 3, 0, 1, 3, 2, 1, 0, 3, 1, 0, 2, 1, 3], // Sorrowful harmony weave
+    [0, 2, 1, 3, 2, 0, 3, 1, 0, 3, 2, 1, 3, 0], // Hope and despair dance
+    [3, 1, 0, 2, 1, 3, 0, 2, 3, 0, 1, 2, 0, 3], // Viyella's lament flow
+    [1, 2, 3, 0, 2, 1, 0, 3, 2, 0, 3, 1, 2, 0], // Destiny's final embrace
+    [2, 0, 3, 1, 0, 2, 1, 3, 0, 3, 1, 2, 3, 1], // Tragic beauty cascade
+    [0, 3, 1, 2, 3, 0, 2, 1, 3, 2, 0, 1, 0, 2], // Melancholic resolution
+    [3, 0, 2, 1, 0, 3, 1, 2, 0, 1, 3, 2, 1, 0]  // Eternal destiny motif
+  ];
+  
+  let patternIndex = 0;
+  let noteInPattern = 0;
+  let beat = startBeat;
+  
+  while (beat < endBeat) {
+    const currentPattern = destinyPatterns[patternIndex % destinyPatterns.length];
+    notes.push({
+      time: beatToMs(beat, bpm),
+      lane: currentPattern[noteInPattern % 14]
+    });
+    
+    noteInPattern++;
+    // Extended pattern sections for emotional storytelling
+    if (noteInPattern % 20 === 0) {
+      patternIndex++;
+      noteInPattern = 0;
+    }
+    
+    // Complex timing variations for Master difficulty
+    if (patternIndex % 6 === 5 && noteInPattern % 10 < 5) {
+      beat += 0.25; // Intense 16th note emotional climaxes
+    } else if (patternIndex % 8 === 7 && noteInPattern % 6 < 2) {
+      beat += 0.33; // Triplet feel for emotional depth
+    } else if (patternIndex % 9 === 8) {
+      beat += 0.75; // Slow, contemplative master sections
+    } else {
+      beat += 0.5; // Standard flow
     }
   }
   return notes;
@@ -296,6 +390,86 @@ const anotherMeMaster: Chart = {
   notes: generateMasterPatterns(8, 350, 190) // 8 to 350 beats = ~3.3 minutes
 };
 
+// Viyella's Destiny - Easy (120 BPM)
+const viyellaDestinyEasy: Chart = {
+  songId: "3",
+  difficulty: "Easy",
+  bpm: 120,
+  notes: generateEasyPatterns(4, 260, 120) // 4 to 260 beats = ~4.3 minutes
+};
+
+// Viyella's Destiny - Normal (140 BPM)
+const viyellaDestinyNormal: Chart = {
+  songId: "3",
+  difficulty: "Normal",
+  bpm: 140,
+  notes: generateNormalPatterns(4, 210, 140) // 4 to 210 beats = ~3.7 minutes
+};
+
+// Viyella's Destiny - Hard (160 BPM)
+const viyellaDestinyHard: Chart = {
+  songId: "3",
+  difficulty: "Hard",
+  bpm: 160,
+  notes: generateConsistent16thNotes(4, 420, 160) // 4 to 420 beats = ~4.2 minutes
+};
+
+// Viyella's Destiny - Expert (180 BPM)
+const viyellaDestinyExpert: Chart = {
+  songId: "3",
+  difficulty: "Expert",
+  bpm: 180,
+  notes: generateViyellaExpertPatterns(8, 400, 180) // 8 to 400 beats = ~4.4 minutes
+};
+
+// Viyella's Destiny - Master (200 BPM)
+const viyellaDestinyMaster: Chart = {
+  songId: "3",
+  difficulty: "Master",
+  bpm: 200,
+  notes: generateViyellaMasterPatterns(8, 380, 200) // 8 to 380 beats = ~3.8 minutes
+};
+
+// Grievous Lady - Easy (150 BPM)
+const grievousLadyEasy: Chart = {
+  songId: "2",
+  difficulty: "Easy",
+  bpm: 150,
+  notes: generateEasyPatterns(4, 230, 150) // 4 to 230 beats = ~3.8 minutes
+};
+
+// Grievous Lady - Normal (170 BPM)
+const grievousLadyNormal: Chart = {
+  songId: "2",
+  difficulty: "Normal",
+  bpm: 170,
+  notes: generateNormalPatterns(4, 190, 170) // 4 to 190 beats = ~3.3 minutes
+};
+
+// Grievous Lady - Hard (190 BPM)
+const grievousLadyHard: Chart = {
+  songId: "2",
+  difficulty: "Hard",
+  bpm: 190,
+  notes: generateConsistent16thNotes(4, 380, 190) // 4 to 380 beats = ~3.8 minutes
+};
+
+// Grievous Lady - Expert (210 BPM)
+const grievousLadyExpert: Chart = {
+  songId: "2",
+  difficulty: "Expert",
+  bpm: 210,
+  notes: generateExpertPatterns(8, 350, 210) // 8 to 350 beats = ~3.3 minutes
+};
+
+// Grievous Lady - Master (230 BPM)
+const grievousLadyMaster: Chart = {
+  songId: "2",
+  difficulty: "Master",
+  bpm: 230,
+  notes: generateMasterPatterns(8, 320, 230) // 8 to 320 beats = ~2.8 minutes
+};
+
 // Chart registry
 export const CHARTS = new Map<string, Chart>([
   ["1-Easy", gearsOfFateEasy],
@@ -303,6 +477,16 @@ export const CHARTS = new Map<string, Chart>([
   ["1-Hard", gearsOfFateHard],
   ["1-Expert", gearsOfFateExpert],
   ["1-Master", gearsOfFateMaster],
+  ["2-Easy", grievousLadyEasy],
+  ["2-Normal", grievousLadyNormal],
+  ["2-Hard", grievousLadyHard],
+  ["2-Expert", grievousLadyExpert],
+  ["2-Master", grievousLadyMaster],
+  ["3-Easy", viyellaDestinyEasy],
+  ["3-Normal", viyellaDestinyNormal],
+  ["3-Hard", viyellaDestinyHard],
+  ["3-Expert", viyellaDestinyExpert],
+  ["3-Master", viyellaDestinyMaster],
   ["4-Easy", anotherMeEasy],
   ["4-Normal", anotherMeNormal],
   ["4-Hard", anotherMeHard],
