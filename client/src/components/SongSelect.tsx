@@ -3,38 +3,38 @@ import { useGame } from "../lib/stores/useGame";
 const AVAILABLE_SONGS = [
   {
     id: "1",
-    title: "Electric Dreams",
-    artist: "Synthwave Studios",
-    difficulty: "Easy" as const,
-    bpm: 128,
-    duration: "3:24",
+    title: "Gears of Fate",
+    artist: "Laur",
+    difficulty: "Medium" as const,
+    bpm: 165,
+    duration: "4:32",
     audioFile: "/sounds/background.mp3"
   },
   {
     id: "2", 
-    title: "Neon Nights",
-    artist: "Cyberpunk Collective",
-    difficulty: "Medium" as const,
-    bpm: 140,
-    duration: "4:12",
+    title: "Grievious Lady",
+    artist: "Laur",
+    difficulty: "Hard" as const,
+    bpm: 180,
+    duration: "3:58",
     audioFile: "/sounds/background.mp3"
   },
   {
     id: "3",
-    title: "Digital Rush", 
-    artist: "Future Bass Inc",
-    difficulty: "Hard" as const,
-    bpm: 174,
-    duration: "3:56",
+    title: "Viyella's Destiny", 
+    artist: "Laur",
+    difficulty: "Easy" as const,
+    bpm: 140,
+    duration: "4:15",
     audioFile: "/sounds/background.mp3"
   },
   {
     id: "4",
-    title: "Retro Pulse",
-    artist: "Arcade Legends",
-    difficulty: "Easy" as const,
-    bpm: 110,
-    duration: "2:48",
+    title: "Another Me",
+    artist: "Laur",
+    difficulty: "Medium" as const,
+    bpm: 158,
+    duration: "3:47",
     audioFile: "/sounds/background.mp3"
   }
 ];
