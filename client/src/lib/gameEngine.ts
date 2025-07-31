@@ -166,7 +166,10 @@ export class GameEngine {
           lane: chartNote.lane,
           y: -50,
           time: currentTime + leadTime, // When this note should be hit
-          hit: false
+          hit: false,
+          isHold: (chartNote as any).isHold || false,
+          holdDuration: (chartNote as any).holdDuration || 0,
+          holdActive: false
         };
 
         useRhythm.getState().addNote(note);
@@ -317,31 +320,53 @@ export class GameEngine {
       const noteSize = this.laneWidth - 40;
       const centerX = x + this.laneWidth / 2;
       
-      // Note stem (vertical line)
-      this.ctx!.strokeStyle = this.laneColors[note.lane];
-      this.ctx!.lineWidth = 3;
-      this.ctx!.beginPath();
-      this.ctx!.moveTo(centerX + noteSize / 2 - 5, note.y);
-      this.ctx!.lineTo(centerX + noteSize / 2 - 5, note.y - 30);
-      this.ctx!.stroke();
-      
-      // Note shadow
-      this.ctx!.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      this.ctx!.beginPath();
-      this.ctx!.ellipse(centerX + 2, note.y + 12, noteSize / 2, 10, 0, 0, 2 * Math.PI);
-      this.ctx!.fill();
-      
-      // Note body (oval shape like a musical note)
-      this.ctx!.fillStyle = this.laneColors[note.lane];
-      this.ctx!.beginPath();
-      this.ctx!.ellipse(centerX, note.y + 10, noteSize / 2, 10, 0, 0, 2 * Math.PI);
-      this.ctx!.fill();
-      
-      // Note highlight
-      this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      this.ctx!.beginPath();
-      this.ctx!.ellipse(centerX - 5, note.y + 6, noteSize / 4, 6, 0, 0, 2 * Math.PI);
-      this.ctx!.fill();
+      if (note.isHold) {
+        // Draw hold note as a long rectangle
+        const holdHeight = Math.max(60, (note.holdDuration || 1000) / 10); // Scale hold duration to visual height
+        
+        // Hold note background
+        this.ctx!.fillStyle = `${this.laneColors[note.lane]}40`;
+        this.ctx!.fillRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
+        
+        // Hold note borders
+        this.ctx!.strokeStyle = this.laneColors[note.lane];
+        this.ctx!.lineWidth = 3;
+        this.ctx!.strokeRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
+        
+        // Hold note head (at the end)
+        this.ctx!.fillStyle = this.laneColors[note.lane];
+        this.ctx!.fillRect(x + 10, note.y, this.laneWidth - 20, 20);
+        
+        // Hold note tail (at the start)
+        this.ctx!.fillStyle = this.laneColors[note.lane];
+        this.ctx!.fillRect(x + 10, note.y - holdHeight + 10, this.laneWidth - 20, 20);
+      } else {
+        // Regular note with stem
+        this.ctx!.strokeStyle = this.laneColors[note.lane];
+        this.ctx!.lineWidth = 3;
+        this.ctx!.beginPath();
+        this.ctx!.moveTo(centerX + noteSize / 2 - 5, note.y);
+        this.ctx!.lineTo(centerX + noteSize / 2 - 5, note.y - 30);
+        this.ctx!.stroke();
+        
+        // Note shadow
+        this.ctx!.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx!.beginPath();
+        this.ctx!.ellipse(centerX + 2, note.y + 12, noteSize / 2, 10, 0, 0, 2 * Math.PI);
+        this.ctx!.fill();
+        
+        // Note body (oval shape like a musical note)
+        this.ctx!.fillStyle = this.laneColors[note.lane];
+        this.ctx!.beginPath();
+        this.ctx!.ellipse(centerX, note.y + 10, noteSize / 2, 10, 0, 0, 2 * Math.PI);
+        this.ctx!.fill();
+        
+        // Note highlight
+        this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        this.ctx!.beginPath();
+        this.ctx!.ellipse(centerX - 5, note.y + 6, noteSize / 4, 6, 0, 0, 2 * Math.PI);
+        this.ctx!.fill();
+      }
     });
 
     // Draw particles

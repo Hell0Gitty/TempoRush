@@ -7,6 +7,10 @@ export interface Note {
   y: number;
   time: number;
   hit: boolean;
+  isHold?: boolean;
+  holdDuration?: number; // Duration in milliseconds
+  holdStartTime?: number; // When the hold started being pressed
+  holdActive?: boolean; // Whether the hold is currently being held
 }
 
 interface RhythmState {

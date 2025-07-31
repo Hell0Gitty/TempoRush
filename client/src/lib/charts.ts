@@ -1,6 +1,8 @@
 export interface Note {
   time: number;
   lane: number;
+  isHold?: boolean;
+  holdDuration?: number; // Duration in milliseconds
 }
 
 export interface Chart {
@@ -235,6 +237,33 @@ const generateViyellaMasterPatterns = (startBeat: number, endBeat: number, bpm: 
   return notes;
 };
 
+// Generate hold notes for added complexity
+const generateHoldNotes = (startBeat: number, endBeat: number, bpm: number, density: number = 0.1): Note[] => {
+  const notes: Note[] = [];
+  const holdDurations = [1000, 1500, 2000, 2500, 3000]; // Various hold lengths in ms
+  
+  for (let beat = startBeat; beat < endBeat; beat += 4 + Math.random() * 8) {
+    if (Math.random() < density) {
+      const lane = Math.floor(Math.random() * 4);
+      const duration = holdDurations[Math.floor(Math.random() * holdDurations.length)];
+      
+      notes.push({
+        time: beatToMs(beat, bpm),
+        lane: lane,
+        isHold: true,
+        holdDuration: duration
+      });
+    }
+  }
+  
+  return notes;
+};
+
+// Combine regular notes with hold notes
+const combineWithHolds = (regularNotes: Note[], holdNotes: Note[]): Note[] => {
+  return [...regularNotes, ...holdNotes].sort((a, b) => a.time - b.time);
+};
+
 // Generate easy patterns with varied, musical sequences
 const generateEasyPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
@@ -311,7 +340,10 @@ const gearsOfFateEasy: Chart = {
   songId: "1",
   difficulty: "Easy",
   bpm: 150,
-  notes: generateEasyPatterns(4, 250, 150) // 4 to 250 beats = ~3.3 minutes
+  notes: combineWithHolds(
+    generateEasyPatterns(4, 250, 150),
+    generateHoldNotes(4, 250, 150, 0.05)
+  )
 };
 
 // Gears of Fate - Normal (160 BPM)
@@ -320,7 +352,10 @@ const gearsOfFateNormal: Chart = {
   songId: "1",
   difficulty: "Normal",
   bpm: 160,
-  notes: generateNormalPatterns(4, 200, 160) // 4 to 200 beats = ~3 minutes
+  notes: combineWithHolds(
+    generateNormalPatterns(4, 200, 160),
+    generateHoldNotes(4, 200, 160, 0.08)
+  )
 };
 
 // Gears of Fate - Hard (170 BPM)
@@ -329,7 +364,10 @@ const gearsOfFateHard: Chart = {
   songId: "1",
   difficulty: "Hard",
   bpm: 170,
-  notes: generateConsistent16thNotes(4, 450, 170) // 4 to 450 beats = ~3.5 minutes
+  notes: combineWithHolds(
+    generateConsistent16thNotes(4, 450, 170),
+    generateHoldNotes(4, 450, 170, 0.1)
+  )
 };
 
 // Gears of Fate - Expert (185 BPM)
@@ -338,7 +376,10 @@ const gearsOfFateExpert: Chart = {
   songId: "1",
   difficulty: "Expert",
   bpm: 185,
-  notes: generateExpertPatterns(8, 400, 185) // 8 to 400 beats = ~3.5 minutes
+  notes: combineWithHolds(
+    generateExpertPatterns(8, 400, 185),
+    generateHoldNotes(8, 400, 185, 0.12)
+  )
 };
 
 // Gears of Fate - Master (210 BPM)
@@ -347,7 +388,10 @@ const gearsOfFateMaster: Chart = {
   songId: "1",
   difficulty: "Master",
   bpm: 210,
-  notes: generateMasterPatterns(8, 350, 210) // 8 to 350 beats = ~3 minutes
+  notes: combineWithHolds(
+    generateMasterPatterns(8, 350, 210),
+    generateHoldNotes(8, 350, 210, 0.15)
+  )
 };
 
 // Another Me - Easy (140 BPM)
@@ -411,7 +455,7 @@ const viyellaDestinyHard: Chart = {
   songId: "3",
   difficulty: "Hard",
   bpm: 160,
-  notes: generateConsistent16thNotes(4, 420, 160) // 4 to 420 beats = ~4.2 minutes
+  notes: generateConsistent16thNotes(4, 520, 160) // 4 to 520 beats = ~5.2 minutes (extended)
 };
 
 // Viyella's Destiny - Expert (180 BPM)
@@ -419,7 +463,10 @@ const viyellaDestinyExpert: Chart = {
   songId: "3",
   difficulty: "Expert",
   bpm: 180,
-  notes: generateViyellaExpertPatterns(8, 400, 180) // 8 to 400 beats = ~4.4 minutes
+  notes: combineWithHolds(
+    generateViyellaExpertPatterns(8, 600, 180),
+    generateHoldNotes(8, 600, 180, 0.12)
+  )
 };
 
 // Viyella's Destiny - Master (200 BPM)
@@ -427,7 +474,10 @@ const viyellaDestinyMaster: Chart = {
   songId: "3",
   difficulty: "Master",
   bpm: 200,
-  notes: generateViyellaMasterPatterns(8, 380, 200) // 8 to 380 beats = ~3.8 minutes
+  notes: combineWithHolds(
+    generateViyellaMasterPatterns(8, 550, 200),
+    generateHoldNotes(8, 550, 200, 0.15)
+  )
 };
 
 // Grievous Lady - Easy (150 BPM)
