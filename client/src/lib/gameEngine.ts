@@ -98,9 +98,15 @@ export class GameEngine {
     try {
       // Get the audio element that's playing music
       const audioElement = document.querySelector('audio');
-      console.log('Audio element found:', audioElement);
+      console.log('Audio element found:', audioElement, 'playing:', audioElement?.currentTime);
       if (!audioElement) {
         console.log('No audio element found for visualizer');
+        return;
+      }
+
+      // Skip if already initialized and working
+      if (this.source && this.analyser && this.dataArray) {
+        console.log('Audio analyser already initialized');
         return;
       }
 
@@ -117,22 +123,29 @@ export class GameEngine {
       console.log('Audio analyser created with', this.analyser.frequencyBinCount, 'frequency bins');
       
       // Connect audio source to analyser
-      if (!this.source) {
-        this.source = this.audioContext.createMediaElementSource(audioElement);
-        this.source.connect(this.analyser);
-        this.source.connect(this.audioContext.destination);
-        console.log('Audio source connected to analyser');
-      }
+      this.source = this.audioContext.createMediaElementSource(audioElement);
+      this.source.connect(this.analyser);
+      this.source.connect(this.audioContext.destination);
+      console.log('Audio source connected to analyser');
       
       // Resume audio context if needed
       if (this.audioContext.state === 'suspended') {
-        this.audioContext.resume();
+        this.audioContext.resume().then(() => {
+          console.log('Audio context resumed');
+        });
       }
       
     } catch (error) {
       console.error('Audio analyser setup failed:', error);
+      // If we get CORS or other errors, we can still show animated bars
+      if (error.message.includes('cross-origin') || error.message.includes('CORS')) {
+        console.log('Using animated fallback bars due to CORS');
+        this.useFallbackAnimation = true;
+      }
     }
   }
+
+  private useFallbackAnimation = false;
 
   private getFrequencyData(): number[] {
     if (!this.analyser || !this.dataArray) {
@@ -165,10 +178,14 @@ export class GameEngine {
 
   private drawAudioBars() {
     const frequencyData = this.getFrequencyData();
-    if (frequencyData.length === 0) {
-      // Draw static bars for testing if no frequency data
-      const staticBars = [0.3, 0.5, 0.7, 0.4, 0.6, 0.8, 0.2, 0.9];
-      this.renderBars(staticBars);
+    if (frequencyData.length === 0 || this.useFallbackAnimation) {
+      // Create animated bars that pulse with time
+      const time = Date.now() / 1000;
+      const animatedBars = Array.from({length: 8}, (_, i) => {
+        const phase = (i * 0.5) + time * 2;
+        return Math.abs(Math.sin(phase)) * 0.8 + 0.2; // Range 0.2 to 1.0
+      });
+      this.renderBars(animatedBars);
       return;
     }
     
@@ -184,7 +201,7 @@ export class GameEngine {
       const x = index * barWidth;
       const y = this.height - barHeight;
       
-      // Create gradient for each bar
+      // Create gradient for each bar (only bottom bars now)
       const barGradient = this.ctx!.createLinearGradient(x, y + barHeight, x, y);
       const hue = (index * 45) % 360;
       barGradient.addColorStop(0, `hsla(${hue}, 70%, 50%, 0.4)`);
@@ -192,15 +209,6 @@ export class GameEngine {
       
       this.ctx!.fillStyle = barGradient;
       this.ctx!.fillRect(x, y, barWidth - 4, barHeight);
-      
-      // Add mirror bars at the top
-      const topY = 0;
-      const topGradient = this.ctx!.createLinearGradient(x, topY, x, topY + barHeight * 0.5);
-      topGradient.addColorStop(0, `hsla(${hue}, 70%, 70%, 0.6)`);
-      topGradient.addColorStop(1, `hsla(${hue}, 70%, 50%, 0.2)`);
-      
-      this.ctx!.fillStyle = topGradient;
-      this.ctx!.fillRect(x, topY, barWidth - 4, barHeight * 0.5);
     });
   }
 
