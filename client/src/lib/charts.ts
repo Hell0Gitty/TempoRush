@@ -15,18 +15,38 @@ const beatToMs = (beat: number, bpm: number): number => {
   return (beat / bpm) * 60 * 1000;
 };
 
-// Generate consistent 16th note patterns for Hard difficulty
+// Generate varied 16th note patterns for Hard difficulty
 const generateConsistent16thNotes = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
-  const lanePattern = [0, 1, 2, 3]; // Cycle through lanes
-  let laneIndex = 0;
+  const sequences = [
+    [0, 1, 2, 3, 2, 1, 0, 3, 1, 2, 3, 0], // Flowing pattern
+    [3, 0, 2, 1, 0, 3, 1, 2, 3, 1, 0, 2], // Cross flow
+    [1, 2, 0, 3, 2, 1, 3, 0, 2, 0, 1, 3], // Weaving
+    [2, 3, 1, 0, 3, 2, 0, 1, 3, 1, 2, 0], // Spiral dance
+    [0, 2, 1, 3, 2, 0, 3, 1, 0, 3, 2, 1], // Diamond flow
+    [3, 1, 0, 2, 1, 3, 2, 0, 1, 2, 3, 0], // Bounce sequence
+    [1, 0, 3, 2, 0, 1, 2, 3, 0, 2, 1, 3], // Alternating cross
+    [2, 0, 3, 1, 0, 2, 1, 3, 2, 3, 0, 1], // Center burst
+    [0, 3, 1, 2, 3, 0, 2, 1, 3, 2, 0, 1], // Outside sweep
+    [1, 3, 2, 0, 3, 1, 0, 2, 1, 0, 3, 2]  // Complex weave
+  ];
+  
+  let sequenceIndex = 0;
+  let noteInSequence = 0;
   
   for (let beat = startBeat; beat < endBeat; beat += 0.25) { // 16th notes
+    const currentSequence = sequences[sequenceIndex % sequences.length];
     notes.push({
       time: beatToMs(beat, bpm),
-      lane: lanePattern[laneIndex % 4]
+      lane: currentSequence[noteInSequence % 12]
     });
-    laneIndex++;
+    
+    noteInSequence++;
+    // Switch sequences every 20 notes for variety
+    if (noteInSequence % 20 === 0) {
+      sequenceIndex++;
+      noteInSequence = 0;
+    }
   }
   return notes;
 };
@@ -107,34 +127,72 @@ const generateMasterPatterns = (startBeat: number, endBeat: number, bpm: number)
   return notes;
 };
 
-// Generate easy patterns with quarter notes
+// Generate easy patterns with varied, musical sequences
 const generateEasyPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
-  const lanePattern = [0, 1, 2, 3]; // Simple pattern
-  let laneIndex = 0;
+  const sequences = [
+    [0, 2, 1, 3, 0, 3, 2, 1], // Simple cross
+    [1, 0, 3, 2, 1, 2, 0, 3], // Gentle weave
+    [2, 1, 0, 2, 3, 1, 0, 3], // Center focus
+    [0, 1, 2, 0, 3, 2, 1, 3], // Ascending steps
+    [3, 1, 2, 0, 1, 3, 0, 2], // Outside-in
+    [0, 3, 1, 2, 3, 0, 2, 1], // Diamond shape
+    [1, 2, 3, 1, 0, 2, 3, 0], // Skip pattern
+    [2, 0, 3, 1, 2, 3, 0, 1]  // Alternating pairs
+  ];
+  
+  let sequenceIndex = 0;
+  let noteInSequence = 0;
   
   for (let beat = startBeat; beat < endBeat; beat += 1) { // Quarter notes
+    const currentSequence = sequences[sequenceIndex % sequences.length];
     notes.push({
       time: beatToMs(beat, bpm),
-      lane: lanePattern[laneIndex % 4]
+      lane: currentSequence[noteInSequence % 8]
     });
-    laneIndex++;
+    
+    noteInSequence++;
+    // Switch sequences every 12 notes for variety
+    if (noteInSequence % 12 === 0) {
+      sequenceIndex++;
+      noteInSequence = 0;
+    }
   }
   return notes;
 };
 
-// Generate normal patterns with 8th notes
+// Generate normal patterns with varied 8th note sequences
 const generateNormalPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
-  const lanePattern = [0, 1, 2, 3, 2, 0, 3, 1]; // Slightly more complex
-  let laneIndex = 0;
+  const sequences = [
+    [0, 1, 2, 3, 2, 1, 0, 3, 1, 2], // Wave pattern
+    [3, 0, 2, 1, 3, 2, 0, 1, 2, 3], // Zigzag
+    [1, 3, 0, 2, 1, 0, 3, 2, 0, 1], // Cross weave
+    [2, 0, 1, 3, 0, 2, 3, 1, 3, 0], // Center spiral
+    [0, 2, 3, 1, 2, 0, 1, 3, 2, 1], // Skip dance
+    [3, 1, 0, 2, 3, 0, 1, 2, 1, 3], // Bounce pattern
+    [1, 0, 2, 3, 1, 3, 0, 2, 3, 2], // Diagonal flow
+    [2, 3, 1, 0, 2, 1, 3, 0, 1, 2], // Reverse spiral
+    [0, 3, 2, 1, 0, 1, 2, 3, 0, 2], // Figure-8
+    [3, 2, 0, 1, 3, 1, 2, 0, 2, 3]  // Complex weave
+  ];
+  
+  let sequenceIndex = 0;
+  let noteInSequence = 0;
   
   for (let beat = startBeat; beat < endBeat; beat += 0.5) { // 8th notes
+    const currentSequence = sequences[sequenceIndex % sequences.length];
     notes.push({
       time: beatToMs(beat, bpm),
-      lane: lanePattern[laneIndex % 8]
+      lane: currentSequence[noteInSequence % 10]
     });
-    laneIndex++;
+    
+    noteInSequence++;
+    // Switch sequences every 16 notes for variety
+    if (noteInSequence % 16 === 0) {
+      sequenceIndex++;
+      noteInSequence = 0;
+    }
   }
   return notes;
 };
