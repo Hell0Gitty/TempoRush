@@ -541,6 +541,98 @@ const grievousLadyMaster: Chart = {
   notes: generateMasterPatterns(8, 320, 230) // 8 to 320 beats = ~2.8 minutes
 };
 
+// Glacier - Easy (135 BPM)
+const glacierEasy: Chart = {
+  songId: "5",
+  difficulty: "Easy",
+  bpm: 135,
+  notes: generateEasyPatterns(4, 280, 135) // 4:18 duration
+};
+
+// Glacier - Normal (160 BPM)
+const glacierNormal: Chart = {
+  songId: "5",
+  difficulty: "Normal",
+  bpm: 160,
+  notes: generateNormalPatterns(4, 250, 160)
+};
+
+// Glacier - Hard (180 BPM)
+const glacierHard: Chart = {
+  songId: "5",
+  difficulty: "Hard",
+  bpm: 180,
+  notes: generateConsistent16thNotes(4, 420, 180)
+};
+
+// Glacier - Expert (200 BPM)
+const glacierExpert: Chart = {
+  songId: "5",
+  difficulty: "Expert",
+  bpm: 200,
+  notes: combineWithHolds(
+    generateExpertPatterns(8, 450, 200),
+    8, 450, 200, 0.12
+  )
+};
+
+// Glacier - Master (220 BPM)
+const glacierMaster: Chart = {
+  songId: "5",
+  difficulty: "Master",
+  bpm: 220,
+  notes: combineWithHolds(
+    generateMasterPatterns(8, 480, 220),
+    8, 480, 220, 0.15
+  )
+};
+
+// Luminous Era - Easy (140 BPM)
+const luminousEraEasy: Chart = {
+  songId: "6",
+  difficulty: "Easy",
+  bpm: 140,
+  notes: generateEasyPatterns(4, 260, 140) // 3:52 duration
+};
+
+// Luminous Era - Normal (165 BPM)
+const luminousEraNormal: Chart = {
+  songId: "6",
+  difficulty: "Normal",
+  bpm: 165,
+  notes: generateNormalPatterns(4, 220, 165)
+};
+
+// Luminous Era - Hard (185 BPM)
+const luminousEraHard: Chart = {
+  songId: "6",
+  difficulty: "Hard",
+  bpm: 185,
+  notes: generateConsistent16thNotes(4, 390, 185)
+};
+
+// Luminous Era - Expert (205 BPM)
+const luminousEraExpert: Chart = {
+  songId: "6",
+  difficulty: "Expert",
+  bpm: 205,
+  notes: combineWithHolds(
+    generateExpertPatterns(8, 420, 205),
+    8, 420, 205, 0.12
+  )
+};
+
+// Luminous Era - Master (225 BPM)
+const luminousEraMaster: Chart = {
+  songId: "6",
+  difficulty: "Master",
+  bpm: 225,
+  notes: combineWithHolds(
+    generateMasterPatterns(8, 450, 225),
+    8, 450, 225, 0.15
+  )
+};
+
 // Chart registry
 export const CHARTS = new Map<string, Chart>([
   ["1-Easy", gearsOfFateEasy],
@@ -562,7 +654,17 @@ export const CHARTS = new Map<string, Chart>([
   ["4-Normal", anotherMeNormal],
   ["4-Hard", anotherMeHard],
   ["4-Expert", anotherMeExpert],
-  ["4-Master", anotherMeMaster]
+  ["4-Master", anotherMeMaster],
+  ["5-Easy", glacierEasy],
+  ["5-Normal", glacierNormal],
+  ["5-Hard", glacierHard],
+  ["5-Expert", glacierExpert],
+  ["5-Master", glacierMaster],
+  ["6-Easy", luminousEraEasy],
+  ["6-Normal", luminousEraNormal],
+  ["6-Hard", luminousEraHard],
+  ["6-Expert", luminousEraExpert],
+  ["6-Master", luminousEraMaster]
 ]);
 
 export const getChart = (songId: string, difficulty: string): Chart | null => {

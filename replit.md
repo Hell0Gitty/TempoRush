@@ -43,7 +43,7 @@ The core game logic is implemented in a custom GameEngine class that handles:
 - **Multi-tier selection**: Song selection followed by difficulty selection
 - **Five difficulty levels**: Easy, Normal, Hard, Expert, Master
 - **Master unlock system**: Master difficulty unlocks after Expert full combo
-- **Laur track collection**: Features Gears of Fate, Grievious Lady, Viyella's Destiny, Another Me
+- **Laur track collection**: Features Gears of Fate, Grievious Lady, Viyella's Destiny, Another Me, Glacier, Luminous Era
 - **Difficulty-specific parameters**: Each level has unique BPM, note speed, and frequency
 
 ### State Management Stores
@@ -127,3 +127,5 @@ The application is designed to be deployed as a single Node.js process that serv
 - **Artist Credit Correction**: Updated Grievous Lady artist from "Team Grimoire vs Laur" to just "Laur" as requested
 - **Interactive ESC Key**: ESC key now toggles between pause/resume functionality for better user control
 - **Menu Functionality Fix**: Added proper pointer-events and cursor styling to ensure pause menu buttons are clickable
+- **New Songs Added**: Expanded music library with "Glacier" and "Luminous Era" by Laur
+- **Speed Control System**: Moved speed adjustment controls to song selection screen with preset buttons and fine-tuning options

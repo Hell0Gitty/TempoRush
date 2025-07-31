@@ -108,16 +108,29 @@ const AVAILABLE_SONGS = [
     ]
   },
   {
-    id: "9",
-    title: "Metamorphose",
+    id: "5",
+    title: "Glacier",
     artist: "Laur",
-    audioFile: "/sounds/metamorphose.mp3",
+    audioFile: "/sounds/glacier.mp3",
     difficulties: [
-      { level: "Easy" as const, bpm: 160, duration: "3:55", noteSpeed: 300, noteFrequency: 1250 },
-      { level: "Normal" as const, bpm: 180, duration: "3:55", noteSpeed: 400, noteFrequency: 950 },
-      { level: "Hard" as const, bpm: 200, duration: "3:55", noteSpeed: 500, noteFrequency: 800 },
-      { level: "Expert" as const, bpm: 220, duration: "3:55", noteSpeed: 600, noteFrequency: 650 },
-      { level: "Master" as const, bpm: 240, duration: "3:55", noteSpeed: 700, noteFrequency: 450 }
+      { level: "Easy" as const, bpm: 135, duration: "4:18", noteSpeed: 300, noteFrequency: 1500 },
+      { level: "Normal" as const, bpm: 160, duration: "4:18", noteSpeed: 400, noteFrequency: 1200 },
+      { level: "Hard" as const, bpm: 180, duration: "4:18", noteSpeed: 500, noteFrequency: 1000 },
+      { level: "Expert" as const, bpm: 200, duration: "4:18", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 220, duration: "4:18", noteSpeed: 700, noteFrequency: 600 }
+    ]
+  },
+  {
+    id: "6",
+    title: "Luminous Era",
+    artist: "Laur",
+    audioFile: "/sounds/luminous-era.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 140, duration: "3:52", noteSpeed: 300, noteFrequency: 1400 },
+      { level: "Normal" as const, bpm: 165, duration: "3:52", noteSpeed: 400, noteFrequency: 1100 },
+      { level: "Hard" as const, bpm: 185, duration: "3:52", noteSpeed: 500, noteFrequency: 900 },
+      { level: "Expert" as const, bpm: 205, duration: "3:52", noteSpeed: 600, noteFrequency: 750 },
+      { level: "Master" as const, bpm: 225, duration: "3:52", noteSpeed: 700, noteFrequency: 550 }
     ]
   }
 ];
