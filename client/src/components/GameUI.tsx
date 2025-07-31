@@ -71,8 +71,13 @@ export default function GameUI({ onPause }: GameUIProps) {
             {isMuted ? '🔇' : '🔊'}
           </button>
           <button
-            onClick={onPause}
-            className="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 hover:bg-black/40 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('Pause button clicked');
+              onPause();
+            }}
+            className="bg-black/30 backdrop-blur-sm rounded-lg px-4 py-2 hover:bg-black/40 transition-colors cursor-pointer"
           >
             Pause
           </button>

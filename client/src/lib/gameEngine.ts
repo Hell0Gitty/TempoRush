@@ -633,6 +633,21 @@ export class GameEngine {
   }
 
   private gameLoop = (timestamp: number) => {
+    const gameState = useGame.getState();
+    
+    // Check if game is paused - if so, only render but don't update game logic
+    if (gameState.phase === 'paused') {
+      this.render(); // Still render the current state
+      this.animationId = requestAnimationFrame(this.gameLoop);
+      return;
+    }
+    
+    // Stop game loop if not in playing state
+    if (gameState.phase !== 'playing') {
+      this.stop();
+      return;
+    }
+
     if (!this.startTime) {
       this.startTime = timestamp;
     }
