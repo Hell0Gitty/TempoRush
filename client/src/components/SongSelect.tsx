@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useGame } from "../lib/stores/useGame";
+import { useAudio } from "../lib/stores/useAudio";
 
 const AVAILABLE_SONGS = [
   {
@@ -58,10 +59,59 @@ const AVAILABLE_SONGS = [
 
 export default function SongSelect() {
   const { selectSong, start, restart, selectedSong, expertFullCombos } = useGame();
+  const { isMuted } = useAudio();
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
+  const previewAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
 
   const currentSong = AVAILABLE_SONGS.find(song => song.id === selectedSongId);
+
+  // Cleanup preview audio on unmount
+  useEffect(() => {
+    return () => {
+      if (previewAudioRef.current) {
+        previewAudioRef.current.pause();
+        previewAudioRef.current = null;
+      }
+    };
+  }, []);
+
+  const playPreview = (audioFile: string) => {
+    if (isMuted) return; // Don't play if sound is muted
+    
+    // Stop any currently playing preview
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause();
+    }
+    
+    // Create new audio for preview
+    const audio = new Audio(audioFile);
+    audio.volume = 0.4; // Lower volume for preview
+    audio.currentTime = 30; // Start 30 seconds into the song for better preview
+    
+    previewAudioRef.current = audio;
+    setIsPreviewPlaying(true);
+    
+    // Play for 10 seconds only
+    audio.play().catch(console.log);
+    
+    // Stop after 10 seconds
+    setTimeout(() => {
+      if (previewAudioRef.current === audio) {
+        audio.pause();
+        setIsPreviewPlaying(false);
+      }
+    }, 10000);
+  };
+
+  const stopPreview = () => {
+    if (previewAudioRef.current) {
+      previewAudioRef.current.pause();
+      previewAudioRef.current = null;
+      setIsPreviewPlaying(false);
+    }
+  };
 
   const handleSongSelect = (song: typeof AVAILABLE_SONGS[0]) => {
     setSelectedSongId(song.id);
@@ -121,7 +171,9 @@ export default function SongSelect() {
             <div
               key={song.id}
               onClick={() => handleSongSelect(song)}
-              className="p-6 rounded-lg cursor-pointer transition-all duration-300 border-2 border-white/20 bg-black/20 hover:border-pink-400 hover:bg-pink-400/10"
+              onMouseEnter={() => playPreview(song.audioFile)}
+              onMouseLeave={stopPreview}
+              className="p-6 rounded-lg cursor-pointer transition-all duration-300 border-2 border-white/20 bg-black/20 hover:border-pink-400 hover:bg-pink-400/10 relative"
             >
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -141,6 +193,11 @@ export default function SongSelect() {
               <div className="flex items-center justify-between text-xs opacity-60">
                 <span>🎵 {song.artist}</span>
                 <span>→</span>
+              </div>
+              
+              {/* Preview indicator */}
+              <div className="absolute top-2 right-2 opacity-60">
+                <span className="text-xs">Hover to preview</span>
               </div>
             </div>
           ))}
