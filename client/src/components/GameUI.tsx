@@ -27,9 +27,14 @@ export default function GameUI({ onPause }: GameUIProps) {
       
       if (e.key === 'Enter') {
         const abilityType = selectedCharacter.ability.type;
-        if ((abilityType === 'health_freeze' || abilityType === 'score_boost') && 
-            (abilityUses[abilityType] || 0) > 0) {
+        const remainingUses = abilityUses[abilityType] || 0;
+        console.log(`Enter pressed. Character: ${selectedCharacter.name}, Ability: ${abilityType}, Uses: ${remainingUses}`);
+        
+        if ((abilityType === 'health_freeze' || abilityType === 'score_boost') && remainingUses > 0) {
+          console.log(`Activating ${abilityType} ability`);
           activateAbility(abilityType);
+        } else {
+          console.log(`Cannot activate ability: type=${abilityType}, uses=${remainingUses}`);
         }
       }
     };
@@ -116,6 +121,7 @@ export default function GameUI({ onPause }: GameUIProps) {
             <div className="text-sm">
               <span className="text-yellow-300">Combo Saves: </span>
               <span className="font-bold">{abilityUses['combo_save'] || 0}</span>
+              <div className="text-xs opacity-60">Auto-activates on miss</div>
             </div>
           )}
           

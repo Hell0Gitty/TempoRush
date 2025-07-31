@@ -234,7 +234,12 @@ export const useRhythm = create<RhythmState>()(
       
       if (character?.ability.uses) {
         initialAbilityUses[character.ability.type] = character.ability.uses;
+        console.log(`Initialized ${character.name} ability: ${character.ability.type} with ${character.ability.uses} uses`);
+      } else if (character) {
+        console.log(`Character ${character.name} has no ability uses to initialize (ability type: ${character.ability.type})`);
       }
+      
+      console.log('Initial ability uses:', initialAbilityUses);
       
       set({
         score: 0,
