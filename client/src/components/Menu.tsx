@@ -2,7 +2,7 @@ import { useGame } from "../lib/stores/useGame";
 import { useAudio } from "../lib/stores/useAudio";
 
 export default function Menu() {
-  const { showSongSelect } = useGame();
+  const { showSongSelect, showCharacterSelect, showHighScores } = useGame();
   const { toggleMute, isMuted } = useAudio();
 
   const handleStart = () => {
@@ -54,6 +54,20 @@ export default function Menu() {
           className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg font-bold text-xl hover:scale-105 transition-transform shadow-lg"
         >
           START GAME
+        </button>
+        
+        <button
+          onClick={showCharacterSelect}
+          className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          CHARACTER SELECT
+        </button>
+        
+        <button
+          onClick={showHighScores}
+          className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg font-bold hover:scale-105 transition-transform"
+        >
+          HIGH SCORES
         </button>
         
         <button

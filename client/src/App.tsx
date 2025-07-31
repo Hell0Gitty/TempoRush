@@ -3,6 +3,8 @@ import { useGame } from "./lib/stores/useGame";
 import { useAudio } from "./lib/stores/useAudio";
 import Menu from "./components/Menu";
 import SongSelect from "./components/SongSelect";
+import CharacterSelect from "./components/CharacterSelect";
+import HighScores from "./components/HighScores";
 import Game from "./components/Game";
 import AudioManager from "./components/AudioManager";
 import "@fontsource/lato";
@@ -51,6 +53,8 @@ function App() {
       
       {phase === 'ready' && <Menu />}
       {phase === 'songSelect' && <SongSelect />}
+      {phase === 'characterSelect' && <CharacterSelect />}
+      {phase === 'highScores' && <HighScores />}
       {(phase === 'playing' || phase === 'ended') && <Game />}
     </div>
   );

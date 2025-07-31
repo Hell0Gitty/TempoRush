@@ -265,13 +265,21 @@ export class GameEngine {
 
     const distance = Math.abs(closestNote.y - this.hitZoneY);
     
-    // Determine timing based on distance
+    // Get character modifier for hit windows
+    const gameState = useGame.getState();
+    const character = gameState.selectedCharacter;
+    const hitWindowMultiplier = character?.modifier.hitWindowMultiplier || 1.0;
+    
+    // Determine timing based on distance (modified by character)
     let timing: 'perfect' | 'good' | 'miss';
-    if (distance <= 30) {
+    const perfectWindow = 30 * hitWindowMultiplier;
+    const goodWindow = 60 * hitWindowMultiplier;
+    
+    if (distance <= perfectWindow) {
       timing = 'perfect';
       audioState.playSuccess(); // Keep the satisfying "ding" for perfect hits
       this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffd700');
-    } else if (distance <= 60) {
+    } else if (distance <= goodWindow) {
       timing = 'good';
       // No sound for good hits - cleaner experience
       this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffffff');
@@ -392,8 +400,10 @@ export class GameEngine {
         return true;
       }
 
-      // Move note down using global speed multiplier
-      const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier;
+      // Move note down using global speed multiplier and character modifier
+      const character = gameState.selectedCharacter;
+      const characterSpeedMultiplier = character?.modifier.noteSpeedMultiplier || 1.0;
+      const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier * characterSpeedMultiplier;
       note.y += currentSpeed * (deltaTime / 1000);
 
       // Check if note passed the judgment line without being hit

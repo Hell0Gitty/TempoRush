@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
+import { useGame } from "./useGame";
 
 export interface Note {
   id: string;
@@ -69,24 +70,30 @@ export const useRhythm = create<RhythmState>()(
           note.id === noteId ? { ...note, hit: true, hitTime: Date.now() } : note
         );
 
+        // Get character modifiers from imported useGame
+        const gameState = useGame.getState();
+        const character = gameState.selectedCharacter;
+        const scoreMultiplier = character?.modifier.scoreMultiplier || 1.0;
+        const healthMultiplier = character?.modifier.healthMultiplier || 1.0;
+
         let scoreIncrease = 0;
         let comboIncrease = 0;
         let healthChange = 0;
 
         switch (timing) {
           case 'perfect':
-            scoreIncrease = 100 * (state.combo + 1);
+            scoreIncrease = Math.floor(100 * (state.combo + 1) * scoreMultiplier);
             comboIncrease = 1;
-            healthChange = 2;
+            healthChange = Math.floor(2 * healthMultiplier);
             break;
           case 'good':
-            scoreIncrease = 50 * (state.combo + 1);
+            scoreIncrease = Math.floor(50 * (state.combo + 1) * scoreMultiplier);
             comboIncrease = 1;
-            healthChange = 1;
+            healthChange = Math.floor(1 * healthMultiplier);
             break;
           case 'miss':
             comboIncrease = -state.combo; // Reset combo
-            healthChange = -3;
+            healthChange = Math.floor(-3 / healthMultiplier); // Characters with higher health take less damage
             break;
         }
 
