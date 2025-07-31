@@ -84,7 +84,14 @@ export class GameEngine {
         this.resetSpeed();
       }
       else if (key === 'escape') {
-        useGame.getState().pause();
+        const gameState = useGame.getState();
+        if (gameState.phase === 'playing') {
+          console.log("ESC pressed - pausing game");
+          gameState.pause();
+        } else if (gameState.phase === 'paused') {
+          console.log("ESC pressed - resuming game");
+          gameState.resume();
+        }
       }
     };
 
