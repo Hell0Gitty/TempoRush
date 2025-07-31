@@ -19,7 +19,7 @@ const AVAILABLE_SONGS = [
   {
     id: "2", 
     title: "Grievous Lady",
-    artist: "Team Grimoire vs Laur",
+    artist: "Laur",
     audioFile: "/sounds/grievous-lady.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 150, duration: "3:58", noteSpeed: 200, noteFrequency: 1500 },
