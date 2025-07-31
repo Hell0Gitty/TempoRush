@@ -5,7 +5,7 @@ import Menu from "./components/Menu";
 import SongSelect from "./components/SongSelect";
 import Game from "./components/Game";
 import AudioManager from "./components/AudioManager";
-import "@fontsource/inter";
+import "@fontsource/lato";
 
 function App() {
   const { phase } = useGame();
@@ -32,7 +32,7 @@ function App() {
       position: 'relative', 
       overflow: 'hidden',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      fontFamily: 'Inter, sans-serif'
+      fontFamily: 'Lato, sans-serif'
     }}>
       <AudioManager />
       
