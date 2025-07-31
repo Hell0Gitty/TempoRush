@@ -54,6 +54,71 @@ const AVAILABLE_SONGS = [
       { level: "Expert" as const, bpm: 190, duration: "3:47", noteSpeed: 600, noteFrequency: 800 },
       { level: "Master" as const, bpm: 205, duration: "3:47", noteSpeed: 700, noteFrequency: 600 }
     ]
+  },
+  {
+    id: "5",
+    title: "Sound Chimera",
+    artist: "Laur",
+    audioFile: "/sounds/sound-chimera.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 145, duration: "4:12", noteSpeed: 300, noteFrequency: 1400 },
+      { level: "Normal" as const, bpm: 170, duration: "4:12", noteSpeed: 400, noteFrequency: 1100 },
+      { level: "Hard" as const, bpm: 190, duration: "4:12", noteSpeed: 500, noteFrequency: 900 },
+      { level: "Expert" as const, bpm: 210, duration: "4:12", noteSpeed: 600, noteFrequency: 750 },
+      { level: "Master" as const, bpm: 230, duration: "4:12", noteSpeed: 700, noteFrequency: 550 }
+    ]
+  },
+  {
+    id: "6",
+    title: "PRISTINE",
+    artist: "Laur",
+    audioFile: "/sounds/pristine.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 155, duration: "3:28", noteSpeed: 300, noteFrequency: 1300 },
+      { level: "Normal" as const, bpm: 175, duration: "3:28", noteSpeed: 400, noteFrequency: 1000 },
+      { level: "Hard" as const, bpm: 195, duration: "3:28", noteSpeed: 500, noteFrequency: 850 },
+      { level: "Expert" as const, bpm: 215, duration: "3:28", noteSpeed: 600, noteFrequency: 700 },
+      { level: "Master" as const, bpm: 235, duration: "3:28", noteSpeed: 700, noteFrequency: 500 }
+    ]
+  },
+  {
+    id: "7",
+    title: "Last Judgement",
+    artist: "Laur",
+    audioFile: "/sounds/last-judgement.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 140, duration: "4:05", noteSpeed: 300, noteFrequency: 1450 },
+      { level: "Normal" as const, bpm: 165, duration: "4:05", noteSpeed: 400, noteFrequency: 1150 },
+      { level: "Hard" as const, bpm: 185, duration: "4:05", noteSpeed: 500, noteFrequency: 950 },
+      { level: "Expert" as const, bpm: 205, duration: "4:05", noteSpeed: 600, noteFrequency: 800 },
+      { level: "Master" as const, bpm: 225, duration: "4:05", noteSpeed: 700, noteFrequency: 600 }
+    ]
+  },
+  {
+    id: "8",
+    title: "Unknown Civilization",
+    artist: "Laur",
+    audioFile: "/sounds/unknown-civilization.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 125, duration: "4:33", noteSpeed: 300, noteFrequency: 1600 },
+      { level: "Normal" as const, bpm: 150, duration: "4:33", noteSpeed: 400, noteFrequency: 1300 },
+      { level: "Hard" as const, bpm: 170, duration: "4:33", noteSpeed: 500, noteFrequency: 1100 },
+      { level: "Expert" as const, bpm: 190, duration: "4:33", noteSpeed: 600, noteFrequency: 900 },
+      { level: "Master" as const, bpm: 210, duration: "4:33", noteSpeed: 700, noteFrequency: 700 }
+    ]
+  },
+  {
+    id: "9",
+    title: "Metamorphose",
+    artist: "Laur",
+    audioFile: "/sounds/metamorphose.mp3",
+    difficulties: [
+      { level: "Easy" as const, bpm: 160, duration: "3:55", noteSpeed: 300, noteFrequency: 1250 },
+      { level: "Normal" as const, bpm: 180, duration: "3:55", noteSpeed: 400, noteFrequency: 950 },
+      { level: "Hard" as const, bpm: 200, duration: "3:55", noteSpeed: 500, noteFrequency: 800 },
+      { level: "Expert" as const, bpm: 220, duration: "3:55", noteSpeed: 600, noteFrequency: 650 },
+      { level: "Master" as const, bpm: 240, duration: "3:55", noteSpeed: 700, noteFrequency: 450 }
+    ]
   }
 ];
 
