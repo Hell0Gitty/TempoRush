@@ -6,7 +6,7 @@ const AVAILABLE_SONGS = [
     id: "1",
     title: "Gears of Fate",
     artist: "Laur",
-    audioFile: "/sounds/background.mp3",
+    audioFile: "/sounds/gears-of-fate.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 140, duration: "4:32", noteSpeed: 200, noteFrequency: 1500 },
       { level: "Normal" as const, bpm: 165, duration: "4:32", noteSpeed: 250, noteFrequency: 1200 },
@@ -17,9 +17,9 @@ const AVAILABLE_SONGS = [
   },
   {
     id: "2", 
-    title: "Grievious Lady",
-    artist: "Laur",
-    audioFile: "/sounds/background.mp3",
+    title: "Grievous Lady",
+    artist: "Team Grimoire vs Laur",
+    audioFile: "/sounds/grievous-lady.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 150, duration: "3:58", noteSpeed: 200, noteFrequency: 1500 },
       { level: "Normal" as const, bpm: 170, duration: "3:58", noteSpeed: 250, noteFrequency: 1200 },
@@ -32,7 +32,7 @@ const AVAILABLE_SONGS = [
     id: "3",
     title: "Viyella's Destiny", 
     artist: "Laur",
-    audioFile: "/sounds/background.mp3",
+    audioFile: "/sounds/viyellas-destiny.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 120, duration: "4:15", noteSpeed: 200, noteFrequency: 1500 },
       { level: "Normal" as const, bpm: 140, duration: "4:15", noteSpeed: 250, noteFrequency: 1200 },
@@ -45,7 +45,7 @@ const AVAILABLE_SONGS = [
     id: "4",
     title: "Another Me",
     artist: "Laur",
-    audioFile: "/sounds/background.mp3",
+    audioFile: "/sounds/another-me.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 130, duration: "3:47", noteSpeed: 200, noteFrequency: 1500 },
       { level: "Normal" as const, bpm: 158, duration: "3:47", noteSpeed: 250, noteFrequency: 1200 },
