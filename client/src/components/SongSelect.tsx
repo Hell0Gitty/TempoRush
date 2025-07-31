@@ -84,7 +84,7 @@ const AVAILABLE_SONGS = [
   {
     id: "7",
     title: "Absolute Queen",
-    artist: "Unknown Artist",
+    artist: "Laur",
     audioFile: "/sounds/absolute-queen.mp3",
     difficulties: [
       { level: "Easy" as const, bpm: 140, duration: "2:30", noteSpeed: 300, noteFrequency: 1500 },

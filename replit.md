@@ -127,5 +127,5 @@ The application is designed to be deployed as a single Node.js process that serv
 - **Artist Credit Correction**: Updated Grievous Lady artist from "Team Grimoire vs Laur" to just "Laur" as requested
 - **Interactive ESC Key**: ESC key now toggles between pause/resume functionality for better user control
 - **Menu Functionality Fix**: Added proper pointer-events and cursor styling to ensure pause menu buttons are clickable
-- **New Songs Added**: Expanded music library with "Glacier" and "Luminous Era" by Laur
+- **New Songs Added**: Expanded music library with "Glacier", "Luminous Era", and "Absolute Queen" by Laur
 - **Speed Control System**: Moved speed adjustment controls to song selection screen with preset buttons and fine-tuning options
