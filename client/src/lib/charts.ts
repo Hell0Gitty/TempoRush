@@ -237,30 +237,45 @@ const generateViyellaMasterPatterns = (startBeat: number, endBeat: number, bpm: 
   return notes;
 };
 
-// Generate hold notes for added complexity
-const generateHoldNotes = (startBeat: number, endBeat: number, bpm: number, density: number = 0.1): Note[] => {
+// Generate hold notes for added complexity - strategically placed to avoid overlap
+const generateHoldNotes = (regularNotes: Note[], startBeat: number, endBeat: number, bpm: number, density: number = 0.1): Note[] => {
   const notes: Note[] = [];
   const holdDurations = [1000, 1500, 2000, 2500, 3000]; // Various hold lengths in ms
   
-  for (let beat = startBeat; beat < endBeat; beat += 4 + Math.random() * 8) {
+  // Create time map of regular notes by lane to avoid overlaps
+  const laneOccupancy: { [lane: number]: number[] } = { 0: [], 1: [], 2: [], 3: [] };
+  regularNotes.forEach(note => {
+    laneOccupancy[note.lane].push(note.time);
+  });
+  
+  for (let beat = startBeat; beat < endBeat; beat += 6 + Math.random() * 12) {
     if (Math.random() < density) {
       const lane = Math.floor(Math.random() * 4);
       const duration = holdDurations[Math.floor(Math.random() * holdDurations.length)];
+      const time = beatToMs(beat, bpm);
       
-      notes.push({
-        time: beatToMs(beat, bpm),
-        lane: lane,
-        isHold: true,
-        holdDuration: duration
-      });
+      // Check if this lane is clear for the hold duration
+      const isLaneClear = !laneOccupancy[lane].some(noteTime => 
+        Math.abs(noteTime - time) < duration + 500 // 500ms buffer
+      );
+      
+      if (isLaneClear) {
+        notes.push({
+          time: time,
+          lane: lane,
+          isHold: true,
+          holdDuration: duration
+        });
+      }
     }
   }
   
   return notes;
 };
 
-// Combine regular notes with hold notes
-const combineWithHolds = (regularNotes: Note[], holdNotes: Note[]): Note[] => {
+// Combine regular notes with strategically placed hold notes
+const combineWithHolds = (regularNotes: Note[], startBeat: number, endBeat: number, bpm: number, density: number): Note[] => {
+  const holdNotes = generateHoldNotes(regularNotes, startBeat, endBeat, bpm, density);
   return [...regularNotes, ...holdNotes].sort((a, b) => a.time - b.time);
 };
 
@@ -342,7 +357,7 @@ const gearsOfFateEasy: Chart = {
   bpm: 150,
   notes: combineWithHolds(
     generateEasyPatterns(4, 250, 150),
-    generateHoldNotes(4, 250, 150, 0.05)
+    4, 250, 150, 0.05
   )
 };
 
@@ -354,7 +369,7 @@ const gearsOfFateNormal: Chart = {
   bpm: 160,
   notes: combineWithHolds(
     generateNormalPatterns(4, 200, 160),
-    generateHoldNotes(4, 200, 160, 0.08)
+    4, 200, 160, 0.08
   )
 };
 
@@ -366,7 +381,7 @@ const gearsOfFateHard: Chart = {
   bpm: 170,
   notes: combineWithHolds(
     generateConsistent16thNotes(4, 450, 170),
-    generateHoldNotes(4, 450, 170, 0.1)
+    4, 450, 170, 0.1
   )
 };
 
@@ -378,7 +393,7 @@ const gearsOfFateExpert: Chart = {
   bpm: 185,
   notes: combineWithHolds(
     generateExpertPatterns(8, 400, 185),
-    generateHoldNotes(8, 400, 185, 0.12)
+    8, 400, 185, 0.12
   )
 };
 
@@ -390,7 +405,7 @@ const gearsOfFateMaster: Chart = {
   bpm: 210,
   notes: combineWithHolds(
     generateMasterPatterns(8, 350, 210),
-    generateHoldNotes(8, 350, 210, 0.15)
+    8, 350, 210, 0.15
   )
 };
 
@@ -465,7 +480,7 @@ const viyellaDestinyExpert: Chart = {
   bpm: 180,
   notes: combineWithHolds(
     generateViyellaExpertPatterns(8, 600, 180),
-    generateHoldNotes(8, 600, 180, 0.12)
+    8, 600, 180, 0.12
   )
 };
 
@@ -476,7 +491,7 @@ const viyellaDestinyMaster: Chart = {
   bpm: 200,
   notes: combineWithHolds(
     generateViyellaMasterPatterns(8, 550, 200),
-    generateHoldNotes(8, 550, 200, 0.15)
+    8, 550, 200, 0.15
   )
 };
 

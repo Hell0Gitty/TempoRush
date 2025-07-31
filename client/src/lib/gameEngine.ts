@@ -18,6 +18,7 @@ export class GameEngine {
   private noteSpeed: number = 300; // pixels per second
   private keyStates: { [key: string]: boolean } = {};
   private keyPressedFrames: { [key: string]: number } = {};
+  private activeHolds: { [key: string]: string | null } = {}; // Maps key to note ID
   private currentFrame: number = 0;
   private chartNotes: Array<{time: number, lane: number}> = [];
   private nextNoteIndex: number = 0;
@@ -74,6 +75,7 @@ export class GameEngine {
       const key = e.key.toLowerCase();
       if (['a', 's', 'k', 'l'].includes(key)) {
         this.keyStates[key] = false;
+        this.handleKeyRelease(key);
       }
     };
 
@@ -129,7 +131,43 @@ export class GameEngine {
       // This miss will reset combo because it's a note that was hit but too late/early
     }
 
-    state.hitNote(closestNote.id, timing);
+    if (closestNote.isHold) {
+      // Start holding the note
+      state.startHoldNote(closestNote.id);
+      this.activeHolds[key] = closestNote.id;
+    } else {
+      // Regular note hit
+      state.hitNote(closestNote.id, timing);
+    }
+  }
+
+  private handleKeyRelease(key: string) {
+    const holdNoteId = this.activeHolds[key];
+    if (holdNoteId) {
+      // End the hold note
+      const state = useRhythm.getState();
+      const note = state.notes.find(n => n.id === holdNoteId);
+      
+      if (note && note.holdActive) {
+        // Determine timing based on how well the hold was maintained
+        const holdDuration = Date.now() - (note.holdStartTime || 0);
+        const expectedDuration = note.holdDuration || 1000;
+        const holdRatio = holdDuration / expectedDuration;
+        
+        let timing: 'perfect' | 'good' | 'miss';
+        if (holdRatio >= 0.8) {
+          timing = 'perfect';
+        } else if (holdRatio >= 0.5) {
+          timing = 'good';
+        } else {
+          timing = 'miss';
+        }
+        
+        state.endHoldNote(holdNoteId, timing);
+      }
+      
+      this.activeHolds[key] = null;
+    }
   }
 
   private createParticles(x: number, y: number, color: string) {
@@ -187,9 +225,14 @@ export class GameEngine {
     const gameState = useGame.getState();
     
     const updatedNotes = state.notes.filter(note => {
-      if (note.hit) {
-        // Remove hit notes after a short delay
+      if (note.hit && !note.isHold) {
+        // Remove regular hit notes after a short delay
         return false;
+      }
+      
+      if (note.hit && note.isHold) {
+        // Keep hold notes visible until they're completely finished
+        return true;
       }
 
       // Move note down
@@ -198,7 +241,11 @@ export class GameEngine {
       // Check if note passed the judgment line without being hit
       if (note.y > this.hitZoneY + 60) {
         // This is a proper miss - reset combo and affect health
-        state.hitNote(note.id, 'miss');
+        if (note.isHold) {
+          state.endHoldNote(note.id, 'miss');
+        } else {
+          state.hitNote(note.id, 'miss');
+        }
         return false;
       }
 
@@ -324,22 +371,37 @@ export class GameEngine {
         // Draw hold note as a long rectangle
         const holdHeight = Math.max(60, (note.holdDuration || 1000) / 10); // Scale hold duration to visual height
         
-        // Hold note background
-        this.ctx!.fillStyle = `${this.laneColors[note.lane]}40`;
+        // Change appearance based on whether it's being held
+        const isActive = note.holdActive;
+        const opacity = isActive ? '80' : '40';
+        const brightness = isActive ? 'FF' : this.laneColors[note.lane];
+        
+        // Hold note background - brighter when active
+        this.ctx!.fillStyle = `${brightness}${opacity}`;
         this.ctx!.fillRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
         
-        // Hold note borders
-        this.ctx!.strokeStyle = this.laneColors[note.lane];
-        this.ctx!.lineWidth = 3;
+        // Hold note borders - thicker when active
+        this.ctx!.strokeStyle = brightness;
+        this.ctx!.lineWidth = isActive ? 5 : 3;
         this.ctx!.strokeRect(x + 15, note.y - holdHeight + 10, this.laneWidth - 30, holdHeight);
         
-        // Hold note head (at the end)
-        this.ctx!.fillStyle = this.laneColors[note.lane];
+        // Hold note head (at the end) - glowing when active
+        this.ctx!.fillStyle = isActive ? '#ffffff' : this.laneColors[note.lane];
         this.ctx!.fillRect(x + 10, note.y, this.laneWidth - 20, 20);
         
         // Hold note tail (at the start)
         this.ctx!.fillStyle = this.laneColors[note.lane];
         this.ctx!.fillRect(x + 10, note.y - holdHeight + 10, this.laneWidth - 20, 20);
+        
+        // Add progress indicator for active holds
+        if (isActive && note.holdStartTime) {
+          const elapsed = Date.now() - note.holdStartTime;
+          const progress = Math.min(elapsed / (note.holdDuration || 1000), 1.0);
+          const progressHeight = holdHeight * progress;
+          
+          this.ctx!.fillStyle = '#00ff0080';
+          this.ctx!.fillRect(x + 18, note.y - holdHeight + 10, this.laneWidth - 36, progressHeight);
+        }
       } else {
         // Regular note with stem
         this.ctx!.strokeStyle = this.laneColors[note.lane];

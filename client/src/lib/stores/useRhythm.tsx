@@ -30,6 +30,8 @@ interface RhythmState {
   // Actions
   addNote: (note: Note) => void;
   hitNote: (noteId: string, timing: 'perfect' | 'good' | 'miss') => void;
+  startHoldNote: (noteId: string) => void;
+  endHoldNote: (noteId: string, timing: 'perfect' | 'good' | 'miss') => void;
   updateNotes: (notes: Note[]) => void;
   resetGame: () => void;
   triggerFlash: (intensity?: number) => void;
@@ -97,6 +99,64 @@ export const useRhythm = create<RhythmState>()(
 
         return {
           notes: newNotes,
+          score: state.score + scoreIncrease,
+          combo: newCombo,
+          maxCombo: Math.max(state.maxCombo, newCombo),
+          accuracy: newAccuracy,
+          health: newHealth,
+          hitCounts: newHitCounts
+        };
+      });
+    },
+
+    startHoldNote: (noteId) => {
+      set((state) => ({
+        notes: state.notes.map(note => 
+          note.id === noteId ? { ...note, holdActive: true, holdStartTime: Date.now() } : note
+        )
+      }));
+    },
+
+    endHoldNote: (noteId, timing) => {
+      set((state) => {
+        const note = state.notes.find(n => n.id === noteId);
+        if (!note) return state;
+
+        const holdDuration = Date.now() - (note.holdStartTime || 0);
+        const expectedDuration = note.holdDuration || 1000;
+        const holdRatio = Math.min(holdDuration / expectedDuration, 1.0);
+
+        let scoreIncrease = 0;
+        let comboIncrease = 0;
+        let healthChange = 0;
+
+        // Score based on how well the hold was maintained
+        if (timing === 'perfect' && holdRatio > 0.8) {
+          scoreIncrease = Math.floor(200 * holdRatio * (state.combo + 1));
+          comboIncrease = 1;
+          healthChange = 3;
+        } else if (timing === 'good' && holdRatio > 0.5) {
+          scoreIncrease = Math.floor(100 * holdRatio * (state.combo + 1));
+          comboIncrease = 1;
+          healthChange = 2;
+        } else {
+          comboIncrease = -state.combo; // Reset combo
+          healthChange = -5;
+        }
+
+        const newCombo = Math.max(0, state.combo + comboIncrease);
+        const newHealth = Math.max(0, Math.min(100, state.health + healthChange));
+        const newHitCounts = {
+          ...state.hitCounts,
+          [timing]: state.hitCounts[timing] + 1
+        };
+
+        const totalHits = newHitCounts.perfect + newHitCounts.good + newHitCounts.miss;
+        const successfulHits = newHitCounts.perfect + newHitCounts.good;
+        const newAccuracy = totalHits > 0 ? (successfulHits / totalHits) * 100 : 100;
+
+        return {
+          notes: state.notes.map(n => n.id === noteId ? { ...n, hit: true } : n),
           score: state.score + scoreIncrease,
           combo: newCombo,
           maxCombo: Math.max(state.maxCombo, newCombo),
