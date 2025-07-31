@@ -17,7 +17,52 @@ const beatToMs = (beat: number, bpm: number): number => {
   return (beat / bpm) * 60 * 1000;
 };
 
-// Generate varied 16th note patterns for Hard difficulty
+// Generate spaced-out Hard patterns (mixture of 8th and quarter notes)
+const generateSpacedHardPatterns = (startBeat: number, endBeat: number, bpm: number): Note[] => {
+  const notes: Note[] = [];
+  const patterns = [
+    [0, 1, 2, 3], // Simple ascending
+    [3, 2, 1, 0], // Descending
+    [0, 2, 1, 3], // Cross pattern
+    [1, 3, 0, 2], // Opposite cross
+    [0, 3, 2, 1], // Outside to inside
+    [2, 1, 3, 0], // Inside to outside
+    [0, 1, 3, 2], // Gentle weave
+    [3, 0, 1, 2], // Corner bounce
+  ];
+  
+  let patternIndex = 0;
+  let noteInPattern = 0;
+  let beat = startBeat;
+  
+  while (beat < endBeat) {
+    const currentPattern = patterns[patternIndex % patterns.length];
+    notes.push({
+      time: beatToMs(beat, bpm),
+      lane: currentPattern[noteInPattern % 4]
+    });
+    
+    noteInPattern++;
+    
+    // Vary timing for less clumping
+    if (noteInPattern % 8 < 4) {
+      beat += 0.5; // 8th notes for main rhythm
+    } else if (noteInPattern % 8 < 6) {
+      beat += 1.0; // Quarter notes for breathing room
+    } else {
+      beat += 0.25; // Occasional 16th notes for accents
+    }
+    
+    // Switch patterns every 16 notes
+    if (noteInPattern % 16 === 0) {
+      patternIndex++;
+      noteInPattern = 0;
+    }
+  }
+  return notes;
+};
+
+// Generate varied 16th note patterns for Hard difficulty (kept for songs that work well with it)
 const generateConsistent16thNotes = (startBeat: number, endBeat: number, bpm: number): Note[] => {
   const notes: Note[] = [];
   const sequences = [
@@ -425,12 +470,12 @@ const anotherMeNormal: Chart = {
   notes: generateNormalPatterns(4, 598, 158) // 3:47 duration (598 beats at 158 BPM)
 };
 
-// Another Me - Hard (175 BPM) - Full 3:47 duration
+// Another Me - Hard (175 BPM) - Full 3:47 duration, spaced out
 const anotherMeHard: Chart = {
   songId: "4",
   difficulty: "Hard",
   bpm: 175,
-  notes: generateConsistent16thNotes(4, 662, 175) // 3:47 duration (662 beats at 175 BPM)
+  notes: generateSpacedHardPatterns(4, 662, 175) // 3:47 duration (662 beats at 175 BPM)
 };
 
 // Another Me - Expert (190 BPM) - Full 3:47 duration
@@ -557,12 +602,12 @@ const glacierNormal: Chart = {
   notes: generateNormalPatterns(4, 688, 160) // 4:18 duration (688 beats at 160 BPM)
 };
 
-// Glacier - Hard (180 BPM) - Full 4:18 duration
+// Glacier - Hard (180 BPM) - Full 4:18 duration, spaced out
 const glacierHard: Chart = {
   songId: "5",
   difficulty: "Hard",
   bpm: 180,
-  notes: generateConsistent16thNotes(4, 774, 180) // 4:18 duration (774 beats at 180 BPM)
+  notes: generateSpacedHardPatterns(4, 774, 180) // 4:18 duration (774 beats at 180 BPM)
 };
 
 // Glacier - Expert (200 BPM) - Full 4:18 duration
@@ -603,12 +648,12 @@ const luminousEraNormal: Chart = {
   notes: generateNormalPatterns(4, 220, 165)
 };
 
-// Luminous Era - Hard (185 BPM)
+// Luminous Era - Hard (185 BPM) - Spaced out for better flow
 const luminousEraHard: Chart = {
   songId: "6",
   difficulty: "Hard",
   bpm: 185,
-  notes: generateConsistent16thNotes(4, 390, 185)
+  notes: generateSpacedHardPatterns(4, 390, 185)
 };
 
 // Luminous Era - Expert (205 BPM)
@@ -649,12 +694,12 @@ const absoluteQueenNormal: Chart = {
   notes: generateNormalPatterns(4, 578, 165) // 3:30 duration (578 beats at 165 BPM)
 };
 
-// Absolute Queen - Hard (185 BPM) - Adjusted to 3:30 duration
+// Absolute Queen - Hard (185 BPM) - Adjusted to 3:30 duration, spaced out
 const absoluteQueenHard: Chart = {
   songId: "7",
   difficulty: "Hard",
   bpm: 185,
-  notes: generateConsistent16thNotes(4, 648, 185) // 3:30 duration (648 beats at 185 BPM)
+  notes: generateSpacedHardPatterns(4, 648, 185) // 3:30 duration (648 beats at 185 BPM)
 };
 
 // Absolute Queen - Expert (205 BPM) - Adjusted to 3:30 duration
