@@ -409,44 +409,50 @@ const gearsOfFateMaster: Chart = {
   )
 };
 
-// Another Me - Easy (140 BPM)
+// Another Me - Easy (130 BPM)
 const anotherMeEasy: Chart = {
   songId: "4",
   difficulty: "Easy",
-  bpm: 140,
-  notes: generateEasyPatterns(4, 240, 140) // 4 to 240 beats = ~3.4 minutes
+  bpm: 130,
+  notes: generateEasyPatterns(4, 340, 130) // 4 to 340 beats = ~4.3 minutes (full song)
 };
 
-// Another Me - Normal (150 BPM)
+// Another Me - Normal (158 BPM)
 const anotherMeNormal: Chart = {
   songId: "4",
   difficulty: "Normal",
-  bpm: 150,
-  notes: generateNormalPatterns(4, 180, 150) // 4 to 180 beats = ~3 minutes
+  bpm: 158,
+  notes: generateNormalPatterns(4, 380, 158) // 4 to 380 beats = ~3.8 minutes (full song)
 };
 
-// Another Me - Hard (160 BPM)
+// Another Me - Hard (175 BPM)
 const anotherMeHard: Chart = {
   songId: "4",
   difficulty: "Hard",
-  bpm: 160,
-  notes: generateConsistent16thNotes(4, 400, 160) // 4 to 400 beats = ~3.5 minutes
+  bpm: 175,
+  notes: generateConsistent16thNotes(4, 450, 175) // 4 to 450 beats = ~4.1 minutes (full song)
 };
 
-// Another Me - Expert (175 BPM)
+// Another Me - Expert (190 BPM)
 const anotherMeExpert: Chart = {
   songId: "4",
   difficulty: "Expert",
-  bpm: 175,
-  notes: generateExpertPatterns(8, 380, 175) // 8 to 380 beats = ~3.6 minutes
+  bpm: 190,
+  notes: combineWithHolds(
+    generateExpertPatterns(8, 480, 190),
+    8, 480, 190, 0.12
+  ) // 8 to 480 beats = ~4.0 minutes (full song with holds)
 };
 
-// Another Me - Master (190 BPM)
+// Another Me - Master (205 BPM)
 const anotherMeMaster: Chart = {
   songId: "4",
   difficulty: "Master",
-  bpm: 190,
-  notes: generateMasterPatterns(8, 350, 190) // 8 to 350 beats = ~3.3 minutes
+  bpm: 205,
+  notes: combineWithHolds(
+    generateMasterPatterns(8, 520, 205),
+    8, 520, 205, 0.15
+  ) // 8 to 520 beats = ~4.1 minutes (full song with challenging holds)
 };
 
 // Viyella's Destiny - Easy (120 BPM)
