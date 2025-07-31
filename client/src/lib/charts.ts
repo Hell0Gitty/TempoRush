@@ -633,49 +633,49 @@ const luminousEraMaster: Chart = {
   )
 };
 
-// Absolute Queen - Easy (140 BPM)
+// Absolute Queen - Easy (140 BPM) - Full 4:00 duration
 const absoluteQueenEasy: Chart = {
   songId: "7",
   difficulty: "Easy",
   bpm: 140,
-  notes: generateEasyPatterns(4, 180, 140) // 2:30 duration
+  notes: generateEasyPatterns(4, 560, 140) // 4:00 duration (560 beats at 140 BPM)
 };
 
-// Absolute Queen - Normal (165 BPM)
+// Absolute Queen - Normal (165 BPM) - Full 4:00 duration
 const absoluteQueenNormal: Chart = {
   songId: "7",
   difficulty: "Normal",
   bpm: 165,
-  notes: generateNormalPatterns(4, 160, 165)
+  notes: generateNormalPatterns(4, 660, 165) // 4:00 duration (660 beats at 165 BPM)
 };
 
-// Absolute Queen - Hard (185 BPM)
+// Absolute Queen - Hard (185 BPM) - Full 4:00 duration
 const absoluteQueenHard: Chart = {
   songId: "7",
   difficulty: "Hard",
   bpm: 185,
-  notes: generateConsistent16thNotes(4, 280, 185)
+  notes: generateConsistent16thNotes(4, 740, 185) // 4:00 duration (740 beats at 185 BPM)
 };
 
-// Absolute Queen - Expert (205 BPM)
+// Absolute Queen - Expert (205 BPM) - Full 4:00 duration
 const absoluteQueenExpert: Chart = {
   songId: "7",
   difficulty: "Expert",
   bpm: 205,
   notes: combineWithHolds(
-    generateExpertPatterns(8, 300, 205),
-    8, 300, 205, 0.12
+    generateExpertPatterns(8, 820, 205), // 4:00 duration (820 beats at 205 BPM)
+    8, 820, 205, 0.12
   )
 };
 
-// Absolute Queen - Master (225 BPM)
+// Absolute Queen - Master (225 BPM) - Full 4:00 duration
 const absoluteQueenMaster: Chart = {
   songId: "7",
   difficulty: "Master",
   bpm: 225,
   notes: combineWithHolds(
-    generateMasterPatterns(8, 320, 225),
-    8, 320, 225, 0.15
+    generateMasterPatterns(8, 900, 225), // 4:00 duration (900 beats at 225 BPM)
+    8, 900, 225, 0.15
   )
 };
 
