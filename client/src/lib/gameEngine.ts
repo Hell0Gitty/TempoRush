@@ -349,7 +349,7 @@ export class GameEngine {
     });
 
     // Draw lane labels at bottom
-    this.ctx!.font = '700 24px Fredoka, sans-serif';
+    this.ctx!.font = '900 24px Nunito, Fredoka, sans-serif';
     this.ctx!.textAlign = 'center';
     ['A', 'S', 'K', 'L'].forEach((key, i) => {
       this.ctx!.fillStyle = 'white';
