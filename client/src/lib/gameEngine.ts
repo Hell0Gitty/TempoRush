@@ -38,6 +38,10 @@ export class GameEngine {
     maxLife: number;
     color: string;
   }> = [];
+  private audioContext: AudioContext | null = null;
+  private analyser: AnalyserNode | null = null;
+  private dataArray: Uint8Array | null = null;
+  private source: MediaElementAudioSourceNode | null = null;
 
   constructor() {
     this.audioEngine = new AudioEngine();
@@ -89,6 +93,87 @@ export class GameEngine {
 
   private keyDownListener?: (e: KeyboardEvent) => void;
   private keyUpListener?: (e: KeyboardEvent) => void;
+
+  private initAudioAnalyser() {
+    try {
+      // Get the audio element that's playing music
+      const audioElement = document.querySelector('audio');
+      if (!audioElement) return;
+
+      // Create audio context and analyser
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.analyser = this.audioContext.createAnalyser();
+      
+      // Configure analyser
+      this.analyser.fftSize = 128; // 64 frequency bins
+      this.analyser.smoothingTimeConstant = 0.8;
+      
+      // Create data array for frequency data
+      this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+      
+      // Connect audio source to analyser
+      if (!this.source) {
+        this.source = this.audioContext.createMediaElementSource(audioElement);
+        this.source.connect(this.analyser);
+        this.source.connect(this.audioContext.destination);
+      }
+    } catch (error) {
+      console.log('Audio analyser setup failed:', error);
+    }
+  }
+
+  private getFrequencyData(): number[] {
+    if (!this.analyser || !this.dataArray) return [];
+    
+    this.analyser.getByteFrequencyData(this.dataArray);
+    
+    // Group frequencies into bars (8 bars total)
+    const barCount = 8;
+    const binSize = Math.floor(this.dataArray.length / barCount);
+    const bars: number[] = [];
+    
+    for (let i = 0; i < barCount; i++) {
+      let sum = 0;
+      for (let j = 0; j < binSize; j++) {
+        sum += this.dataArray[i * binSize + j];
+      }
+      bars.push(sum / binSize / 255); // Normalize to 0-1
+    }
+    
+    return bars;
+  }
+
+  private drawAudioBars() {
+    const frequencyData = this.getFrequencyData();
+    if (frequencyData.length === 0) return;
+    
+    const barWidth = this.width / frequencyData.length;
+    const maxBarHeight = this.height * 0.4; // Reduced height so it doesn't cover gameplay
+    
+    frequencyData.forEach((amplitude, index) => {
+      const barHeight = amplitude * maxBarHeight;
+      const x = index * barWidth;
+      const y = this.height - barHeight;
+      
+      // Create gradient for each bar
+      const barGradient = this.ctx!.createLinearGradient(x, y + barHeight, x, y);
+      const hue = (index * 45) % 360;
+      barGradient.addColorStop(0, `hsla(${hue}, 70%, 50%, 0.2)`);
+      barGradient.addColorStop(1, `hsla(${hue}, 70%, 70%, 0.4)`);
+      
+      this.ctx!.fillStyle = barGradient;
+      this.ctx!.fillRect(x, y, barWidth - 2, barHeight);
+      
+      // Add mirror bars at the top
+      const topY = 0;
+      const topGradient = this.ctx!.createLinearGradient(x, topY, x, topY + barHeight);
+      topGradient.addColorStop(0, `hsla(${hue}, 70%, 70%, 0.3)`);
+      topGradient.addColorStop(1, `hsla(${hue}, 70%, 50%, 0.1)`);
+      
+      this.ctx!.fillStyle = topGradient;
+      this.ctx!.fillRect(x, topY, barWidth - 2, barHeight);
+    });
+  }
 
   private handleKeyPress(key: string) {
     const laneIndex = ['a', 's', 'k', 'l'].indexOf(key);
@@ -318,6 +403,9 @@ export class GameEngine {
     this.ctx!.fillStyle = gradient;
     this.ctx!.fillRect(0, 0, this.width, this.height);
     
+    // Draw audio visualizer bars behind everything
+    this.drawAudioBars();
+    
     // Draw background pattern
     this.ctx!.strokeStyle = 'rgba(255, 255, 255, 0.05)';
     this.ctx!.lineWidth = 1;
@@ -500,6 +588,11 @@ export class GameEngine {
     this.lastTime = undefined;
     this.currentFrame = 0;
     this.nextNoteIndex = 0;
+    
+    // Initialize audio analyser after a delay to ensure audio is ready
+    setTimeout(() => {
+      this.initAudioAnalyser();
+    }, 2000);
     
     this.animationId = requestAnimationFrame(this.gameLoop);
   }
