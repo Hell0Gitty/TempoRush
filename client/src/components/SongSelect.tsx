@@ -90,8 +90,35 @@ export default function SongSelect() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
   const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  // Split songs into pages: 4 songs per page
+  const songsPerPage = 4;
+  const totalPages = Math.ceil(AVAILABLE_SONGS.length / songsPerPage);
+  const currentPageSongs = AVAILABLE_SONGS.slice(
+    currentPage * songsPerPage,
+    (currentPage + 1) * songsPerPage
+  );
 
   const currentSong = AVAILABLE_SONGS.find(song => song.id === selectedSongId);
+  
+  const nextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
+      setSelectedSongId(null);
+      setSelectedDifficulty(null);
+      stopPreview();
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+      setSelectedSongId(null);
+      setSelectedDifficulty(null);
+      stopPreview();
+    }
+  };
 
   // Cleanup preview audio on unmount
   useEffect(() => {
@@ -192,8 +219,34 @@ export default function SongSelect() {
           <p className="text-lg opacity-80">Choose a track to start your rhythm challenge</p>
         </div>
 
+        {/* Page Navigation */}
+        <div className="flex items-center justify-between mb-6 w-full max-w-4xl">
+          <button
+            onClick={prevPage}
+            disabled={currentPage === 0}
+            className="px-4 py-2 bg-blue-600 rounded-lg font-bold hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            ← Previous
+          </button>
+          
+          <div className="text-center">
+            <div className="text-lg font-bold">Page {currentPage + 1} of {totalPages}</div>
+            <div className="text-sm opacity-70">
+              {currentPage === 0 ? "Main Collection" : "Extended Collection"}
+            </div>
+          </div>
+          
+          <button
+            onClick={nextPage}
+            disabled={currentPage === totalPages - 1}
+            className="px-4 py-2 bg-blue-600 rounded-lg font-bold hover:bg-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            Next →
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full mb-8">
-          {AVAILABLE_SONGS.map((song) => (
+          {currentPageSongs.map((song) => (
             <div
               key={song.id}
               onClick={() => handleSongSelect(song)}
