@@ -21,12 +21,15 @@ interface RhythmState {
     good: number;
     miss: number;
   };
-
+  flashIntensity: number; // 0-1 for screen flash effect
+  
   // Actions
   addNote: (note: Note) => void;
   hitNote: (noteId: string, timing: 'perfect' | 'good' | 'miss') => void;
   updateNotes: (notes: Note[]) => void;
   resetGame: () => void;
+  triggerFlash: (intensity?: number) => void;
+  updateFlash: () => void;
 }
 
 export const useRhythm = create<RhythmState>()(
@@ -42,6 +45,7 @@ export const useRhythm = create<RhythmState>()(
       good: 0,
       miss: 0
     },
+    flashIntensity: 0,
 
     addNote: (note) => {
       set((state) => ({
@@ -115,8 +119,19 @@ export const useRhythm = create<RhythmState>()(
           perfect: 0,
           good: 0,
           miss: 0
-        }
+        },
+        flashIntensity: 0
       });
+    },
+
+    triggerFlash: (intensity = 0.8) => {
+      set({ flashIntensity: intensity });
+    },
+
+    updateFlash: () => {
+      set((state) => ({
+        flashIntensity: Math.max(0, state.flashIntensity - 0.04) // Fade out over ~1 second at 60fps
+      }));
     }
   }))
 );

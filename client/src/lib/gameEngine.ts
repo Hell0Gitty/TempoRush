@@ -21,6 +21,8 @@ export class GameEngine {
   private currentFrame: number = 0;
   private chartNotes: Array<{time: number, lane: number}> = [];
   private nextNoteIndex: number = 0;
+  private lastFlashTime: number = 0;
+  private flashTriggers: number[] = []; // Chorus timing points in milliseconds
 
   // Lane colors
   private laneColors = ['#ef4444', '#22c55e', '#3b82f6', '#eab308']; // red, green, blue, yellow
@@ -215,6 +217,41 @@ export class GameEngine {
     });
   }
 
+  private setupFlashTriggers(songId: string) {
+    // Define chorus/drop timing for each song (in seconds)
+    const flashTimings: { [key: string]: number[] } = {
+      "1": [20, 40, 60, 80, 100, 120, 140, 160, 180], // Gears of Fate
+      "2": [25, 50, 75, 100, 125, 150, 175], // Grievous Lady  
+      "3": [30, 60, 90, 120, 150, 180], // Viyella's Destiny
+      "4": [22, 44, 66, 88, 110, 132, 154, 176] // Another Me
+    };
+    
+    // Convert to milliseconds
+    this.flashTriggers = (flashTimings[songId] || []).map(time => time * 1000);
+    this.lastFlashTime = 0;
+    console.log(`Set up ${this.flashTriggers.length} flash triggers for song ${songId}`);
+  }
+
+  private checkFlashTriggers() {
+    if (this.startTime === 0) return;
+    
+    const currentTime = (this.lastTime || 0) - this.startTime;
+    
+    // Check if we've hit a chorus timing
+    for (const flashTime of this.flashTriggers) {
+      if (currentTime >= flashTime && this.lastFlashTime < flashTime) {
+        useRhythm.getState().triggerFlash(0.9); // Strong flash for chorus
+        this.lastFlashTime = flashTime;
+        console.log(`Triggered chorus flash at ${currentTime.toFixed(0)}ms`);
+        break;
+      }
+    }
+  }
+
+  private updateFlash() {
+    useRhythm.getState().updateFlash();
+  }
+
   private render() {
     if (!this.ctx || !this.canvas) return;
 
@@ -317,6 +354,8 @@ export class GameEngine {
     this.generateNote();
     this.updateNotes(deltaTime);
     this.updateParticles(deltaTime);
+    this.checkFlashTriggers();
+    this.updateFlash();
     this.render();
 
     this.animationId = requestAnimationFrame(this.gameLoop);
@@ -334,6 +373,7 @@ export class GameEngine {
       if (chart) {
         this.chartNotes = chart.notes;
         this.noteSpeed = gameState.selectedSong.selectedDifficulty.noteSpeed;
+        this.setupFlashTriggers(gameState.selectedSong.id);
         console.log(`Loaded chart for ${gameState.selectedSong.title} - ${gameState.selectedSong.selectedDifficulty.level}: ${this.chartNotes.length} notes`);
       }
     }
