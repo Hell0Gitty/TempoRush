@@ -115,3 +115,15 @@ The application is configured for production deployment with:
 - Request logging with performance metrics
 
 The application is designed to be deployed as a single Node.js process that serves both the API and static frontend files, making it suitable for platforms like Railway, Vercel, or traditional VPS hosting.
+
+## Recent Changes
+
+### July 31, 2025
+- **Enhanced Pause System**: Replaced restart button with comprehensive pause menu featuring Continue, Restart Song, and Quit options accessible via Escape key or pause button
+- **Speed Control Instructions**: Added visible on-screen instructions for speed controls (↑/↓, +/-, 0 to reset) during gameplay and in pause menu
+- **Note Speed Increase**: Increased default note speeds across all difficulties by 50% for faster, more challenging gameplay (Easy: 300, Normal: 400, Hard: 500, Expert: 600, Master: 700 pixels/sec)
+- **White Block Notes**: Changed note shapes from musical note design to simple white blocks for cleaner visual appearance
+- **Extended Another Me Charts**: Fixed chart duration to cover full 3:47 song length across all difficulty levels (was cutting short)
+- **Artist Credit Correction**: Updated Grievous Lady artist from "Team Grimoire vs Laur" to just "Laur" as requested
+- **Interactive ESC Key**: ESC key now toggles between pause/resume functionality for better user control
+- **Menu Functionality Fix**: Added proper pointer-events and cursor styling to ensure pause menu buttons are clickable
