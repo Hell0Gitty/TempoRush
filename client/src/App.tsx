@@ -8,22 +8,38 @@ import AudioManager from "./components/AudioManager";
 import "@fontsource/lato";
 
 function App() {
-  const { phase } = useGame();
+  const { phase, selectedSong } = useGame();
   const { setBackgroundMusic, setHitSound, setSuccessSound } = useAudio();
 
-  // Initialize audio files
+  // Initialize hit and success sound effects
   useEffect(() => {
-    const bgMusic = new Audio('/sounds/background.mp3');
     const hitSound = new Audio('/sounds/hit.mp3');
     const successSound = new Audio('/sounds/success.mp3');
     
-    bgMusic.loop = true;
-    bgMusic.volume = 0.6;
-    
-    setBackgroundMusic(bgMusic);
     setHitSound(hitSound);
     setSuccessSound(successSound);
-  }, [setBackgroundMusic, setHitSound, setSuccessSound]);
+  }, [setHitSound, setSuccessSound]);
+
+  // Load selected song's audio file
+  useEffect(() => {
+    if (selectedSong?.audioFile) {
+      console.log("Loading song audio:", selectedSong.audioFile);
+      const bgMusic = new Audio(selectedSong.audioFile);
+      bgMusic.loop = true;
+      bgMusic.volume = 0.6;
+      
+      // Add error handling for audio loading
+      bgMusic.onerror = (e) => {
+        console.error("Failed to load audio file:", selectedSong.audioFile, e);
+      };
+      
+      bgMusic.onloadeddata = () => {
+        console.log("Audio file loaded successfully:", selectedSong.audioFile);
+      };
+      
+      setBackgroundMusic(bgMusic);
+    }
+  }, [selectedSong?.audioFile, setBackgroundMusic]);
 
   return (
     <div style={{ 
