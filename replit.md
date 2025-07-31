@@ -132,3 +132,4 @@ The application is designed to be deployed as a single Node.js process that serv
 - **Character System**: Integrated 4 custom characters (Ivy, Winter, Scal, Lightren) with unique artwork and special abilities
 - **Character Abilities**: Implemented ability system with Ivy's combo save, Winter's health freeze, Scal's high-risk modifier, and Lightren's score boost
 - **Voice Line System**: Added character-specific dialogue that appears as speech bubbles when songs complete or fail, featuring 3 different lines per character per outcome
+- **Background Removal**: Processed character images using Python PIL to remove backgrounds, creating transparent PNG files for cleaner visual integration with CSS enhancement filters
