@@ -409,50 +409,50 @@ const gearsOfFateMaster: Chart = {
   )
 };
 
-// Another Me - Easy (130 BPM)
+// Another Me - Easy (130 BPM) - Full 3:47 duration
 const anotherMeEasy: Chart = {
   songId: "4",
   difficulty: "Easy",
   bpm: 130,
-  notes: generateEasyPatterns(4, 340, 130) // 4 to 340 beats = ~4.3 minutes (full song)
+  notes: generateEasyPatterns(4, 492, 130) // 3:47 duration (492 beats at 130 BPM)
 };
 
-// Another Me - Normal (158 BPM)
+// Another Me - Normal (158 BPM) - Full 3:47 duration
 const anotherMeNormal: Chart = {
   songId: "4",
   difficulty: "Normal",
   bpm: 158,
-  notes: generateNormalPatterns(4, 380, 158) // 4 to 380 beats = ~3.8 minutes (full song)
+  notes: generateNormalPatterns(4, 598, 158) // 3:47 duration (598 beats at 158 BPM)
 };
 
-// Another Me - Hard (175 BPM)
+// Another Me - Hard (175 BPM) - Full 3:47 duration
 const anotherMeHard: Chart = {
   songId: "4",
   difficulty: "Hard",
   bpm: 175,
-  notes: generateConsistent16thNotes(4, 450, 175) // 4 to 450 beats = ~4.1 minutes (full song)
+  notes: generateConsistent16thNotes(4, 662, 175) // 3:47 duration (662 beats at 175 BPM)
 };
 
-// Another Me - Expert (190 BPM)
+// Another Me - Expert (190 BPM) - Full 3:47 duration
 const anotherMeExpert: Chart = {
   songId: "4",
   difficulty: "Expert",
   bpm: 190,
   notes: combineWithHolds(
-    generateExpertPatterns(8, 480, 190),
-    8, 480, 190, 0.12
-  ) // 8 to 480 beats = ~4.0 minutes (full song with holds)
+    generateExpertPatterns(8, 719, 190), // 3:47 duration (719 beats at 190 BPM)
+    8, 719, 190, 0.12
+  )
 };
 
-// Another Me - Master (205 BPM)
+// Another Me - Master (205 BPM) - Full 3:47 duration
 const anotherMeMaster: Chart = {
   songId: "4",
   difficulty: "Master",
   bpm: 205,
   notes: combineWithHolds(
-    generateMasterPatterns(8, 520, 205),
-    8, 520, 205, 0.15
-  ) // 8 to 520 beats = ~4.1 minutes (full song with challenging holds)
+    generateMasterPatterns(8, 776, 205), // 3:47 duration (776 beats at 205 BPM)
+    8, 776, 205, 0.15
+  )
 };
 
 // Viyella's Destiny - Easy (120 BPM)
