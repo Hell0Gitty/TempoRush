@@ -103,10 +103,7 @@ export default function GameUI({ onPause }: GameUIProps) {
             <img 
               src={selectedCharacter.image} 
               alt={selectedCharacter.name}
-              className="w-6 h-6 rounded object-cover"
-              style={{
-                filter: 'contrast(1.1) brightness(1.1)'
-              }}
+              className="w-10 h-10 object-contain character-image"
             />
             {selectedCharacter.name}
           </div>
@@ -183,10 +180,7 @@ export default function GameUI({ onPause }: GameUIProps) {
             <img 
               src={selectedCharacter.image} 
               alt={selectedCharacter.name}
-              className="w-8 h-8 rounded object-cover"
-              style={{
-                filter: 'contrast(1.1) brightness(1.1)'
-              }}
+              className="w-12 h-12 object-contain character-image"
             />
             <div className="text-white font-bold text-lg">
               "{abilityVoiceLine}"

@@ -141,15 +141,11 @@ export default function CharacterSelect() {
               }`}
             >
               <div className="text-center">
-                <div className="mb-3 h-24 flex items-center justify-center">
+                <div className="mb-3 h-32 flex items-center justify-center">
                   <img 
                     src={character.image} 
                     alt={character.name}
-                    className="w-20 h-20 object-contain rounded-lg"
-                    style={{
-                      filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3)) contrast(1.1) brightness(1.1)',
-                      mixBlendMode: 'normal'
-                    }}
+                    className="w-32 h-32 object-contain character-select-image"
                   />
                 </div>
                 <h3 className="text-xl font-bold mb-2">{character.name}</h3>

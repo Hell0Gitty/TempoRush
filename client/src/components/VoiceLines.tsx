@@ -103,10 +103,7 @@ export default function VoiceLines({ gameResult, onClose }: VoiceLinesProps) {
             <img 
               src={selectedCharacter.image} 
               alt={selectedCharacter.name}
-              className="w-16 h-16 rounded-lg object-cover"
-              style={{
-                filter: 'contrast(1.1) brightness(1.1) drop-shadow(0 0 8px rgba(255,255,255,0.3))'
-              }}
+              className="w-24 h-24 object-contain character-image"
             />
           </div>
           

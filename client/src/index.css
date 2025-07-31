@@ -39,3 +39,52 @@ canvas {
   height: 100% !important;
   touch-action: none;
 }
+
+/* Character background removal techniques */
+.character-image {
+  /* Advanced background removal using multiple CSS filters */
+  filter: 
+    contrast(1.3) 
+    brightness(1.2) 
+    saturate(1.2)
+    drop-shadow(0 0 15px rgba(255,255,255,0.6))
+    hue-rotate(0deg);
+  
+  /* Use screen blend mode to help remove darker backgrounds */
+  mix-blend-mode: screen;
+  
+  /* Ensure transparent background is respected */
+  background: transparent;
+  
+  /* Remove any border artifacts */
+  border: none;
+  outline: none;
+}
+
+/* Enhanced character display for selection screen */
+.character-select-image {
+  /* Stronger filters for character selection */
+  filter: 
+    contrast(1.4) 
+    brightness(1.3) 
+    saturate(1.3)
+    drop-shadow(0 0 20px rgba(255,255,255,0.8))
+    drop-shadow(0 0 40px rgba(255,255,255,0.4));
+  
+  mix-blend-mode: screen;
+  background: transparent;
+  
+  /* Smooth transitions for hover effects */
+  transition: all 0.3s ease;
+}
+
+.character-select-image:hover {
+  filter: 
+    contrast(1.5) 
+    brightness(1.4) 
+    saturate(1.4)
+    drop-shadow(0 0 25px rgba(255,255,255,1.0))
+    drop-shadow(0 0 50px rgba(255,255,255,0.6));
+  
+  transform: scale(1.05);
+}
