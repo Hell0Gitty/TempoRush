@@ -17,7 +17,7 @@ interface AudioState {
 export const useAudio = create<AudioState>((set, get) => ({
   backgroundMusic: null,
   successSound: null,
-  isMuted: true, // Start muted by default
+  isMuted: false, // Start with sound ON by default
   
   setBackgroundMusic: (music) => set({ backgroundMusic: music }),
   setSuccessSound: (sound) => set({ successSound: sound }),
