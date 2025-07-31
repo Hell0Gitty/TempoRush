@@ -2,11 +2,11 @@ import { useGame } from "../lib/stores/useGame";
 import { useAudio } from "../lib/stores/useAudio";
 
 export default function Menu() {
-  const { start } = useGame();
+  const { showSongSelect } = useGame();
   const { toggleMute, isMuted } = useAudio();
 
   const handleStart = () => {
-    start();
+    showSongSelect();
   };
 
   return (

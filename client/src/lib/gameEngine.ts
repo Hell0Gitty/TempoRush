@@ -12,6 +12,7 @@ export class GameEngine {
   private width: number = 0;
   private height: number = 0;
   private laneWidth: number = 0;
+  private laneStartX: number = 0;
   private hitZoneY: number = 0;
   private noteSpeed: number = 300; // pixels per second
   private nextNoteTime: number = 0;
@@ -47,7 +48,10 @@ export class GameEngine {
   resize(width: number, height: number) {
     this.width = width;
     this.height = height;
-    this.laneWidth = width / 4;
+    // Make lanes smaller and center them
+    const gameAreaWidth = Math.min(width * 0.6, 600); // Max 600px wide
+    this.laneWidth = gameAreaWidth / 4;
+    this.laneStartX = (width - gameAreaWidth) / 2;
     this.hitZoneY = height - 120;
   }
 
@@ -111,11 +115,11 @@ export class GameEngine {
     if (distance <= 30) {
       timing = 'perfect';
       audioState.playSuccess();
-      this.createParticles(laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffd700');
+      this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffd700');
     } else if (distance <= 60) {
       timing = 'good';
       audioState.playHit();
-      this.createParticles(laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffffff');
+      this.createParticles(this.laneStartX + laneIndex * this.laneWidth + this.laneWidth / 2, this.hitZoneY, '#ffffff');
     } else {
       timing = 'miss';
       audioState.playHit();
@@ -208,74 +212,88 @@ export class GameEngine {
 
     const state = useRhythm.getState();
     
-    // Clear canvas
-    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    // Draw animated background
+    const gradient = this.ctx!.createLinearGradient(0, 0, 0, this.height);
+    gradient.addColorStop(0, '#1a1a2e');
+    gradient.addColorStop(0.5, '#16213e');
+    gradient.addColorStop(1, '#0f3460');
+    this.ctx!.fillStyle = gradient;
+    this.ctx!.fillRect(0, 0, this.width, this.height);
+    
+    // Draw background pattern
+    this.ctx!.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    this.ctx!.lineWidth = 1;
+    for (let i = 0; i < this.width; i += 50) {
+      this.ctx!.beginPath();
+      this.ctx!.moveTo(i, 0);
+      this.ctx!.lineTo(i, this.height);
+      this.ctx!.stroke();
+    }
 
     // Draw lanes
     for (let i = 0; i < 4; i++) {
-      const x = i * this.laneWidth;
+      const x = this.laneStartX + i * this.laneWidth;
       
       // Lane background
-      this.ctx.fillStyle = `${this.laneColors[i]}20`;
-      this.ctx.fillRect(x, 0, this.laneWidth, this.height);
+      this.ctx!.fillStyle = `${this.laneColors[i]}20`;
+      this.ctx!.fillRect(x, 0, this.laneWidth, this.height);
       
       // Lane border
-      this.ctx.strokeStyle = this.laneColors[i];
-      this.ctx.lineWidth = 2;
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, 0);
-      this.ctx.lineTo(x, this.height);
-      this.ctx.stroke();
+      this.ctx!.strokeStyle = this.laneColors[i];
+      this.ctx!.lineWidth = 2;
+      this.ctx!.beginPath();
+      this.ctx!.moveTo(x, 0);
+      this.ctx!.lineTo(x, this.height);
+      this.ctx!.stroke();
 
       // Hit zone
       const isPressed = this.keyStates[['a', 's', 'k', 'l'][i]];
       const pressFrame = this.keyPressedFrames[['a', 's', 'k', 'l'][i]] || 0;
       const framesSincePress = this.currentFrame - pressFrame;
       
-      this.ctx.fillStyle = isPressed && framesSincePress < 10 ? 
+      this.ctx!.fillStyle = isPressed && framesSincePress < 10 ? 
         `${this.laneColors[i]}80` : `${this.laneColors[i]}40`;
-      this.ctx.fillRect(x + 10, this.hitZoneY - 30, this.laneWidth - 20, 60);
+      this.ctx!.fillRect(x + 10, this.hitZoneY - 30, this.laneWidth - 20, 60);
       
       // Hit zone border
-      this.ctx.strokeStyle = this.laneColors[i];
-      this.ctx.lineWidth = 3;
-      this.ctx.strokeRect(x + 10, this.hitZoneY - 30, this.laneWidth - 20, 60);
+      this.ctx!.strokeStyle = this.laneColors[i];
+      this.ctx!.lineWidth = 3;
+      this.ctx!.strokeRect(x + 10, this.hitZoneY - 30, this.laneWidth - 20, 60);
     }
 
     // Draw notes
     state.notes.forEach(note => {
       if (note.hit) return;
       
-      const x = note.lane * this.laneWidth;
+      const x = this.laneStartX + note.lane * this.laneWidth;
       const noteSize = this.laneWidth - 40;
       
       // Note shadow
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      this.ctx.fillRect(x + 22, note.y + 2, noteSize, 20);
+      this.ctx!.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      this.ctx!.fillRect(x + 22, note.y + 2, noteSize, 20);
       
       // Note body
-      this.ctx.fillStyle = this.laneColors[note.lane];
-      this.ctx.fillRect(x + 20, note.y, noteSize, 20);
+      this.ctx!.fillStyle = this.laneColors[note.lane];
+      this.ctx!.fillRect(x + 20, note.y, noteSize, 20);
       
       // Note highlight
-      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-      this.ctx.fillRect(x + 20, note.y, noteSize, 5);
+      this.ctx!.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      this.ctx!.fillRect(x + 20, note.y, noteSize, 5);
     });
 
     // Draw particles
     this.particles.forEach(particle => {
       const alpha = particle.life / particle.maxLife;
-      this.ctx.fillStyle = particle.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
-      this.ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+      this.ctx!.fillStyle = particle.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+      this.ctx!.fillRect(particle.x - 2, particle.y - 2, 4, 4);
     });
 
     // Draw lane labels at bottom
-    this.ctx.font = 'bold 24px Inter, sans-serif';
-    this.ctx.textAlign = 'center';
+    this.ctx!.font = 'bold 24px Inter, sans-serif';
+    this.ctx!.textAlign = 'center';
     ['A', 'S', 'K', 'L'].forEach((key, i) => {
-      this.ctx.fillStyle = 'white';
-      this.ctx.fillText(key, i * this.laneWidth + this.laneWidth / 2, this.height - 30);
+      this.ctx!.fillStyle = 'white';
+      this.ctx!.fillText(key, this.laneStartX + i * this.laneWidth + this.laneWidth / 2, this.height - 30);
     });
   }
 

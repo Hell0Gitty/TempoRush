@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useGame } from "./lib/stores/useGame";
 import { useAudio } from "./lib/stores/useAudio";
 import Menu from "./components/Menu";
+import SongSelect from "./components/SongSelect";
 import Game from "./components/Game";
 import AudioManager from "./components/AudioManager";
 import "@fontsource/inter";
@@ -36,6 +37,7 @@ function App() {
       <AudioManager />
       
       {phase === 'ready' && <Menu />}
+      {phase === 'songSelect' && <SongSelect />}
       {(phase === 'playing' || phase === 'ended') && <Game />}
     </div>
   );

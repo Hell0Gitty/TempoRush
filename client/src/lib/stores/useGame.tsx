@@ -1,12 +1,25 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 
-export type GamePhase = "ready" | "playing" | "ended";
+export type GamePhase = "ready" | "songSelect" | "playing" | "ended";
+
+interface Song {
+  id: string;
+  title: string;
+  artist: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  bpm: number;
+  duration: string;
+  audioFile: string;
+}
 
 interface GameState {
   phase: GamePhase;
+  selectedSong: Song | null;
   
   // Actions
+  showSongSelect: () => void;
+  selectSong: (song: Song) => void;
   start: () => void;
   restart: () => void;
   end: () => void;
@@ -15,11 +28,20 @@ interface GameState {
 export const useGame = create<GameState>()(
   subscribeWithSelector((set) => ({
     phase: "ready",
+    selectedSong: null,
+    
+    showSongSelect: () => {
+      set(() => ({ phase: "songSelect" }));
+    },
+    
+    selectSong: (song) => {
+      set(() => ({ selectedSong: song }));
+    },
     
     start: () => {
       set((state) => {
-        // Only transition from ready to playing
-        if (state.phase === "ready") {
+        // Only transition from songSelect to playing
+        if (state.phase === "songSelect" && state.selectedSong) {
           return { phase: "playing" };
         }
         return {};
@@ -27,7 +49,7 @@ export const useGame = create<GameState>()(
     },
     
     restart: () => {
-      set(() => ({ phase: "ready" }));
+      set(() => ({ phase: "ready", selectedSong: null }));
     },
     
     end: () => {
