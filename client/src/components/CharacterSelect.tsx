@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGame } from "../lib/stores/useGame";
 
 interface Character {
@@ -20,6 +20,17 @@ interface Character {
   };
   color: string;
   image: string;
+  stats: {
+    difficulty: string;
+    rarity: string;
+    element: string;
+    power: number;
+    defense: number;
+    speed: number;
+    luck: number;
+  };
+  lore: string;
+  specialNotes: string;
 }
 
 const CHARACTERS: Character[] = [
@@ -39,7 +50,18 @@ const CHARACTERS: Character[] = [
       hitWindowMultiplier: 1.0
     },
     color: "from-purple-600 to-blue-800",
-    image: "/characters/ivy.png"
+    image: "/characters/ivy.png",
+    stats: {
+      difficulty: 'Beginner',
+      rarity: 'Common',
+      element: 'Nature',
+      power: 7,
+      defense: 8,
+      speed: 6,
+      luck: 5
+    },
+    lore: 'A gentle forest guardian who protects those who venture into rhythm. Her connection to nature allows her to sense the perfect moment to preserve a combo, making her ideal for beginners learning the flow of music.',
+    specialNotes: 'Perfect for new players who want to maintain long combos while learning complex patterns.'
   },
   {
     id: "winter",
@@ -58,7 +80,18 @@ const CHARACTERS: Character[] = [
       hitWindowMultiplier: 1.0
     },
     color: "from-blue-400 to-cyan-600",
-    image: "/characters/winter.png"
+    image: "/characters/winter.png",
+    stats: {
+      difficulty: 'Intermediate',
+      rarity: 'Rare',
+      element: 'Ice',
+      power: 6,
+      defense: 9,
+      speed: 5,
+      luck: 7
+    },
+    lore: 'Born from the eternal winter, she commands ice and time itself. Her mastery over frozen moments allows her to halt the flow of damage, giving players precious seconds to recover.',
+    specialNotes: 'Excellent for surviving difficult sections and maintaining health during intense gameplay.'
   },
   {
     id: "scal",
@@ -76,7 +109,18 @@ const CHARACTERS: Character[] = [
       hitWindowMultiplier: 0.9
     },
     color: "from-green-600 to-emerald-800",
-    image: "/characters/scal.png"
+    image: "/characters/scal.png",
+    stats: {
+      difficulty: 'Expert',
+      rarity: 'Epic',
+      element: 'Shadow',
+      power: 10,
+      defense: 3,
+      speed: 9,
+      luck: 8
+    },
+    lore: 'A mysterious warrior who thrives on danger and chaos. Her snake companions whisper secrets of risk and reward, doubling the stakes of every note played.',
+    specialNotes: 'High-risk, high-reward character for expert players seeking maximum scores.'
   },
   {
     id: "lightren",
@@ -96,129 +140,204 @@ const CHARACTERS: Character[] = [
       hitWindowMultiplier: 1.0
     },
     color: "from-yellow-400 to-orange-600",
-    image: "/characters/lightren.png"
+    image: "/characters/lightren.png",
+    stats: {
+      difficulty: 'Advanced',
+      rarity: 'Legendary',
+      element: 'Light',
+      power: 8,
+      defense: 7,
+      speed: 8,
+      luck: 9
+    },
+    lore: 'A radiant being who channels pure light and harmony. Her luminous presence amplifies the power of every note, creating cascading score multipliers that reward skilled players.',
+    specialNotes: 'Balanced character with powerful score enhancement for achieving high rankings.'
   }
 ];
 
 export default function CharacterSelect() {
   const { restart, selectedCharacter, setSelectedCharacter } = useGame();
-  const [hoveredCharacter, setHoveredCharacter] = useState<string | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleCharacterSelect = (character: Character) => {
-    setSelectedCharacter(character);
-  };
+  useEffect(() => {
+    // Set default character if none selected
+    if (!selectedCharacter) {
+      setSelectedCharacter(CHARACTERS[0]);
+    } else {
+      // Find current character index
+      const index = CHARACTERS.findIndex(char => char.id === selectedCharacter.id);
+      if (index !== -1) {
+        setCurrentIndex(index);
+      }
+    }
+  }, [selectedCharacter, setSelectedCharacter]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        setCurrentIndex(prev => {
+          const newIndex = prev > 0 ? prev - 1 : CHARACTERS.length - 1;
+          setSelectedCharacter(CHARACTERS[newIndex]);
+          return newIndex;
+        });
+      } else if (event.key === 'ArrowRight') {
+        setCurrentIndex(prev => {
+          const newIndex = prev < CHARACTERS.length - 1 ? prev + 1 : 0;
+          setSelectedCharacter(CHARACTERS[newIndex]);
+          return newIndex;
+        });
+      } else if (event.key === 'Enter') {
+        handleConfirm();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [setSelectedCharacter]);
 
   const handleConfirm = () => {
     restart();
   };
 
+  const currentCharacter = CHARACTERS[currentIndex];
+
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case 'Common': return 'text-gray-400';
+      case 'Rare': return 'text-blue-400';
+      case 'Epic': return 'text-purple-400';
+      case 'Legendary': return 'text-yellow-400';
+      default: return 'text-white';
+    }
+  };
+
+  const getStatBar = (value: number, max: number = 10) => {
+    const percentage = (value / max) * 100;
+    return (
+      <div className="w-full bg-gray-700 rounded-full h-2">
+        <div 
+          className="bg-gradient-to-r from-blue-400 to-purple-500 h-2 rounded-full transition-all duration-300"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full text-white p-8">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-600 bg-clip-text text-transparent">
-          Character Select
-        </h1>
-        <p className="text-lg opacity-80">Choose your playstyle modifier</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl w-full mb-8">
-        {CHARACTERS.map((character) => {
-          const isSelected = selectedCharacter?.id === character.id;
-          const isHovered = hoveredCharacter === character.id;
+    <div className="flex h-full text-white bg-gradient-to-br from-purple-900/20 to-blue-900/20">
+      {/* Left Side - Character Display */}
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="relative mb-8">
+            <div className={`absolute inset-0 bg-gradient-to-br ${currentCharacter.color} blur-3xl opacity-30 rounded-full`} />
+            <img 
+              src={currentCharacter.image} 
+              alt={currentCharacter.name}
+              className="relative w-80 h-80 object-contain character-select-image mx-auto"
+            />
+          </div>
           
-          return (
-            <div
-              key={character.id}
-              onClick={() => handleCharacterSelect(character)}
-              onMouseEnter={() => setHoveredCharacter(character.id)}
-              onMouseLeave={() => setHoveredCharacter(null)}
-              className={`p-6 rounded-lg cursor-pointer transition-all duration-300 border-2 relative ${
-                isSelected 
-                  ? `bg-gradient-to-br ${character.color} border-white scale-105 shadow-lg`
-                  : isHovered
-                    ? `bg-gradient-to-br ${character.color} border-white/60 scale-102`
-                    : 'border-white/20 bg-black/20 hover:border-white/40'
-              }`}
-            >
-              <div className="text-center">
-                <div className="mb-3 h-32 flex items-center justify-center">
-                  <img 
-                    src={character.image} 
-                    alt={character.name}
-                    className="w-32 h-32 object-contain character-select-image"
-                  />
-                </div>
-                <h3 className="text-xl font-bold mb-2">{character.name}</h3>
-                <p className="text-sm opacity-80 mb-4">{character.description}</p>
-                
-                <div className="text-xs space-y-1 mb-4">
-                  <div className="font-semibold opacity-90 text-yellow-300">{character.effect}</div>
-                  {character.ability.uses && (
-                    <div className="text-cyan-300">Uses: {character.ability.uses}</div>
-                  )}
-                  {character.ability.duration && (
-                    <div className="text-green-300">Duration: {character.ability.duration}s</div>
-                  )}
-                </div>
-
-                {/* Stats */}
-                <div className="text-xs space-y-1">
-                  <div className="flex justify-between">
-                    <span>Note Speed:</span>
-                    <span className={character.modifier.noteSpeedMultiplier > 1 ? 'text-red-400' : character.modifier.noteSpeedMultiplier < 1 ? 'text-green-400' : 'text-white'}>
-                      {(character.modifier.noteSpeedMultiplier * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Health:</span>
-                    <span className={character.modifier.healthMultiplier > 1 ? 'text-green-400' : character.modifier.healthMultiplier < 1 ? 'text-red-400' : 'text-white'}>
-                      {(character.modifier.healthMultiplier * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Score Bonus:</span>
-                    <span className={character.modifier.scoreMultiplier > 1 ? 'text-green-400' : character.modifier.scoreMultiplier < 1 ? 'text-red-400' : 'text-white'}>
-                      {(character.modifier.scoreMultiplier * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Hit Window:</span>
-                    <span className={character.modifier.hitWindowMultiplier > 1 ? 'text-green-400' : character.modifier.hitWindowMultiplier < 1 ? 'text-red-400' : 'text-white'}>
-                      {(character.modifier.hitWindowMultiplier * 100).toFixed(0)}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {isSelected && (
-                <div className="absolute top-2 right-2 text-white">
-                  ✓
-                </div>
-              )}
-            </div>
-          );
-        })}
+          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-600 bg-clip-text text-transparent">
+            {currentCharacter.name}
+          </h1>
+          
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <span className={`text-2xl font-bold ${getRarityColor(currentCharacter.stats.rarity)}`}>
+              {currentCharacter.stats.rarity}
+            </span>
+            <span className="text-xl opacity-60">•</span>
+            <span className="text-xl">{currentCharacter.stats.element}</span>
+            <span className="text-xl opacity-60">•</span>
+            <span className="text-xl">{currentCharacter.stats.difficulty}</span>
+          </div>
+        </div>
       </div>
 
-      <div className="flex gap-4">
-        <button
-          onClick={restart}
-          className="px-6 py-3 bg-gray-600 rounded-lg font-bold hover:bg-gray-500 transition-colors"
-        >
-          Back to Menu
-        </button>
-        
-        <button
-          onClick={handleConfirm}
-          disabled={!selectedCharacter}
-          className={`px-8 py-3 rounded-lg font-bold transition-all ${
-            selectedCharacter
-              ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:scale-105 shadow-lg'
-              : 'bg-gray-500 cursor-not-allowed opacity-50'
-          }`}
-        >
-          {selectedCharacter ? `Play as ${selectedCharacter.name}` : 'Select a Character'}
-        </button>
+      {/* Right Side - Character Information */}
+      <div className="flex-1 p-8 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-lg mx-auto">
+          <h2 className="text-3xl font-bold mb-6">Character Details</h2>
+          
+          {/* Description */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold mb-2 text-purple-400">Description</h3>
+            <p className="text-lg opacity-90">{currentCharacter.description}</p>
+          </div>
+
+          {/* Ability */}
+          <div className="mb-6 p-4 bg-purple-900/30 rounded-lg border border-purple-500/30">
+            <h3 className="text-xl font-bold mb-2 text-purple-400">Special Ability</h3>
+            <p className="text-lg font-semibold mb-1">{currentCharacter.description}</p>
+            <p className="opacity-80">{currentCharacter.effect}</p>
+          </div>
+
+          {/* Stats */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold mb-4 text-purple-400">Stats</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <span>Power</span>
+                  <span className="text-purple-400">{currentCharacter.stats.power}/10</span>
+                </div>
+                {getStatBar(currentCharacter.stats.power)}
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <span>Defense</span>
+                  <span className="text-blue-400">{currentCharacter.stats.defense}/10</span>
+                </div>
+                {getStatBar(currentCharacter.stats.defense)}
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <span>Speed</span>
+                  <span className="text-green-400">{currentCharacter.stats.speed}/10</span>
+                </div>
+                {getStatBar(currentCharacter.stats.speed)}
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <span>Luck</span>
+                  <span className="text-yellow-400">{currentCharacter.stats.luck}/10</span>
+                </div>
+                {getStatBar(currentCharacter.stats.luck)}
+              </div>
+            </div>
+          </div>
+
+          {/* Lore */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold mb-2 text-purple-400">Lore</h3>
+            <p className="opacity-80 leading-relaxed">{currentCharacter.lore}</p>
+          </div>
+
+          {/* Special Notes */}
+          <div className="mb-8 p-3 bg-blue-900/20 rounded-lg border border-blue-500/30">
+            <h3 className="text-lg font-bold mb-2 text-blue-400">Player Notes</h3>
+            <p className="opacity-80">{currentCharacter.specialNotes}</p>
+          </div>
+
+          {/* Navigation and Controls */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-sm opacity-60">
+              <span>← Previous</span>
+              <span>{currentIndex + 1} / {CHARACTERS.length}</span>
+              <span>Next →</span>
+            </div>
+            
+            <button
+              onClick={handleConfirm}
+              className="w-full px-6 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-lg hover:from-pink-600 hover:to-purple-700 transition-all duration-300 text-xl"
+            >
+              Start Game with {currentCharacter.name}
+            </button>
+            
+            <p className="text-center text-sm opacity-60">
+              Use ← → arrow keys to browse • Enter to confirm
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

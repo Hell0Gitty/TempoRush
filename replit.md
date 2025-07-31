@@ -133,3 +133,4 @@ The application is designed to be deployed as a single Node.js process that serv
 - **Character Abilities**: Implemented ability system with Ivy's combo save, Winter's health freeze, Scal's high-risk modifier, and Lightren's score boost
 - **Voice Line System**: Added character-specific dialogue that appears as speech bubbles when songs complete or fail, featuring 3 different lines per character per outcome
 - **Background Removal**: Processed character images using Python PIL to remove backgrounds, creating transparent PNG files for cleaner visual integration with CSS enhancement filters
+- **Full-Page Character Selection**: Redesigned character selection as immersive full-page interface with large character displays, detailed stats, lore, and arrow key navigation (left/right to browse, Enter to confirm)
