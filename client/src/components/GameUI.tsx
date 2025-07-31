@@ -1,15 +1,42 @@
 import { useRhythm } from "../lib/stores/useRhythm";
 import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
+import { useEffect } from "react";
 
 interface GameUIProps {
   onPause: () => void;
 }
 
 export default function GameUI({ onPause }: GameUIProps) {
-  const { score, combo, accuracy, health } = useRhythm();
+  const { score, combo, accuracy, health, abilityUses, activeAbilities, activateAbility, updateActiveAbilities } = useRhythm();
   const { toggleMute, isMuted } = useAudio();
-  const { selectedSong } = useGame();
+  const { selectedSong, selectedCharacter } = useGame();
+
+  // Update active abilities timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateActiveAbilities();
+    }, 100);
+    return () => clearInterval(interval);
+  }, [updateActiveAbilities]);
+
+  // Handle ability activation (Q key for Winter/Lightren abilities)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedCharacter) return;
+      
+      if (e.key.toLowerCase() === 'q') {
+        const abilityType = selectedCharacter.ability.type;
+        if ((abilityType === 'health_freeze' || abilityType === 'score_boost') && 
+            (abilityUses[abilityType] || 0) > 0) {
+          activateAbility(abilityType);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCharacter, abilityUses, activateAbility]);
 
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -54,13 +81,76 @@ export default function GameUI({ onPause }: GameUIProps) {
             <span className="text-white text-sm font-semibold">Health:</span>
             <div className="w-32 h-2 bg-red-900 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-red-500 to-green-500 transition-all duration-300"
+                className={`h-full transition-all duration-300 ${
+                  activeAbilities.healthFreeze 
+                    ? 'bg-gradient-to-r from-cyan-400 to-blue-500 animate-pulse' 
+                    : 'bg-gradient-to-r from-red-500 to-green-500'
+                }`}
                 style={{ width: `${health}%` }}
               />
             </div>
+            {activeAbilities.healthFreeze && (
+              <span className="text-cyan-300 text-xs animate-pulse">FROZEN</span>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Character Ability */}
+      {selectedCharacter && (
+        <div className="absolute top-20 left-4 bg-black/30 backdrop-blur-sm rounded-lg p-3 text-white pointer-events-auto">
+          <div className="text-sm font-bold mb-2 flex items-center gap-2">
+            <img 
+              src={selectedCharacter.image} 
+              alt={selectedCharacter.name}
+              className="w-6 h-6 rounded object-cover"
+              style={{
+                filter: 'contrast(1.1) brightness(1.1)'
+              }}
+            />
+            {selectedCharacter.name}
+          </div>
+          
+          {/* Ability info */}
+          <div className="text-xs mb-2 opacity-80">{selectedCharacter.effect}</div>
+          
+          {/* Ability uses and activation */}
+          {selectedCharacter.ability.type === 'combo_save' && (
+            <div className="text-sm">
+              <span className="text-yellow-300">Combo Saves: </span>
+              <span className="font-bold">{abilityUses['combo_save'] || 0}</span>
+            </div>
+          )}
+          
+          {(selectedCharacter.ability.type === 'health_freeze' || selectedCharacter.ability.type === 'score_boost') && (
+            <div className="space-y-1">
+              <button
+                onClick={() => activateAbility(selectedCharacter.ability.type)}
+                disabled={(abilityUses[selectedCharacter.ability.type] || 0) <= 0}
+                className={`px-3 py-1 rounded text-xs font-bold transition-all ${
+                  (abilityUses[selectedCharacter.ability.type] || 0) > 0
+                    ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                Q - Activate ({abilityUses[selectedCharacter.ability.type] || 0} left)
+              </button>
+              
+              {selectedCharacter.ability.type === 'score_boost' && activeAbilities.scoreBoost && (
+                <div className="text-xs text-yellow-300 animate-pulse">
+                  SCORE BOOST ACTIVE!
+                </div>
+              )}
+            </div>
+          )}
+          
+          {selectedCharacter.ability.type === 'health_penalty' && (
+            <div className="text-sm text-red-300">
+              Extra Risk: -5 HP on miss
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Speed Control Instructions */}
       <div className="absolute bottom-32 right-4 bg-black/30 backdrop-blur-sm rounded-lg p-3 text-white text-sm">

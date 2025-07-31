@@ -28,6 +28,12 @@ interface Character {
   name: string;
   description: string;
   effect: string;
+  ability: {
+    type: 'combo_save' | 'health_freeze' | 'health_penalty' | 'score_boost' | 'none';
+    duration?: number; // in seconds
+    uses?: number; // number of times ability activates
+    value?: number; // modifier value
+  };
   modifier: {
     noteSpeedMultiplier: number;
     healthMultiplier: number;
@@ -35,7 +41,7 @@ interface Character {
     hitWindowMultiplier: number;
   };
   color: string;
-  icon: string;
+  image: string;
 }
 
 interface GameState {
@@ -66,18 +72,22 @@ export const useGame = create<GameState>()(
     phase: "ready",
     selectedSong: null,
     selectedCharacter: {
-      id: "normal",
-      name: "Rhythm",
-      description: "Balanced character for standard gameplay",
-      effect: "No modifications - pure skill challenge",
+      id: "ivy",
+      name: "Ivy",
+      description: "Combo protection specialist",
+      effect: "Saves combo 5 times when you would lose it",
+      ability: {
+        type: 'combo_save',
+        uses: 5
+      },
       modifier: {
         noteSpeedMultiplier: 1.0,
         healthMultiplier: 1.0,
         scoreMultiplier: 1.0,
         hitWindowMultiplier: 1.0
       },
-      color: "from-gray-500 to-gray-700",
-      icon: "🎵"
+      color: "from-purple-600 to-blue-800",
+      image: "/characters/ivy.png"
     },
     expertFullCombos: [],
     speedMultiplier: 1.0,

@@ -30,6 +30,13 @@ interface RhythmState {
   flashIntensity: number; // 0-1 for screen flash effect
   speedFeedback: { visible: boolean; multiplier: number; }; // Speed change feedback
   
+  // Character abilities
+  abilityUses: { [abilityType: string]: number }; // Track remaining uses
+  activeAbilities: { 
+    healthFreeze?: { endTime: number };
+    scoreBoost?: { endTime: number; multiplier: number };
+  };
+  
   // Actions
   addNote: (note: Note) => void;
   hitNote: (noteId: string, timing: 'perfect' | 'good' | 'miss') => void;
@@ -40,6 +47,8 @@ interface RhythmState {
   triggerFlash: (intensity?: number) => void;
   updateFlash: () => void;
   showSpeedFeedback: (multiplier: number) => void;
+  activateAbility: (abilityType: string) => void;
+  updateActiveAbilities: () => void;
 }
 
 export const useRhythm = create<RhythmState>()(
@@ -57,6 +66,8 @@ export const useRhythm = create<RhythmState>()(
     },
     flashIntensity: 0,
     speedFeedback: { visible: false, multiplier: 1.0 },
+    abilityUses: {},
+    activeAbilities: {},
 
     addNote: (note) => {
       set((state) => ({
@@ -92,9 +103,39 @@ export const useRhythm = create<RhythmState>()(
             healthChange = Math.floor(1 * healthMultiplier);
             break;
           case 'miss':
-            comboIncrease = -state.combo; // Reset combo
-            healthChange = Math.floor(-3 / healthMultiplier); // Characters with higher health take less damage
+            // Check for Ivy's combo save ability
+            const gameState = useGame.getState();
+            const character = gameState.selectedCharacter;
+            
+            if (character?.ability.type === 'combo_save' && state.abilityUses['combo_save'] > 0) {
+              // Use one combo save
+              set((s) => ({
+                abilityUses: { ...s.abilityUses, combo_save: (s.abilityUses['combo_save'] || 0) - 1 }
+              }));
+              comboIncrease = 0; // Keep combo instead of resetting
+              console.log('Combo saved! Uses remaining:', (state.abilityUses['combo_save'] || 0) - 1);
+            } else {
+              comboIncrease = -state.combo; // Reset combo
+            }
+            
+            // Apply Scal's extra damage
+            let baseDamage = 3;
+            if (character?.ability.type === 'health_penalty') {
+              baseDamage += character.ability.value || 0;
+            }
+            
+            // Check for Winter's health freeze
+            const isHealthFrozen = state.activeAbilities.healthFreeze && 
+              Date.now() < state.activeAbilities.healthFreeze.endTime;
+            
+            healthChange = isHealthFrozen ? 0 : Math.floor(-baseDamage / healthMultiplier);
             break;
+        }
+
+        // Apply score boost if active
+        let finalScoreIncrease = scoreIncrease;
+        if (state.activeAbilities.scoreBoost && Date.now() < state.activeAbilities.scoreBoost.endTime) {
+          finalScoreIncrease *= state.activeAbilities.scoreBoost.multiplier;
         }
 
         const newCombo = Math.max(0, state.combo + comboIncrease);
@@ -110,7 +151,7 @@ export const useRhythm = create<RhythmState>()(
 
         return {
           notes: newNotes,
-          score: state.score + scoreIncrease,
+          score: state.score + finalScoreIncrease,
           combo: newCombo,
           maxCombo: Math.max(state.maxCombo, newCombo),
           accuracy: newAccuracy,
@@ -183,6 +224,15 @@ export const useRhythm = create<RhythmState>()(
     },
 
     resetGame: () => {
+      // Initialize ability uses based on selected character
+      const gameState = useGame.getState();
+      const character = gameState.selectedCharacter;
+      const initialAbilityUses: { [key: string]: number } = {};
+      
+      if (character?.ability.uses) {
+        initialAbilityUses[character.ability.type] = character.ability.uses;
+      }
+      
       set({
         score: 0,
         combo: 0,
@@ -196,7 +246,9 @@ export const useRhythm = create<RhythmState>()(
           miss: 0
         },
         flashIntensity: 0,
-        speedFeedback: { visible: false, multiplier: 1.0 }
+        speedFeedback: { visible: false, multiplier: 1.0 },
+        abilityUses: initialAbilityUses,
+        activeAbilities: {}
       });
     },
 
@@ -219,6 +271,61 @@ export const useRhythm = create<RhythmState>()(
           speedFeedback: { ...state.speedFeedback, visible: false } 
         }));
       }, 2000);
+    },
+
+    activateAbility: (abilityType) => {
+      set((state) => {
+        const gameState = useGame.getState();
+        const character = gameState.selectedCharacter;
+        
+        if (!character || character.ability.type !== abilityType) return state;
+        if ((state.abilityUses[abilityType] || 0) <= 0) return state;
+        
+        const newAbilityUses = {
+          ...state.abilityUses,
+          [abilityType]: (state.abilityUses[abilityType] || 0) - 1
+        };
+        
+        const newActiveAbilities = { ...state.activeAbilities };
+        
+        if (abilityType === 'health_freeze' && character.ability.duration) {
+          newActiveAbilities.healthFreeze = {
+            endTime: Date.now() + character.ability.duration * 1000
+          };
+          console.log(`Health freeze activated for ${character.ability.duration} seconds`);
+        } else if (abilityType === 'score_boost' && character.ability.duration && character.ability.value) {
+          newActiveAbilities.scoreBoost = {
+            endTime: Date.now() + character.ability.duration * 1000,
+            multiplier: character.ability.value
+          };
+          console.log(`Score boost activated: ${character.ability.value}x for ${character.ability.duration} seconds`);
+        }
+        
+        return {
+          ...state,
+          abilityUses: newAbilityUses,
+          activeAbilities: newActiveAbilities
+        };
+      });
+    },
+
+    updateActiveAbilities: () => {
+      set((state) => {
+        const now = Date.now();
+        const newActiveAbilities = { ...state.activeAbilities };
+        
+        // Clean up expired abilities
+        if (newActiveAbilities.healthFreeze && now >= newActiveAbilities.healthFreeze.endTime) {
+          delete newActiveAbilities.healthFreeze;
+          console.log('Health freeze expired');
+        }
+        if (newActiveAbilities.scoreBoost && now >= newActiveAbilities.scoreBoost.endTime) {
+          delete newActiveAbilities.scoreBoost;
+          console.log('Score boost expired');
+        }
+        
+        return { ...state, activeAbilities: newActiveAbilities };
+      });
     }
   }))
 );
