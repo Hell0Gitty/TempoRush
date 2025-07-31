@@ -101,7 +101,8 @@ export class GameEngine {
     );
 
     if (notesInLane.length === 0) {
-      // Miss - no notes to hit (no sound for cleaner experience)
+      // No notes to hit - this should NOT reset combo
+      // Only reset combo when an actual note is missed
       return;
     }
 
@@ -125,6 +126,7 @@ export class GameEngine {
     } else {
       timing = 'miss';
       // No sound for misses - less punishing
+      // This miss will reset combo because it's a note that was hit but too late/early
     }
 
     state.hitNote(closestNote.id, timing);
@@ -190,9 +192,10 @@ export class GameEngine {
       // Move note down
       note.y += this.noteSpeed * (deltaTime / 1000);
 
-      // Check if note missed (went past hit zone)
-      if (note.y > this.hitZoneY + 100) {
-        // Just remove the note without affecting health/score - passive miss
+      // Check if note passed the judgment line without being hit
+      if (note.y > this.hitZoneY + 60) {
+        // This is a proper miss - reset combo and affect health
+        state.hitNote(note.id, 'miss');
         return false;
       }
 
