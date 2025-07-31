@@ -72,7 +72,7 @@ export const useRhythm = create<RhythmState>()(
             break;
           case 'miss':
             comboIncrease = -state.combo; // Reset combo
-            healthChange = -10;
+            healthChange = -3;
             break;
         }
 
