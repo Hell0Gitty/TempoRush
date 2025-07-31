@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGame } from "../lib/stores/useGame";
 import { useRhythm } from "../lib/stores/useRhythm";
 import GameCanvas from "./GameCanvas";
@@ -6,13 +6,15 @@ import GameUI from "./GameUI";
 import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
 import PauseMenu from "./PauseMenu";
+import VoiceLines from "./VoiceLines";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
   const { phase, restart, pause, selectedSong, selectedCharacter, saveHighScore } = useGame();
-  const { resetGame, score, accuracy, maxCombo } = useRhythm();
+  const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
+  const [voiceLineResult, setVoiceLineResult] = useState<'complete' | 'failed' | null>(null);
 
 
 
@@ -39,7 +41,7 @@ export default function Game() {
     };
   }, [phase]);
 
-  // Save high score when game ends
+  // Save high score and trigger voice lines when game ends
   useEffect(() => {
     if (phase === 'ended' && !scoresSavedRef.current && selectedSong && selectedCharacter) {
       const highScoreData = {
@@ -53,9 +55,15 @@ export default function Game() {
       
       saveHighScore(highScoreData);
       scoresSavedRef.current = true;
+      
+      // Determine if song was completed or failed
+      const gameResult = health > 0 ? 'complete' : 'failed';
+      setVoiceLineResult(gameResult);
+      
       console.log('High score saved:', highScoreData);
+      console.log('Game result:', gameResult);
     }
-  }, [phase, score, accuracy, maxCombo, selectedSong, selectedCharacter, saveHighScore]);
+  }, [phase, score, accuracy, maxCombo, health, selectedSong, selectedCharacter, saveHighScore]);
 
   const handleRestart = () => {
     if (gameEngineRef.current) {
@@ -64,6 +72,11 @@ export default function Game() {
     }
     resetGame();
     restart();
+    setVoiceLineResult(null); // Clear voice lines
+  };
+
+  const handleCloseVoiceLines = () => {
+    setVoiceLineResult(null);
   };
 
   return (
@@ -72,6 +85,7 @@ export default function Game() {
       <GameUI onPause={pause} />
       <FlashOverlay />
       <SpeedFeedback />
+      <VoiceLines gameResult={voiceLineResult} onClose={handleCloseVoiceLines} />
       
       {phase === 'paused' && (
         <PauseMenu onRestart={handleRestart} />
