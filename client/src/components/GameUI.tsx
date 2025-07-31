@@ -103,7 +103,7 @@ export default function GameUI({ onPause }: GameUIProps) {
 
       {/* Character Ability */}
       {selectedCharacter && (
-        <div className="absolute top-20 left-4 bg-black/30 backdrop-blur-sm rounded-lg p-3 text-white pointer-events-auto">
+        <div className="absolute bottom-4 right-4 bg-black/30 backdrop-blur-sm rounded-lg p-3 text-white pointer-events-auto">
           <div className="text-sm font-bold mb-2 flex items-center gap-2">
             <img 
               src={selectedCharacter.image} 
