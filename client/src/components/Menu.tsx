@@ -1,81 +1,75 @@
 import { useGame } from "../lib/stores/useGame";
-import { useAudio } from "../lib/stores/useAudio";
 
 export default function Menu() {
-  const { showSongSelect, showCharacterSelect, showHighScores } = useGame();
-  const { toggleMute, isMuted } = useAudio();
-
-  const handleStart = () => {
-    showSongSelect();
-  };
+  const { setPhase } = useGame();
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-white">
-      <div className="text-center mb-8">
-        <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-pink-400 to-purple-600 bg-clip-text text-transparent">
+      <div className="text-center mb-12">
+        <h1 className="text-8xl font-black mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
           TEMPO RUSH
         </h1>
-        <p className="text-xl mb-4 opacity-80">
-          Hit the beats with perfect timing!
+        <p className="text-2xl font-light opacity-80">
+          The Ultimate Rhythm Game Experience
         </p>
-        
-        <div className="mb-6 p-4 bg-red-900/30 border border-red-500/50 rounded-lg backdrop-blur-sm">
-          <p className="text-sm text-red-200 font-semibold">
-            ⚠️ Warning: This game contains flashing lights that may trigger seizures in individuals with photosensitive epilepsy.
-          </p>
-        </div>
-        
-        <div className="mb-8 p-6 bg-black/20 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-semibold mb-4">Controls:</h3>
-          <div className="flex gap-4 justify-center">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center font-bold text-xl mb-2">A</div>
-              <div className="text-sm">Lane 1</div>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center font-bold text-xl mb-2">S</div>
-              <div className="text-sm">Lane 2</div>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-xl mb-2">K</div>
-              <div className="text-sm">Lane 3</div>
-            </div>
-            <div className="text-center">
-              <div className="w-12 h-12 bg-yellow-500 rounded-lg flex items-center justify-center font-bold text-xl mb-2">L</div>
-              <div className="text-sm">Lane 4</div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
         <button
-          onClick={handleStart}
-          className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg font-bold text-xl hover:scale-105 transition-transform shadow-lg"
+          onClick={() => setPhase('songSelect')}
+          className="group px-8 py-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white text-xl font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-2xl"
         >
-          START GAME
+          <div className="text-3xl mb-2">🎵</div>
+          <div>Play Songs</div>
         </button>
         
         <button
-          onClick={showCharacterSelect}
-          className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-bold hover:scale-105 transition-transform"
+          onClick={() => setPhase('characterSelect')}
+          className="group px-8 py-6 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-xl font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-2xl"
         >
-          CHARACTER SELECT
+          <div className="text-3xl mb-2">👤</div>
+          <div>Characters</div>
         </button>
         
         <button
-          onClick={showHighScores}
-          className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg font-bold hover:scale-105 transition-transform"
+          onClick={() => setPhase('highScores')}
+          className="group px-8 py-6 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-xl font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-2xl"
         >
-          HIGH SCORES
+          <div className="text-3xl mb-2">🏆</div>
+          <div>High Scores</div>
         </button>
         
         <button
-          onClick={toggleMute}
-          className="px-6 py-2 bg-black/30 rounded-lg hover:bg-black/40 transition-colors"
+          onClick={() => window.location.reload()}
+          className="group px-8 py-6 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white text-xl font-bold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-2xl"
         >
-          Sound: {isMuted ? 'OFF' : 'ON'}
+          <div className="text-3xl mb-2">🔄</div>
+          <div>Reset Game</div>
         </button>
+      </div>
+
+      <div className="mt-12 text-center">
+        <p className="text-lg opacity-60 mb-4">
+          Hit the rhythm with A, S, K, L keys • 7 epic tracks by Laur
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-lg">
+          <div className="bg-green-600/20 border border-green-400 rounded-lg p-3">
+            <div className="text-lg mb-1">🌿</div>
+            <div className="text-xs font-bold">IVY</div>
+          </div>
+          <div className="bg-purple-600/20 border border-purple-400 rounded-lg p-3">
+            <div className="text-lg mb-1">⚔️</div>
+            <div className="text-xs font-bold">SCAL</div>
+          </div>
+          <div className="bg-yellow-600/20 border border-yellow-400 rounded-lg p-3">
+            <div className="text-lg mb-1">⚡</div>
+            <div className="text-xs font-bold">LIGHTREN</div>
+          </div>
+          <div className="bg-blue-600/20 border border-blue-400 rounded-lg p-3">
+            <div className="text-lg mb-1">❄️</div>
+            <div className="text-xs font-bold">WINTER</div>
+          </div>
+        </div>
       </div>
     </div>
   );

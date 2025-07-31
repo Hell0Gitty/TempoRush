@@ -1,39 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGame } from "../lib/stores/useGame";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "../hooks/useAuth";
 
 interface HighScore {
-  id: number;
-  userId: string;
+  id: string;
+  playerName: string;
   songTitle: string;
   difficulty: string;
-  character: string;
   score: number;
   accuracy: number;
   combo: number;
+  character: string;
   grade: string;
-  passed: boolean;
-  experience: number;
-  createdAt: string;
+  timestamp: number;
 }
-
-type LeaderboardData = {
-  [songTitle: string]: {
-    [difficulty: string]: HighScore[];
-  };
-};
 
 export default function HighScores() {
   const { restart } = useGame();
-  const { user } = useAuth();
+  const [highScores, setHighScores] = useState<HighScore[]>([]);
   const [selectedSong, setSelectedSong] = useState<string>("all");
 
-  const { data: leaderboards, isLoading } = useQuery<LeaderboardData>({
-    queryKey: ["/api/leaderboards"],
-  });
+  useEffect(() => {
+    loadHighScores();
+  }, []);
 
-  const songs = leaderboards ? Object.keys(leaderboards).sort() : [];
+  const loadHighScores = () => {
+    const saved = localStorage.getItem('tempoRushHighScores');
+    if (saved) {
+      const scores = JSON.parse(saved);
+      setHighScores(scores.sort((a: HighScore, b: HighScore) => b.score - a.score));
+    }
+  };
+
+  // Group scores by song and difficulty, keeping only top 10 per group
+  const groupedScores = highScores.reduce((acc, score) => {
+    if (!acc[score.songTitle]) {
+      acc[score.songTitle] = {};
+    }
+    if (!acc[score.songTitle][score.difficulty]) {
+      acc[score.songTitle][score.difficulty] = [];
+    }
+    if (acc[score.songTitle][score.difficulty].length < 10) {
+      acc[score.songTitle][score.difficulty].push(score);
+    }
+    return acc;
+  }, {} as { [songTitle: string]: { [difficulty: string]: HighScore[] } });
+
+  const songs = Object.keys(groupedScores).sort();
   const difficulties = ["Easy", "Normal", "Hard", "Expert", "Master"];
 
   const getDifficultyColor = (difficulty: string) => {
@@ -70,17 +82,9 @@ export default function HighScores() {
     return score.toLocaleString().padStart(8, '0');
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString();
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-full text-white">
-        <div className="text-2xl">Loading leaderboards...</div>
-      </div>
-    );
-  }
 
   const songsToDisplay = selectedSong === "all" ? songs : [selectedSong];
 
@@ -134,7 +138,7 @@ export default function HighScores() {
 
       {/* Leaderboards */}
       <div className="flex-1 overflow-y-auto p-6">
-        {!leaderboards || Object.keys(leaderboards).length === 0 ? (
+        {songs.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🎵</div>
             <div className="text-2xl font-bold mb-2">No High Scores Yet!</div>
@@ -143,7 +147,7 @@ export default function HighScores() {
         ) : (
           <div className="space-y-8">
             {songsToDisplay.map((songTitle) => {
-              const songData = leaderboards[songTitle];
+              const songData = groupedScores[songTitle];
               if (!songData) return null;
 
               return (
@@ -167,11 +171,7 @@ export default function HighScores() {
                             {scores.map((score, index) => (
                               <div
                                 key={score.id}
-                                className={`flex items-center justify-between p-3 rounded-lg ${
-                                  score.userId === user?.id
-                                    ? "bg-yellow-900/30 border border-yellow-600"
-                                    : "bg-black/20"
-                                }`}
+                                className="flex items-center justify-between p-3 rounded-lg bg-black/20"
                               >
                                 <div className="flex items-center gap-3">
                                   <div className="text-lg font-bold min-w-[2rem]">
@@ -192,7 +192,7 @@ export default function HighScores() {
                                 </div>
                                 <div className="text-right text-sm opacity-60">
                                   <div>Combo: {score.combo}</div>
-                                  <div>{formatDate(score.createdAt)}</div>
+                                  <div>{formatDate(score.timestamp)}</div>
                                 </div>
                               </div>
                             ))}

@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import { useAuth } from "./hooks/useAuth";
 import { useGame } from "./lib/stores/useGame";
 import { useAudio } from "./lib/stores/useAudio";
-import Landing from "./components/Landing";
-import Home from "./components/Home";
+import Menu from "./components/Menu";
 import SongSelect from "./components/SongSelect";
 import CharacterSelect from "./components/CharacterSelect";
 import HighScores from "./components/HighScores";
@@ -12,7 +10,6 @@ import AudioManager from "./components/AudioManager";
 import "@fontsource/lato";
 
 function App() {
-  const { isAuthenticated, isLoading } = useAuth();
   const { phase, selectedSong } = useGame();
   const { setBackgroundMusic, setSuccessSound } = useAudio();
 
@@ -43,18 +40,6 @@ function App() {
     }
   }, [selectedSong?.audioFile, setBackgroundMusic]);
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 to-blue-900">
-        <div className="text-white text-2xl">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return <Landing />;
-  }
-
   return (
     <div style={{ 
       width: '100vw', 
@@ -66,7 +51,7 @@ function App() {
     }}>
       <AudioManager />
       
-      {phase === 'ready' && <Home />}
+      {phase === 'ready' && <Menu />}
       {phase === 'songSelect' && <SongSelect />}
       {phase === 'characterSelect' && <CharacterSelect />}
       {phase === 'highScores' && <HighScores />}

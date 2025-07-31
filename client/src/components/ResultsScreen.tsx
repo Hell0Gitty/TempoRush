@@ -1,9 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGame } from "../lib/stores/useGame";
 import { useRhythm } from "../lib/stores/useRhythm";
-import { useAuth } from "../hooks/useAuth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "../lib/queryClient";
 
 interface ResultsScreenProps {
   gameResult: 'complete' | 'failed';
@@ -14,12 +11,6 @@ interface ResultsScreenProps {
 export default function ResultsScreen({ gameResult, voiceLine, onNext }: ResultsScreenProps) {
   const { selectedSong, selectedCharacter, restart } = useGame();
   const { score, accuracy, maxCombo, hitCounts, health } = useRhythm();
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [scoreSaved, setScoreSaved] = useState(false);
-  const [experienceGained, setExperienceGained] = useState(0);
-  const [leveledUp, setLeveledUp] = useState(false);
-  const [newCharactersUnlocked, setNewCharactersUnlocked] = useState<string[]>([]);
 
   if (!selectedSong || !selectedCharacter) return null;
 
@@ -37,36 +28,38 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
     return 'text-red-300';
   };
 
-  const saveScoreMutation = useMutation({
-    mutationFn: async (scoreData: any) => {
-      return await apiRequest("POST", "/api/scores", scoreData);
-    },
-    onSuccess: (data) => {
-      setScoreSaved(true);
-      setExperienceGained(data.experience);
-      setLeveledUp(data.leveledUp);
-      setNewCharactersUnlocked(data.newCharactersUnlocked || []);
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-    },
-  });
-
   useEffect(() => {
-    if (!scoreSaved && selectedSong && selectedCharacter && user) {
-      const passed = health > 0 && accuracy >= 70;
-      const grade = getRankText();
-      
-      saveScoreMutation.mutate({
+    // Clear any existing high scores first (reset for new system)
+    localStorage.removeItem('tempoRushHighScores');
+    
+    // Save high score to localStorage only if song was cleared
+    if (selectedSong && selectedCharacter && health > 0 && accuracy >= 70) {
+      const highScore = {
+        id: Date.now().toString(),
+        playerName: 'Player',
         songTitle: selectedSong.title,
         difficulty: selectedSong.selectedDifficulty.level,
-        character: selectedCharacter.id,
         score,
         accuracy,
         combo: maxCombo,
-        grade,
-        passed,
-      });
+        character: selectedCharacter.name,
+        grade: getRankText().replace(/text-\S+/g, '').trim(), // Remove color classes
+        timestamp: Date.now()
+      };
+
+      const saved = localStorage.getItem('tempoRushHighScores');
+      const highScores = saved ? JSON.parse(saved) : [];
+      highScores.push(highScore);
+      
+      // Keep only top 100 scores
+      highScores.sort((a: any, b: any) => b.score - a.score);
+      if (highScores.length > 100) {
+        highScores.splice(100);
+      }
+      
+      localStorage.setItem('tempoRushHighScores', JSON.stringify(highScores));
     }
-  }, [scoreSaved, selectedSong, selectedCharacter, user, health, accuracy, score, maxCombo]);
+  }, [selectedSong, selectedCharacter, score, accuracy, maxCombo, health]);
 
   const isPass = () => {
     return health > 0 && accuracy >= 70; // B grade or above with health remaining
@@ -179,33 +172,11 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
             )}
           </div>
 
-          {/* Experience and Level Up Display */}
-          {scoreSaved && (
-            <div className="mb-6 p-6 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-lg border border-purple-500/30">
-              <h3 className="text-xl font-bold mb-3 text-purple-400">Results Summary</h3>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Experience Gained:</span>
-                  <span className="text-green-400 font-bold">+{experienceGained} EXP</span>
-                </div>
-                {leveledUp && (
-                  <div className="text-yellow-400 font-bold text-center py-2">
-                    🎉 LEVEL UP! 🎉
-                  </div>
-                )}
-                {newCharactersUnlocked.length > 0 && (
-                  <div className="text-center py-2">
-                    <div className="text-pink-400 font-bold mb-1">New Characters Unlocked!</div>
-                    <div className="flex justify-center gap-2">
-                      {newCharactersUnlocked.map(char => (
-                        <span key={char} className="bg-pink-600 text-white px-2 py-1 rounded text-sm">
-                          {char.charAt(0).toUpperCase() + char.slice(1)}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+          {/* Pass/Fail Status */}
+          {isPass() && (
+            <div className="mb-6 p-4 bg-green-900/30 rounded-lg border border-green-500/30 text-center">
+              <div className="text-green-400 font-bold text-lg">🎉 Song Cleared! 🎉</div>
+              <div className="text-sm opacity-80 mt-1">High score saved to leaderboard</div>
             </div>
           )}
 
