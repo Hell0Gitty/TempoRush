@@ -3,9 +3,17 @@ import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
 
 export default function AudioManager() {
-  const { backgroundMusic, isMuted } = useAudio();
+  const { backgroundMusic, menuMusic, isMuted, setMenuMusic, playMenuMusic, stopMenuMusic } = useAudio();
   const { phase } = useGame();
 
+  // Load menu music
+  useEffect(() => {
+    const audio = new Audio('/menu-music.mp3');
+    audio.preload = 'auto';
+    setMenuMusic(audio);
+  }, [setMenuMusic]);
+
+  // Handle background music during gameplay
   useEffect(() => {
     if (!backgroundMusic) return;
 
@@ -20,6 +28,23 @@ export default function AudioManager() {
       backgroundMusic.pause();
     };
   }, [backgroundMusic, phase, isMuted]);
+
+  // Handle menu music for menu screens
+  useEffect(() => {
+    if (!menuMusic) return;
+
+    const isMenuPhase = ['ready', 'songSelect', 'characterSelect', 'highScores'].includes(phase);
+    
+    if (isMenuPhase && !isMuted) {
+      playMenuMusic();
+    } else {
+      stopMenuMusic();
+    }
+
+    return () => {
+      stopMenuMusic();
+    };
+  }, [menuMusic, phase, isMuted, playMenuMusic, stopMenuMusic]);
 
   return null;
 }
