@@ -100,21 +100,45 @@ The application is configured for production deployment with:
 
 ### Build Process
 1. **Frontend Build**: Vite builds React app to `dist/public`
-2. **Backend Build**: esbuild bundles server code to `dist/index.js`
-3. **Database**: Drizzle migrations applied via `db:push` command
+2. **Backend Build**: esbuild bundles server code to `dist/index.js`  
+3. **Static Deployment**: Copy built files to root directory for static hosting
+4. **Database**: Drizzle migrations applied via `db:push` command
+
+### Static Deployment Configuration
+- **Build Command**: `npm run build` (builds both frontend and backend)
+- **Public Directory**: Root directory (.) - files are copied from `dist/public/`
+- **Deployment Script**: `deploy.sh` automates the build and file copying process
+- **Static Files**: `index.html`, `assets/` folder, and all game assets in root
 
 ### Environment Configuration
 - **DATABASE_URL**: Required environment variable for Neon Database connection
 - **NODE_ENV**: Controls production vs development behavior
-- **Static Assets**: Frontend build served from `/dist/public`
+- **Static Assets**: Built assets available at root level for static deployment
 
-### Server Configuration
-- Express serves static files in production
+### Deployment Types
+The application supports both static and full-stack deployment:
+
+#### Static Deployment (Current)
+- Frontend-only deployment using built static files
+- Files served directly from root directory
+- No backend server required
+- Game data stored in local storage
+
+#### Full-Stack Deployment (Alternative)
+- Express serves static files and API endpoints
 - Vite development middleware in development only
-- Error handling middleware for API routes
+- Database integration for user accounts and high scores
 - Request logging with performance metrics
 
-The application is designed to be deployed as a single Node.js process that serves both the API and static frontend files, making it suitable for platforms like Railway, Vercel, or traditional VPS hosting.
+### Deployment Commands
+```bash
+# For static deployment
+./deploy.sh
+
+# Manual build process
+npm run build
+cp -r dist/public/* .
+```
 
 ## Recent Changes
 
