@@ -7,9 +7,8 @@ channel = "stable-24_05"
 packages = ["ffmpeg-full", "freetype", "lcms2", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "openjpeg", "tcl", "tk", "zlib"]
 
 [deployment]
-deploymentTarget = "autoscale"
-build = ["npm", "run", "build"]
-run = ["npm", "run", "start"]
+deploymentTarget = "static"
+publicDir = "."
 
 [[ports]]
 localPort = 5000
