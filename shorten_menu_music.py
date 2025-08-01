@@ -20,17 +20,25 @@ def shorten_surr3al():
     total_duration = len(audio)
     print(f"Original duration: {total_duration/1000:.2f} seconds")
     
-    # The "rise up" section typically happens in the latter part of the track
-    # Let's cut the track to about 60-80% of its original length to remove the build-up
-    # and keep the main rhythmic section for looping
+    # Remove the build-up at the beginning of the track
+    # Skip the intro build-up and start from where the main rhythm kicks in
+    # This is typically around 15-30 seconds into electronic tracks
     
-    # Cut to approximately first 70% of the track (removing the rise up section)
-    cut_point = int(total_duration * 0.7)
-    shortened_audio = audio[:cut_point]
+    # Start from 20 seconds in to skip the intro build-up
+    start_point = 20 * 1000  # 20 seconds in milliseconds
     
-    # Add a fade out at the end for smooth looping
-    fade_duration = 2000  # 2 seconds fade
-    shortened_audio = shortened_audio.fade_out(fade_duration)
+    # Take from 20 seconds to about 2 minutes for a good loop length
+    end_point = 140 * 1000  # 2 minutes 20 seconds in milliseconds
+    
+    # Make sure we don't exceed the original length
+    if end_point > total_duration:
+        end_point = total_duration
+    
+    shortened_audio = audio[start_point:end_point]
+    
+    # Add a fade in at the beginning and fade out at the end for smooth looping
+    fade_duration = 1500  # 1.5 seconds fade
+    shortened_audio = shortened_audio.fade_in(fade_duration).fade_out(fade_duration)
     
     print(f"Shortened duration: {len(shortened_audio)/1000:.2f} seconds")
     print(f"Removed: {(total_duration - len(shortened_audio))/1000:.2f} seconds")
