@@ -7,6 +7,7 @@ import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
 import VoiceLines from "./VoiceLines";
 import ResultsScreen from "./ResultsScreen";
+import MobileControls from "./MobileControls";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
@@ -148,12 +149,24 @@ export default function Game() {
       <FlashOverlay />
       <SpeedFeedback />
       <VoiceLines gameResult={voiceLineResult} onClose={handleVoiceLineClose} />
+      <MobileControls 
+        gameEngine={gameEngineRef.current} 
+        isVisible={phase === 'playing'} 
+      />
       
       {phase === 'paused' && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-40">
           <div className="text-white text-center">
-            <div className="text-6xl font-bold mb-4">PAUSED</div>
-            <div className="text-2xl">Press Enter to continue</div>
+            <div className="text-4xl md:text-6xl font-bold mb-4">PAUSED</div>
+            <div className="text-lg md:text-2xl mb-4">Press Enter to continue</div>
+            <div className="text-sm md:text-base opacity-80">Or tap Resume button</div>
+            <button
+              onClick={resume}
+              className="mt-4 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold mobile-control-btn md:hidden"
+              style={{ touchAction: 'none' }}
+            >
+              Resume
+            </button>
           </div>
         </div>
       )}

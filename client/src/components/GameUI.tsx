@@ -47,18 +47,18 @@ export default function GameUI({ onPause }: GameUIProps) {
     <div className="absolute inset-0 pointer-events-none">
       {/* Top UI */}
       <div className="absolute top-4 left-4 right-4 flex justify-between items-start text-white pointer-events-auto">
-        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4">
-          <div className="text-2xl font-bold">Score: {score.toLocaleString()}</div>
-          <div className="text-lg">Combo: {combo}x</div>
-          <div className="text-sm opacity-80">Accuracy: {accuracy.toFixed(1)}%</div>
+        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-2 md:p-4">
+          <div className="text-lg md:text-2xl font-bold">Score: {score.toLocaleString()}</div>
+          <div className="text-sm md:text-lg">Combo: {combo}x</div>
+          <div className="text-xs md:text-sm opacity-80">Accuracy: {accuracy.toFixed(1)}%</div>
         </div>
 
         {/* Now Playing */}
         {selectedSong && (
-          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 text-center">
-            <div className="text-sm opacity-60">Now Playing</div>
-            <div className="font-bold">{selectedSong.title}</div>
-            <div className="text-sm opacity-80">{selectedSong.artist}</div>
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-2 md:p-4 text-center max-w-xs">
+            <div className="text-xs md:text-sm opacity-60">Now Playing</div>
+            <div className="font-bold text-sm md:text-base truncate">{selectedSong.title}</div>
+            <div className="text-xs md:text-sm opacity-80 truncate">{selectedSong.artist}</div>
             <div className="text-xs opacity-60">{selectedSong.selectedDifficulty.level} • {selectedSong.selectedDifficulty.bpm} BPM</div>
           </div>
         )}

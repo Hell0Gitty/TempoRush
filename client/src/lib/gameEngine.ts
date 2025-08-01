@@ -48,6 +48,27 @@ export class GameEngine {
     this.setupKeyListeners();
   }
 
+  // Mobile input handler for touch controls
+  handleMobileInput(key: string, isPressed: boolean) {
+    const gameState = useGame.getState();
+    
+    // Only process when game is playing
+    if (gameState.phase !== 'playing') {
+      return;
+    }
+
+    if (['a', 's', 'k', 'l'].includes(key)) {
+      if (isPressed && !this.keyStates[key]) {
+        this.keyStates[key] = true;
+        this.keyPressedFrames[key] = this.currentFrame;
+        this.handleKeyPress(key);
+      } else if (!isPressed && this.keyStates[key]) {
+        this.keyStates[key] = false;
+        this.handleKeyRelease(key);
+      }
+    }
+  }
+
   setCanvas(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
@@ -60,7 +81,13 @@ export class GameEngine {
     const gameAreaWidth = Math.min(width * 0.6, 600); // Max 600px wide
     this.laneWidth = gameAreaWidth / 4;
     this.laneStartX = (width - gameAreaWidth) / 2;
-    this.hitZoneY = height - 120;
+    
+    // Check if mobile device to adjust hit zone position
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      (width <= 768 && 'ontouchstart' in window);
+    
+    // Position hit zone higher on mobile to account for touch controls
+    this.hitZoneY = isMobile ? height - 200 : height - 120;
   }
 
   private setupKeyListeners() {
