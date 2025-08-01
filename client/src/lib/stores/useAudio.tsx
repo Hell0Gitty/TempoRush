@@ -5,11 +5,13 @@ interface AudioState {
   menuMusic: HTMLAudioElement | null;
   successSound: HTMLAudioElement | null;
   isMuted: boolean;
+  isPreviewPlaying: boolean;
   
   // Setter functions
   setBackgroundMusic: (music: HTMLAudioElement) => void;
   setMenuMusic: (music: HTMLAudioElement) => void;
   setSuccessSound: (sound: HTMLAudioElement) => void;
+  setPreviewPlaying: (playing: boolean) => void;
   
   // Control functions
   toggleMute: () => void;
@@ -23,10 +25,12 @@ export const useAudio = create<AudioState>((set, get) => ({
   menuMusic: null,
   successSound: null,
   isMuted: false, // Start with sound ON by default
+  isPreviewPlaying: false,
   
   setBackgroundMusic: (music) => set({ backgroundMusic: music }),
   setMenuMusic: (music) => set({ menuMusic: music }),
   setSuccessSound: (sound) => set({ successSound: sound }),
+  setPreviewPlaying: (playing) => set({ isPreviewPlaying: playing }),
   
   toggleMute: () => {
     const { isMuted } = get();
@@ -56,8 +60,8 @@ export const useAudio = create<AudioState>((set, get) => ({
   },
   
   playMenuMusic: () => {
-    const { menuMusic, isMuted } = get();
-    if (menuMusic && !isMuted) {
+    const { menuMusic, isMuted, isPreviewPlaying } = get();
+    if (menuMusic && !isMuted && !isPreviewPlaying) {
       menuMusic.currentTime = 0;
       menuMusic.loop = true;
       menuMusic.volume = 0.3; // Lower volume for background

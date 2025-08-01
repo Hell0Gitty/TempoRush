@@ -46,5 +46,20 @@ export default function AudioManager() {
     };
   }, [menuMusic, phase, isMuted, playMenuMusic, stopMenuMusic]);
 
+  // Handle stopping menu music when preview is playing
+  const { isPreviewPlaying } = useAudio();
+  useEffect(() => {
+    if (!menuMusic) return;
+    
+    if (isPreviewPlaying) {
+      stopMenuMusic();
+    } else {
+      const isMenuPhase = ['ready', 'songSelect', 'characterSelect', 'highScores'].includes(phase);
+      if (isMenuPhase && !isMuted) {
+        playMenuMusic();
+      }
+    }
+  }, [isPreviewPlaying, menuMusic, phase, isMuted, playMenuMusic, stopMenuMusic]);
+
   return null;
 }

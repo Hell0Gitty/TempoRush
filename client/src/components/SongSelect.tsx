@@ -98,7 +98,7 @@ const AVAILABLE_SONGS = [
 
 export default function SongSelect() {
   const { selectSong, start, restart, selectedSong, expertFullCombos, speedMultiplier, setSpeedMultiplier } = useGame();
-  const { isMuted } = useAudio();
+  const { isMuted, setPreviewPlaying } = useAudio();
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<string | null>(null);
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -158,6 +158,7 @@ export default function SongSelect() {
     
     previewAudioRef.current = audio;
     setIsPreviewPlaying(true);
+    setPreviewPlaying(true); // Notify audio store that preview is playing
     
     // Play for 10 seconds only
     audio.play().catch(console.log);
@@ -167,6 +168,7 @@ export default function SongSelect() {
       if (previewAudioRef.current === audio) {
         audio.pause();
         setIsPreviewPlaying(false);
+        setPreviewPlaying(false); // Notify audio store that preview stopped
       }
     }, 10000);
   };
@@ -176,6 +178,7 @@ export default function SongSelect() {
       previewAudioRef.current.pause();
       previewAudioRef.current = null;
       setIsPreviewPlaying(false);
+      setPreviewPlaying(false); // Notify audio store that preview stopped
     }
   };
 
