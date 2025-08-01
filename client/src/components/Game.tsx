@@ -5,7 +5,6 @@ import GameCanvas from "./GameCanvas";
 import GameUI from "./GameUI";
 import FlashOverlay from "./FlashOverlay";
 import SpeedFeedback from "./SpeedFeedback";
-import VoiceLines from "./VoiceLines";
 import ResultsScreen from "./ResultsScreen";
 import MobileControls from "./MobileControls";
 import { GameEngine } from "../lib/gameEngine";
@@ -15,9 +14,8 @@ export default function Game() {
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
-  const [voiceLineResult, setVoiceLineResult] = useState<'complete' | 'failed' | null>(null);
   const [showResults, setShowResults] = useState(false);
-  const [resultVoiceLine, setResultVoiceLine] = useState<string>("");
+  const [gameResult, setGameResult] = useState<'complete' | 'failed' | null>(null);
 
 
 
@@ -61,43 +59,14 @@ export default function Game() {
       scoresSavedRef.current = true;
       
       // Determine if song was completed or failed based on grade (C or above is pass)
-      const gameResult = health > 0 && accuracy >= 70 ? 'complete' : 'failed';
-      setVoiceLineResult(gameResult);
+      const result = health > 0 && accuracy >= 70 ? 'complete' : 'failed';
+      setGameResult(result);
       
-      // Get random voice line for results
-      const CHARACTER_VOICE_LINES = {
-        lightren: {
-          complete: ["Nice. I knew it.", "Our completion was inevitable.", "...Huh. You're not as bad as I thought."],
-          failed: ["Ah... there's always next time.", "...Hm.", "Sad, but we'll get better."]
-        },
-        scal: {
-          complete: ["Huh! Didn't think you'd avoid that.", "You're pretty good!", "Nice!"],
-          failed: ["Hm... Perhaps I made it a bit too hard.", "Try something easier, champ.", "Next time, we'll ace this."]
-        },
-        winter: {
-          complete: ["Victory...", "Hah. Nice.", "You're... not bad."],
-          failed: ["...cold.", "That's... saddening.", "Is... that all?"]
-        },
-        ivy: {
-          complete: ["Nice, buddy.", "I knew I could count on you.", "Heh... I thought so."],
-          failed: ["Hm...", "Really... I thought we did better.", "...no way."]
-        }
-      };
-      
-      const lines = CHARACTER_VOICE_LINES[selectedCharacter.id as keyof typeof CHARACTER_VOICE_LINES];
-      if (lines) {
-        const availableLines = lines[gameResult];
-        const randomLine = availableLines[Math.floor(Math.random() * availableLines.length)];
-        setResultVoiceLine(randomLine);
-      }
-      
-      // Show results screen after a brief delay
-      setTimeout(() => {
-        setShowResults(true);
-      }, 1000);
+      // Show results screen immediately
+      setShowResults(true);
       
       console.log('High score saved:', highScoreData);
-      console.log('Game result:', gameResult);
+      console.log('Game result:', result);
     }
   }, [phase, score, accuracy, maxCombo, health, selectedSong, selectedCharacter, saveHighScore]);
 
@@ -126,19 +95,13 @@ export default function Game() {
     }
     resetGame();
     restart();
-    setVoiceLineResult(null); // Clear voice lines
-    setShowResults(false); // Clear results screen
-    setResultVoiceLine("");
-  };
-
-  const handleVoiceLineClose = () => {
-    setVoiceLineResult(null);
+    setShowResults(false);
+    setGameResult(null);
   };
 
   const handleResultsNext = () => {
     setShowResults(false);
-    setVoiceLineResult(null);
-    setResultVoiceLine("");
+    setGameResult(null);
     restart(); // Go back to song select
   };
 
@@ -148,7 +111,6 @@ export default function Game() {
       <GameUI onPause={pause} />
       <FlashOverlay />
       <SpeedFeedback />
-      <VoiceLines gameResult={voiceLineResult} onClose={handleVoiceLineClose} />
       <MobileControls 
         gameEngine={gameEngineRef.current} 
         isVisible={phase === 'playing'} 
@@ -171,11 +133,10 @@ export default function Game() {
         </div>
       )}
       
-      {showResults && voiceLineResult && (
+      {showResults && gameResult && (
         <div className="absolute inset-0 z-50">
           <ResultsScreen 
-            gameResult={voiceLineResult}
-            voiceLine={resultVoiceLine}
+            gameResult={gameResult}
             onNext={handleResultsNext}
           />
         </div>

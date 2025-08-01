@@ -155,7 +155,15 @@ cp -r dist/public/* .
 - **Speed Control System**: Moved speed adjustment controls to song selection screen with preset buttons and fine-tuning options
 - **Character System**: Integrated 4 custom characters (Ivy, Winter, Scal, Lightren) with unique artwork and special abilities
 - **Character Abilities**: Implemented ability system with Ivy's combo save, Winter's health freeze, Scal's high-risk modifier, and Lightren's score boost
-- **Voice Line System**: Added character-specific dialogue that appears as speech bubbles when songs complete or fail, featuring 3 different lines per character per outcome
+- **Voice Line System**: Removed character voice lines to simplify game over screen and eliminate switching display issues
 - **Background Removal**: Processed character images using Python PIL to remove backgrounds, creating transparent PNG files for cleaner visual integration with CSS enhancement filters
 - **Full-Page Character Selection**: Redesigned character selection as immersive full-page interface with large character displays, detailed stats, lore, and arrow key navigation (left/right to browse, Enter to confirm)
 - **High Score System Reverted**: Removed authentication system and reverted to local storage approach for simplicity, maintaining improved leaderboard structure with song sections and top 10 cleared songs only
+
+### August 1, 2025
+- **Mobile Support Added**: Implemented comprehensive mobile support with touch controls, responsive UI, and mobile-optimized layouts
+- **Touch Controls**: Added colored touch buttons (A, S, K, L) at bottom of screen for mobile rhythm gameplay
+- **Mobile-Responsive UI**: Scaled text sizes, button heights, and layouts for mobile devices with proper touch interaction
+- **Mobile Hit Zone**: Adjusted note hit zone position to accommodate touch controls without overlap
+- **Mobile Ability Button**: Added dedicated ability activation button for characters with activatable abilities
+- **Voice Lines Removed**: Eliminated character voice line system to prevent switching display issues and simplify game over screen

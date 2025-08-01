@@ -4,11 +4,10 @@ import { useRhythm } from "../lib/stores/useRhythm";
 
 interface ResultsScreenProps {
   gameResult: 'complete' | 'failed';
-  voiceLine: string;
   onNext: () => void;
 }
 
-export default function ResultsScreen({ gameResult, voiceLine, onNext }: ResultsScreenProps) {
+export default function ResultsScreen({ gameResult, onNext }: ResultsScreenProps) {
   const { selectedSong, selectedCharacter, restart } = useGame();
   const { score, accuracy, maxCombo, hitCounts, health } = useRhythm();
 
@@ -74,7 +73,7 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
 
   return (
     <div className="flex h-full bg-gradient-to-br from-purple-900/40 to-blue-900/40 text-white">
-      {/* Left Side - Character and Voice Line */}
+      {/* Left Side - Character */}
       <div className="flex-1 flex flex-col items-center justify-center p-8">
         <div className="relative mb-8">
           <div className={`absolute inset-0 bg-gradient-to-br ${selectedCharacter.color} blur-3xl opacity-30 rounded-full`} />
@@ -85,12 +84,11 @@ export default function ResultsScreen({ gameResult, voiceLine, onNext }: Results
           />
         </div>
         
-        {/* Voice Line Speech Bubble */}
+        {/* Character Name */}
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 max-w-md relative">
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-white/10" />
           <div className="text-center">
-            <div className="text-lg font-bold mb-2 text-purple-300">{selectedCharacter.name}</div>
-            <div className="text-xl italic">"{voiceLine}"</div>
+            <div className="text-2xl font-bold text-purple-300">{selectedCharacter.name}</div>
+            <div className="text-lg opacity-80 mt-2">{selectedCharacter.effect}</div>
           </div>
         </div>
       </div>
