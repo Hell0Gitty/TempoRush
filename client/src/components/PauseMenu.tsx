@@ -21,7 +21,7 @@ export default function PauseMenu({ onRestart }: PauseMenuProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 10000,
+        zIndex: 1000,
       }}
     >
       <div 
@@ -35,7 +35,11 @@ export default function PauseMenu({ onRestart }: PauseMenuProps) {
           width: '90%',
         }}
       >
-        <h2 style={{ fontSize: '32px', marginBottom: '20px' }}>PAUSED</h2>
+        <h2 style={{ fontSize: '32px', marginBottom: '20px', fontWeight: 'bold' }}>PAUSED</h2>
+        
+        <div style={{ fontSize: '14px', marginBottom: '20px', opacity: 0.8 }}>
+          Speed Controls: ↑/↓, +/-, 0 to reset
+        </div>
         
         <button
           onClick={() => {
