@@ -65,9 +65,15 @@ export const useAudio = create<AudioState>((set, get) => ({
       menuMusic.currentTime = 0;
       menuMusic.loop = true;
       menuMusic.volume = 0.15; // Much quieter volume for background
-      menuMusic.play().catch(error => {
-        console.log("Menu music play prevented:", error);
-      });
+      
+      // Add user interaction check for autoplay policies
+      const playPromise = menuMusic.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Menu music play prevented (autoplay policy):", error.message);
+          // Don't log full error object to avoid clutter
+        });
+      }
     }
   },
   

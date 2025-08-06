@@ -6,25 +6,12 @@ export default function AudioManager() {
   const { backgroundMusic, menuMusic, isMuted, setMenuMusic, playMenuMusic, stopMenuMusic } = useAudio();
   const { phase } = useGame();
 
-  // Load menu music and start immediately when ready
+  // Load menu music
   useEffect(() => {
     const audio = new Audio('/menu-music.mp3');
     audio.preload = 'auto';
     audio.volume = 0.15; // Set quieter volume immediately
-    
-    // Start playing as soon as it's loaded
-    audio.addEventListener('canplaythrough', () => {
-      setMenuMusic(audio);
-      // Start playing immediately if we're in a menu phase
-      const currentPhase = useGame.getState().phase;
-      const isMenuPhase = ['ready', 'songSelect', 'characterSelect', 'highScores'].includes(currentPhase);
-      if (isMenuPhase && !useAudio.getState().isMuted) {
-        audio.currentTime = 0;
-        audio.loop = true;
-        audio.play().catch(console.log);
-      }
-    });
-    
+    audio.loop = true;
     setMenuMusic(audio);
   }, [setMenuMusic]);
 
