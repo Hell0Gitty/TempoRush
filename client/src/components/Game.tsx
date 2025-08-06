@@ -11,7 +11,14 @@ import PauseMenu from "./PauseMenu";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
-  const { phase, restart, pause, resume, selectedSong, selectedCharacter, saveHighScore } = useGame();
+  // Force explicit phase subscription
+  const phase = useGame((state) => state.phase);
+  const restart = useGame((state) => state.restart);
+  const pause = useGame((state) => state.pause);
+  const resume = useGame((state) => state.resume);
+  const selectedSong = useGame((state) => state.selectedSong);
+  const selectedCharacter = useGame((state) => state.selectedCharacter);
+  const saveHighScore = useGame((state) => state.saveHighScore);
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
