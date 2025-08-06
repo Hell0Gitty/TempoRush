@@ -95,19 +95,7 @@ export class GameEngine {
       const gameState = useGame.getState();
       const key = e.key.toLowerCase();
       
-      // Handle ESC key for pause/resume regardless of game state
-      if (key === 'escape') {
-        if (gameState.phase === 'playing') {
-          console.log("ESC pressed - pausing game");
-          gameState.pause();
-        } else if (gameState.phase === 'paused') {
-          console.log("ESC pressed - resuming game");
-          gameState.resume();
-        }
-        return;
-      }
-      
-      // Only process other keys when game is actually playing
+      // Only process keys when game is actually playing
       if (gameState.phase !== 'playing') {
         return;
       }

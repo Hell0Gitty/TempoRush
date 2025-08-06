@@ -11,31 +11,9 @@ import PauseMenu from "./PauseMenu";
 import { GameEngine } from "../lib/gameEngine";
 
 export default function Game() {
-  const gameStore = useGame();
-  const { phase, restart, pause, resume, selectedSong, selectedCharacter, saveHighScore } = gameStore;
+  const { phase, restart, pause, resume, selectedSong, selectedCharacter, saveHighScore } = useGame();
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
-  
-  // Debug phase changes
-  console.log("Game component - Current phase:", phase);
-  console.log("Store object:", gameStore);
   const gameEngineRef = useRef<GameEngine | null>(null);
-  
-  // Watch for phase changes
-  useEffect(() => {
-    console.log("Phase changed to:", phase);
-    console.log("Full store state:", useGame.getState());
-  }, [phase]);
-  
-  // Manual phase check
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const currentPhase = useGame.getState().phase;
-      if (currentPhase !== phase) {
-        console.log("MISMATCH: Component phase:", phase, "Store phase:", currentPhase);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [phase]);
   const scoresSavedRef = useRef<boolean>(false);
   const [showResults, setShowResults] = useState(false);
   const [gameResult, setGameResult] = useState<'complete' | 'failed' | null>(null);
@@ -139,18 +117,8 @@ export default function Game() {
         isVisible={phase === 'playing'} 
       />
       
-      {/* Debug Phase Display */}
-      <div className="absolute top-4 right-4 bg-red-500 text-white p-2 text-sm z-50">
-        Phase: {phase}
-      </div>
-      
       {phase === 'paused' && (
-        <>
-          <div className="absolute top-16 right-4 bg-yellow-500 text-black p-2 text-sm z-50">
-            PAUSE MENU SHOULD RENDER
-          </div>
-          <PauseMenu onRestart={handleRestart} />
-        </>
+        <PauseMenu onRestart={handleRestart} />
       )}
       
       {showResults && gameResult && (
