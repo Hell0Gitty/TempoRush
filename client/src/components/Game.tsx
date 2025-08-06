@@ -13,7 +13,15 @@ import { GameEngine } from "../lib/gameEngine";
 export default function Game() {
   const { phase, restart, pause, resume, selectedSong, selectedCharacter, saveHighScore } = useGame();
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
+  
+  // Debug phase changes
+  console.log("Game component - Current phase:", phase);
   const gameEngineRef = useRef<GameEngine | null>(null);
+  
+  // Watch for phase changes
+  useEffect(() => {
+    console.log("Phase changed to:", phase);
+  }, [phase]);
   const scoresSavedRef = useRef<boolean>(false);
   const [showResults, setShowResults] = useState(false);
   const [gameResult, setGameResult] = useState<'complete' | 'failed' | null>(null);
