@@ -163,14 +163,9 @@ export const useGame = create<GameState>()(
 
     pause: () => {
       set((state) => {
-        console.log("Pause called, current phase:", state.phase);
         if (state.phase === "playing") {
-          console.log("Game paused - setting phase to paused");
-          const newState = { ...state, phase: "paused" as GamePhase };
-          console.log("New state being set:", newState);
-          return newState;
+          return { ...state, phase: "paused" as GamePhase };
         }
-        console.log("Not pausing - phase is not playing");
         return state;
       });
     },

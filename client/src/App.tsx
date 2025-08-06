@@ -55,7 +55,7 @@ function App() {
       {phase === 'songSelect' && <SongSelect />}
       {phase === 'characterSelect' && <CharacterSelect />}
       {phase === 'highScores' && <HighScores />}
-      {(phase === 'playing' || phase === 'ended') && <Game />}
+      {(phase === 'playing' || phase === 'paused' || phase === 'ended') && <Game />}
     </div>
   );
 }

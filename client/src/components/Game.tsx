@@ -22,36 +22,30 @@ export default function Game() {
   const { resetGame, score, accuracy, maxCombo, health } = useRhythm();
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
-  
-  // Test store subscription
-  useEffect(() => {
-    console.log("Game component mounted, current phase:", phase);
-    const unsubscribe = useGame.subscribe(
-      (state) => state.phase,
-      (phase) => console.log("Store subscription detected phase change:", phase)
-    );
-    return unsubscribe;
-  }, []);
-  
-  // Log every render
-  console.log("Game component rendering with phase:", phase);
+
+
   const [showResults, setShowResults] = useState(false);
-  const [gameResult, setGameResult] = useState<'complete' | 'failed' | null>(null);
-
-
+  const [gameResult, setGameResult] = useState<"complete" | "failed" | null>(
+    null,
+  );
 
   useEffect(() => {
-    if (phase === 'playing' && !gameEngineRef.current) {
+    console.log("useEffect:43 - Game phase changed to:", phase);
+    if (phase === "playing" && !gameEngineRef.current) {
       resetGame(); // Initialize abilities and game state
       gameEngineRef.current = new GameEngine();
       gameEngineRef.current.start();
       scoresSavedRef.current = false; // Reset when starting a new game
-    } else if (phase === 'paused' && gameEngineRef.current) {
+    } else if (phase === "paused" && gameEngineRef.current) {
       gameEngineRef.current.stop();
-    } else if (phase === 'playing' && gameEngineRef.current) {
+    } else if (phase === "playing" && gameEngineRef.current) {
       // Resume game if engine exists
       gameEngineRef.current.start();
-    } else if ((phase !== 'playing' && phase !== 'paused') && gameEngineRef.current) {
+    } else if (
+      phase !== "playing" &&
+      phase !== "paused" &&
+      gameEngineRef.current
+    ) {
       gameEngineRef.current.stop();
       gameEngineRef.current = null;
     }
@@ -66,47 +60,61 @@ export default function Game() {
 
   // Save high score and show results when game ends
   useEffect(() => {
-    if (phase === 'ended' && !scoresSavedRef.current && selectedSong && selectedCharacter) {
+    if (
+      phase === "ended" &&
+      !scoresSavedRef.current &&
+      selectedSong &&
+      selectedCharacter
+    ) {
       const highScoreData = {
         songTitle: selectedSong.title,
         difficulty: selectedSong.selectedDifficulty.level,
         character: selectedCharacter.name,
         score: score,
         accuracy: accuracy,
-        combo: maxCombo
+        combo: maxCombo,
       };
-      
+
       saveHighScore(highScoreData);
       scoresSavedRef.current = true;
-      
+
       // Determine if song was completed or failed based on grade (C or above is pass)
-      const result = health > 0 && accuracy >= 70 ? 'complete' : 'failed';
+      const result = health > 0 && accuracy >= 70 ? "complete" : "failed";
       setGameResult(result);
-      
+
       // Show results screen immediately
       setShowResults(true);
-      
-      console.log('High score saved:', highScoreData);
-      console.log('Game result:', result);
+
+      console.log("High score saved:", highScoreData);
+      console.log("Game result:", result);
     }
-  }, [phase, score, accuracy, maxCombo, health, selectedSong, selectedCharacter, saveHighScore]);
+  }, [
+    phase,
+    score,
+    accuracy,
+    maxCombo,
+    health,
+    selectedSong,
+    selectedCharacter,
+    saveHighScore,
+  ]);
 
   // ESC and Enter key handling for pause/resume
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (phase === 'playing') {
+      if (e.key === "Escape") {
+        if (phase === "playing") {
           pause();
-        } else if (phase === 'paused') {
+        } else if (phase === "paused") {
           resume();
         }
-      } else if (e.key === 'Enter' && phase === 'paused') {
+      } else if (e.key === "Enter" && phase === "paused") {
         resume();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [phase, pause, resume]);
 
   const handleRestart = () => {
@@ -132,21 +140,16 @@ export default function Game() {
       <GameUI onPause={pause} />
       <FlashOverlay />
       <SpeedFeedback />
-      <MobileControls 
-        gameEngine={gameEngineRef.current} 
-        isVisible={phase === 'playing'} 
+      <MobileControls
+        gameEngine={gameEngineRef.current}
+        isVisible={phase === "playing"}
       />
-      
-      {phase === 'paused' && (
-        <PauseMenu onRestart={handleRestart} />
-      )}
-      
+
+      {phase === "paused" && <PauseMenu onRestart={handleRestart} />}
+
       {showResults && gameResult && (
         <div className="absolute inset-0 z-50">
-          <ResultsScreen 
-            gameResult={gameResult}
-            onNext={handleResultsNext}
-          />
+          <ResultsScreen gameResult={gameResult} onNext={handleResultsNext} />
         </div>
       )}
     </div>
