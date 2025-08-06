@@ -12,9 +12,9 @@ export default function PauseMenu({ onRestart }: PauseMenuProps) {
   console.log("PauseMenu rendering");
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-      <div className="bg-black/90 p-10 rounded-xl text-white text-center max-w-md w-5/6">
-        <h2 className="text-4xl font-bold mb-6">PAUSED</h2>
+    <div className="fixed inset-0 bg-red-500/80 flex items-center justify-center z-50">
+      <div className="bg-white p-10 rounded-xl text-black text-center max-w-md w-5/6 border-4 border-yellow-400">
+        <h2 className="text-4xl font-bold mb-6 text-red-600">PAUSED - DEBUG MODE</h2>
         
         <div className="text-sm mb-6 opacity-80">
           Speed Controls: ↑/↓, +/-, 0 to reset

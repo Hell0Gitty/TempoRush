@@ -117,8 +117,18 @@ export default function Game() {
         isVisible={phase === 'playing'} 
       />
       
+      {/* Debug Phase Display */}
+      <div className="absolute top-4 right-4 bg-red-500 text-white p-2 text-sm z-50">
+        Phase: {phase}
+      </div>
+      
       {phase === 'paused' && (
-        <PauseMenu onRestart={handleRestart} />
+        <>
+          <div className="absolute top-16 right-4 bg-yellow-500 text-black p-2 text-sm z-50">
+            PAUSE MENU SHOULD RENDER
+          </div>
+          <PauseMenu onRestart={handleRestart} />
+        </>
       )}
       
       {showResults && gameResult && (
