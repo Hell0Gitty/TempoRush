@@ -23,6 +23,17 @@ export default function Game() {
   const gameEngineRef = useRef<GameEngine | null>(null);
   const scoresSavedRef = useRef<boolean>(false);
 
+  // Test store subscription
+  useEffect(() => {
+    console.log("Game component mounted, current phase:", phase);
+    const unsubscribe = useGame.subscribe(
+      (state) => state.phase,
+      (phase) =>
+        console.log("Store subscription detected phase change:", phase),
+    );
+    return unsubscribe;
+  }, []);
+
 
   const [showResults, setShowResults] = useState(false);
   const [gameResult, setGameResult] = useState<"complete" | "failed" | null>(
@@ -123,7 +134,8 @@ export default function Game() {
       gameEngineRef.current = null;
     }
     resetGame();
-    restart();
+    // Restart to playing phase directly (don't go to menu)
+    useGame.getState().setPhase('playing');
     setShowResults(false);
     setGameResult(null);
   };

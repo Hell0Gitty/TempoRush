@@ -64,7 +64,7 @@ export const useAudio = create<AudioState>((set, get) => ({
     if (menuMusic && !isMuted && !isPreviewPlaying) {
       menuMusic.currentTime = 0;
       menuMusic.loop = true;
-      menuMusic.volume = 0.3; // Lower volume for background
+      menuMusic.volume = 0.15; // Much quieter volume for background
       menuMusic.play().catch(error => {
         console.log("Menu music play prevented:", error);
       });
