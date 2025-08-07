@@ -135,19 +135,19 @@ export class GameEngine {
   private keyDownListener?: (e: KeyboardEvent) => void;
   private keyUpListener?: (e: KeyboardEvent) => void;
 
+  private audioAnalyserInitialized = false;
+  
   private initAudioAnalyser() {
+    // Only try to initialize once per game session to avoid performance hits
+    if (this.audioAnalyserInitialized) {
+      return;
+    }
+    
     try {
-      // Get the audio element that's playing music
       const audioElement = document.querySelector('audio');
-      console.log('Audio element found:', audioElement, 'playing:', audioElement?.currentTime);
       if (!audioElement) {
-        console.log('No audio element found for visualizer');
-        return;
-      }
-
-      // Skip if already initialized and working
-      if (this.source && this.analyser && this.dataArray) {
-        console.log('Audio analyser already initialized');
+        this.useFallbackAnimation = true;
+        this.audioAnalyserInitialized = true;
         return;
       }
 
@@ -155,34 +155,29 @@ export class GameEngine {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       this.analyser = this.audioContext.createAnalyser();
       
-      // Configure analyser
-      this.analyser.fftSize = 256; // 128 frequency bins for better resolution
+      // Configure analyser for better performance
+      this.analyser.fftSize = 128; // Smaller FFT for better performance
       this.analyser.smoothingTimeConstant = 0.8;
       
       // Create data array for frequency data
       this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-      console.log('Audio analyser created with', this.analyser.frequencyBinCount, 'frequency bins');
       
       // Connect audio source to analyser
       this.source = this.audioContext.createMediaElementSource(audioElement);
       this.source.connect(this.analyser);
       this.source.connect(this.audioContext.destination);
-      console.log('Audio source connected to analyser');
       
       // Resume audio context if needed
       if (this.audioContext.state === 'suspended') {
-        this.audioContext.resume().then(() => {
-          console.log('Audio context resumed');
-        });
+        this.audioContext.resume();
       }
       
+      this.audioAnalyserInitialized = true;
+      
     } catch (error) {
-      console.error('Audio analyser setup failed:', error);
-      // If we get CORS or other errors, we can still show animated bars
-      if ((error as Error).message.includes('cross-origin') || (error as Error).message.includes('CORS')) {
-        console.log('Using animated fallback bars due to CORS');
-        this.useFallbackAnimation = true;
-      }
+      // Use fallback animation for any errors
+      this.useFallbackAnimation = true;
+      this.audioAnalyserInitialized = true;
     }
   }
 
@@ -190,7 +185,6 @@ export class GameEngine {
 
   private getFrequencyData(): number[] {
     if (!this.analyser || !this.dataArray) {
-      console.log('No analyser or dataArray available');
       return [];
     }
     
@@ -207,11 +201,6 @@ export class GameEngine {
         sum += this.dataArray[i * binSize + j];
       }
       bars.push(sum / binSize / 255); // Normalize to 0-1
-    }
-    
-    // Log first few frames to see if we're getting data
-    if (this.currentFrame % 60 === 0) { // Log every second
-      console.log('Frequency data:', bars.map(b => b.toFixed(2)));
     }
     
     return bars;
@@ -388,7 +377,10 @@ export class GameEngine {
         useRhythm.getState().addNote(note);
         this.nextNoteIndex++;
         
-        console.log(`Spawned note ${this.nextNoteIndex}/${this.chartNotes.length} for lane ${chartNote.lane} at ${currentTime.toFixed(0)}ms`);
+        // Reduce note spawn logging frequency for performance
+        if (this.nextNoteIndex % 20 === 0) {
+          console.log(`Spawned note ${this.nextNoteIndex}/${this.chartNotes.length} for lane ${chartNote.lane} at ${currentTime.toFixed(0)}ms`);
+        }
       } else {
         break; // No more notes ready to spawn yet
       }
@@ -415,11 +407,13 @@ export class GameEngine {
         return true;
       }
 
-      // Move note down using global speed multiplier and character modifier
+      // Move note down with consistent timing and speed multipliers
       const character = gameState.selectedCharacter;
       const characterSpeedMultiplier = character?.modifier.noteSpeedMultiplier || 1.0;
       const currentSpeed = this.baseNoteSpeed * gameState.speedMultiplier * characterSpeedMultiplier;
-      note.y += currentSpeed * (deltaTime / 1000);
+      // Use fixed deltaTime calculation for consistent movement
+      const fixedDelta = Math.min(deltaTime, 16.67); // Cap delta to prevent large jumps
+      note.y += currentSpeed * (fixedDelta / 1000);
 
       // Check if note passed the judgment line without being hit
       if (note.y > this.hitZoneY + 100) {
@@ -453,10 +447,16 @@ export class GameEngine {
   }
 
   private updateParticles(deltaTime: number) {
+    // Limit particle updates for better performance
+    if (this.particles.length > 50) {
+      this.particles = this.particles.slice(0, 50);
+    }
+    
+    const fixedDelta = Math.min(deltaTime, 16.67);
     this.particles = this.particles.filter(particle => {
-      particle.x += particle.vx * (deltaTime / 1000);
-      particle.y += particle.vy * (deltaTime / 1000);
-      particle.life -= deltaTime / 1000;
+      particle.x += particle.vx * (fixedDelta / 1000);
+      particle.y += particle.vy * (fixedDelta / 1000);
+      particle.life -= fixedDelta / 1000;
       
       return particle.life > 0;
     });
@@ -667,7 +667,7 @@ export class GameEngine {
       this.startTime = timestamp;
     }
 
-    const deltaTime = Math.min(timestamp - (this.lastTime || timestamp), 16.67); // Cap at 60fps
+    const deltaTime = Math.min(timestamp - (this.lastTime || timestamp), 20); // Ensure stable timing
     this.lastTime = timestamp;
     this.currentFrame++;
 
@@ -706,17 +706,8 @@ export class GameEngine {
     this.currentFrame = 0;
     this.nextNoteIndex = 0;
     
-    // Try to initialize audio analyser immediately and with retries
+    // Initialize audio analyser once
     this.initAudioAnalyser();
-    
-    // Also retry after delays in case audio isn't ready yet
-    setTimeout(() => {
-      this.initAudioAnalyser();
-    }, 1000);
-    
-    setTimeout(() => {
-      this.initAudioAnalyser();
-    }, 3000);
     
     this.animationId = requestAnimationFrame(this.gameLoop);
   }
