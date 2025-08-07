@@ -4,6 +4,7 @@ interface AudioState {
   backgroundMusic: HTMLAudioElement | null;
   menuMusic: HTMLAudioElement | null;
   successSound: HTMLAudioElement | null;
+  audioContext: AudioContext | null;
   isMuted: boolean;
   isPreviewPlaying: boolean;
   
@@ -12,6 +13,7 @@ interface AudioState {
   setMenuMusic: (music: HTMLAudioElement) => void;
   setSuccessSound: (sound: HTMLAudioElement) => void;
   setPreviewPlaying: (playing: boolean) => void;
+  initializeAudioContext: () => void;
   
   // Control functions
   toggleMute: () => void;
@@ -24,6 +26,7 @@ export const useAudio = create<AudioState>((set, get) => ({
   backgroundMusic: null,
   menuMusic: null,
   successSound: null,
+  audioContext: null,
   isMuted: false, // Start with sound ON by default
   isPreviewPlaying: false,
   
@@ -31,6 +34,15 @@ export const useAudio = create<AudioState>((set, get) => ({
   setMenuMusic: (music) => set({ menuMusic: music }),
   setSuccessSound: (sound) => set({ successSound: sound }),
   setPreviewPlaying: (playing) => set({ isPreviewPlaying: playing }),
+  
+  initializeAudioContext: () => {
+    try {
+      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+      set({ audioContext: context });
+    } catch (error) {
+      console.log("Failed to initialize AudioContext:", error);
+    }
+  },
   
   toggleMute: () => {
     const { isMuted } = get();
@@ -44,15 +56,13 @@ export const useAudio = create<AudioState>((set, get) => ({
   },
   
   playSuccess: () => {
-    const { isMuted } = get();
-    if (isMuted) {
+    const { isMuted, audioContext } = get();
+    if (isMuted || !audioContext) {
       return;
     }
     
-    // Generate keyboard click sound using Web Audio API
+    // Generate keyboard click sound using shared AudioContext
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
       // Create a brief click sound similar to keyboard typing
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
@@ -60,18 +70,18 @@ export const useAudio = create<AudioState>((set, get) => ({
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
       
-      // Quick high-frequency click sound
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.01);
+      // Quick high-frequency click sound with lower volume
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(300, audioContext.currentTime + 0.005);
       
-      // Quick attack and fast decay for crisp click
+      // Much quieter and shorter for less interference
       gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.001);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.03);
+      gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.001);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.015);
       
       oscillator.type = 'triangle';
       oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.03);
+      oscillator.stop(audioContext.currentTime + 0.015);
     } catch (error) {
       console.log("Keyboard click sound failed:", error);
     }

@@ -4,11 +4,12 @@ import { useEffect } from "react";
 
 export default function Menu() {
   const { setPhase } = useGame();
-  const { playMenuMusic } = useAudio();
+  const { playMenuMusic, initializeAudioContext } = useAudio();
 
-  // Trigger menu music on first user interaction
+  // Initialize audio context and trigger menu music on first user interaction
   useEffect(() => {
     const handleFirstClick = () => {
+      initializeAudioContext();
       playMenuMusic();
       // Remove listener after first interaction
       document.removeEventListener('click', handleFirstClick);
@@ -16,7 +17,7 @@ export default function Menu() {
     
     document.addEventListener('click', handleFirstClick);
     return () => document.removeEventListener('click', handleFirstClick);
-  }, [playMenuMusic]);
+  }, [playMenuMusic, initializeAudioContext]);
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-white">
