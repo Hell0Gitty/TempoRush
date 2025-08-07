@@ -13,11 +13,7 @@ function App() {
   const { phase, selectedSong } = useGame();
   const { setBackgroundMusic, setSuccessSound } = useAudio();
 
-  // Initialize success sound effect only
-  useEffect(() => {
-    const successSound = new Audio('/sounds/success.mp3');
-    setSuccessSound(successSound);
-  }, [setSuccessSound]);
+  // No need to load success sound - using Web Audio API for keyboard clicks
 
   // Load selected song's audio file
   useEffect(() => {
