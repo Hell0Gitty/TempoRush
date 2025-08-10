@@ -241,6 +241,9 @@ export default function CharacterSelect() {
             {currentCharacter.name}
           </h1>
           
+          <p className="text-sm text-white/60 mt-4">
+            Art is not mine! Credits go to original artists!
+          </p>
 
         </div>
       </div>
