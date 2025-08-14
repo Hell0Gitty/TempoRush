@@ -4,3 +4,5 @@ In this game, you will:
 - Immerse yourself in diverse musical genres.
 - Challenge your reflexes and timing skills.
 - Compete with friends for high scores.
+
+why is this so short :D but have fun
